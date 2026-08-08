@@ -1,5 +1,4 @@
-
-   <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -258,7 +257,6 @@
                         resumoDRE[t.categoria] = { orcado: t.orcamento, realizado: t.valor };
                     } else {
                         resumoDRE[t.categoria].realizado += t.valor;
-                        // Soma o orçamento se preenchido
                         resumoDRE[t.categoria].orcado = Math.max(resumoDRE[t.categoria].orcado, t.orcamento);
                     }
                 }

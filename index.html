@@ -119,25 +119,6 @@
         th {
             background-color: #f1f5f9;
         }
-        .summary-box {
-            display: flex;
-            justify-content: space-between;
-            background: #e0f2fe;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            font-weight: bold;
-        }
-        .filter-container {
-            margin-bottom: 20px;
-            display: flex;
-            gap: 15px;
-            align-items: center;
-            background: var(--card-bg);
-            padding: 15px;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-        }
         .text-red {
             color: var(--danger);
             font-weight: bold;
@@ -146,38 +127,17 @@
             color: var(--success);
             font-weight: bold;
         }
+        .table-container {
+            overflow-x: auto;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
             <h1>Demonstrações Financeiras Pessoais</h1>
-            <p>Controle de Fluxo de Caixa: Orçado vs. Realizado</p>
+            <p>Fluxo de Caixa Projetado: Visão Mês a Mês</p>
         </header>
-
-        <div class="filter-container">
-            <label for="filtroMes" style="margin:0; white-space:nowrap;">Visualizar Mês:</label>
-            <select id="filtroMes" onchange="mudarMesFiltro()">
-                <option value="Janeiro">Janeiro</option>
-                <option value="Fevereiro">Fevereiro</option>
-                <option value="Março">Março</option>
-                <option value="Abril">Abril</option>
-                <option value="Maio">Maio</option>
-                <option value="Junho">Junho</option>
-                <option value="Julho">Julho</option>
-                <option value="Agosto">Agosto</option>
-                <option value="Setembro">Setembro</option>
-                <option value="Outubro">Outubro</option>
-                <option value="Novembro">Novembro</option>
-                <option value="Dezembro">Dezembro</option>
-            </select>
-        </div>
-
-        <div class="summary-box">
-            <span>Total Receitas (Real): R$ <span id="totReceitas" class="text-green">0.00</span></span>
-            <span>Total Despesas (Real): R$ <span id="totDespesas" class="text-red">0.00</span></span>
-            <span>Saldo Atual: R$ <span id="totSaldo">0.00</span></span>
-        </div>
 
         <div class="grid">
             <!-- BLOCO 1: Planejamento Orçamentário -->
@@ -289,39 +249,65 @@
             </div>
         </div>
 
-        <!-- Tabela Comparativa: Orçado vs Realizado -->
+        <!-- Tabela Visão Anual: Mês a Mês -->
         <div class="card">
-            <h2>Fluxo de Caixa: Comparativo Orçado vs. Realizado do Mês</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Tipo / Categoria</th>
-                        <th>Orçado (Meta)</th>
-                        <th>Realizado (Efetivo)</th>
-                        <th>Diferença</th>
-                        <th>Ações (Orçamento)</th>
-                    </tr>
-                </thead>
-                <tbody id="tabelaOrcadoRealizado"></tbody>
-            </table>
+            <h2>Projeção Anual: Fluxo de Caixa Mês a Mês (Orçado vs. Realizado)</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Mês</th>
+                            <th>Total Receitas (Orçado)</th>
+                            <th>Total Receitas (Real)</th>
+                            <th>Total Despesas (Orçado)</th>
+                            <th>Total Despesas (Real)</th>
+                            <th>Saldo (Orçado)</th>
+                            <th>Saldo (Real)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaAnoMes"></tbody>
+                </table>
+            </div>
         </div>
 
         <!-- Histórico de Fluxo de Caixa -->
         <div class="card">
             <h2>Extrato de Lançamentos Reais</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Mês</th>
-                        <th>Tipo</th>
-                        <th>Categoria</th>
-                        <th>Observação</th>
-                        <th>Valor</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody id="tabelaCaixa"></tbody>
-            </table>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Mês</th>
+                            <th>Tipo</th>
+                            <th>Categoria</th>
+                            <th>Observação</th>
+                            <th>Valor</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaCaixa"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Orçamentos Cadastrados -->
+        <div class="card">
+            <h2>Metas de Orçamento Cadastradas</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Mês</th>
+                            <th>Tipo</th>
+                            <th>Categoria</th>
+                            <th>Descrição</th>
+                            <th>Valor Orçado</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaOrcamentosCadastrados"></tbody>
+                </table>
+            </div>
         </div>
     </div>
 
@@ -329,23 +315,18 @@
         let orcamentos = JSON.parse(localStorage.getItem('orcamentos')) || [];
         let transacoes = JSON.parse(localStorage.getItem('transacoes')) || [];
 
+        const mesesAno = [
+            "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", 
+            "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+        ];
+
         const orcamentoForm = document.getElementById('orcamentoForm');
         const transacaoForm = document.getElementById('transacaoForm');
         const tabelaCaixa = document.getElementById('tabelaCaixa');
-        const tabelaOrcadoRealizado = document.getElementById('tabelaOrcadoRealizado');
-        const totReceitas = document.getElementById('totReceitas');
-        const totDespesas = document.getElementById('totDespesas');
-        const totSaldo = document.getElementById('totSaldo');
-        const filtroMes = document.getElementById('filtroMes');
+        const tabelaOrcamentosCadastrados = document.getElementById('tabelaOrcamentosCadastrados');
+        const tabelaAnoMes = document.getElementById('tabelaAnoMes');
         const orcMes = document.getElementById('orcMes');
         const transMes = document.getElementById('transMes');
-
-        function mudarMesFiltro() {
-            const mesSelecionado = filtroMes.value;
-            orcMes.value = mesSelecionado;
-            transMes.value = mesSelecionado;
-            renderizar();
-        }
 
         orcamentoForm.addEventListener('submit', function(e) {
             e.preventDefault();
@@ -371,9 +352,6 @@
             }
 
             localStorage.setItem('orcamentos', JSON.stringify(orcamentos));
-            filtroMes.value = mesAtualNoForm;
-            orcMes.value = mesAtualNoForm;
-            transMes.value = mesAtualNoForm;
             renderizar();
             orcamentoForm.reset();
             orcMes.value = mesAtualNoForm;
@@ -403,9 +381,6 @@
             }
 
             localStorage.setItem('transacoes', JSON.stringify(transacoes));
-            filtroMes.value = mesAtualNoForm;
-            orcMes.value = mesAtualNoForm;
-            transMes.value = mesAtualNoForm;
             renderizar();
             transacaoForm.reset();
             transMes.value = mesAtualNoForm;
@@ -475,10 +450,10 @@
 
         function renderizar() {
             tabelaCaixa.innerHTML = '';
-            tabelaOrcadoRealizado.innerHTML = '';
-            let rTotal = 0, dTotal = 0;
-            const mesAtual = filtroMes.value;
+            tabelaOrcamentosCadastrados.innerHTML = '';
+            tabelaAnoMes.innerHTML = '';
 
+            // Renderizar Extrato de Transações
             transacoes.forEach(t => {
                 const corTipo = t.tipo === 'Despesa' ? 'text-red' : 'text-green';
                 const tr = document.createElement('tr');
@@ -494,59 +469,58 @@
                     </td>
                 `;
                 tabelaCaixa.appendChild(tr);
-
-                if(t.mes === mesAtual) {
-                    if(t.tipo === 'Receita') rTotal += t.valor;
-                    if(t.tipo === 'Despesa') dTotal += t.valor;
-                }
             });
 
-            totReceitas.innerText = rTotal.toFixed(2);
-            totDespesas.innerText = dTotal.toFixed(2);
-            const saldo = rTotal - dTotal;
-            totSaldo.innerText = saldo.toFixed(2);
-            totSaldo.style.color = saldo >= 0 ? '#16a34a' : '#ef4444';
-
-            let itensFluxo = {};
-
-            orcamentos.filter(o => o.mes === mesAtual).forEach(o => {
-                let chave = o.tipo + '|' + o.categoria;
-                if(!itensFluxo[chave]) {
-                    itensFluxo[chave] = { id: o.id, tipo: o.tipo, categoria: o.categoria, orcado: o.valor, realizado: 0 };
-                } else {
-                    itensFluxo[chave].orcado += o.valor;
-                }
-            });
-
-            transacoes.filter(t => t.mes === mesAtual).forEach(t => {
-                let chave = t.tipo + '|' + t.categoria;
-                if(!itensFluxo[chave]) {
-                    itensFluxo[chave] = { tipo: t.tipo, categoria: t.categoria, orcado: 0, realizado: t.valor };
-                } else {
-                    itensFluxo[chave].realizado += t.valor;
-                }
-            });
-
-            for(let chave in itensFluxo) {
-                let item = itensFluxo[chave];
-                let diff = item.tipo === 'Receita' ? (item.realizado - item.orcado) : (item.orcado - item.realizado);
-                let corClasse = item.tipo === 'Despesa' ? 'text-red' : 'text-green';
-
-                const trFluxo = document.createElement('tr');
-                trFluxo.innerHTML = `
-                    <td><span class="${corClasse}">[${item.tipo}]</span> ${item.categoria}</td>
-                    <td>R$ ${item.orcado.toFixed(2)}</td>
-                    <td>R$ ${item.realizado.toFixed(2)}</td>
-                    <td class="${diff >= 0 ? 'text-green' : 'text-red'}">R$ ${diff.toFixed(2)}</td>
+            // Renderizar Orçamentos Cadastrados
+            orcamentos.forEach(o => {
+                const corTipo = o.tipo === 'Despesa' ? 'text-red' : 'text-green';
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${o.mes}</strong></td>
+                    <td class="${corTipo}">${o.tipo}</td>
+                    <td>${o.categoria}</td>
+                    <td>${o.descricao || ''}</td>
+                    <td>R$ ${o.valor.toFixed(2)}</td>
                     <td>
-                        ${item.id ? `<button class="btn-warning" onclick="editarOrcamento(${item.id})">Editar</button> <button class="btn-danger" onclick="deletarOrcamento(${item.id})">Excluir</button>` : '-'}
+                        <button class="btn-warning" onclick="editarOrcamento(${o.id})">Editar</button>
+                        <button class="btn-danger" onclick="deletarOrcamento(${o.id})">Excluir</button>
                     </td>
                 `;
-                tabelaOrcadoRealizado.appendChild(trFluxo);
-            }
+                tabelaOrcamentosCadastrados.appendChild(tr);
+            });
+
+            // Renderizar Tabela Mês a Mês (Anual)
+            mesesAno.forEach(mes => {
+                let recOrc = 0, recReal = 0, despOrc = 0, despReal = 0;
+
+                orcamentos.filter(o => o.mes === mes).forEach(o => {
+                    if(o.tipo === 'Receita') recOrc += o.valor;
+                    if(o.tipo === 'Despesa') despOrc += o.valor;
+                });
+
+                transacoes.filter(t => t.mes === mes).forEach(t => {
+                    if(t.tipo === 'Receita') recReal += t.valor;
+                    if(t.tipo === 'Despesa') despReal += t.valor;
+                });
+
+                let saldoOrc = recOrc - despOrc;
+                let saldoReal = recReal - despReal;
+
+                const trAno = document.createElement('tr');
+                trAno.innerHTML = `
+                    <td><strong>${mes}</strong></td>
+                    <td>R$ ${recOrc.toFixed(2)}</td>
+                    <td class="text-green">R$ ${recReal.toFixed(2)}</td>
+                    <td>R$ ${despOrc.toFixed(2)}</td>
+                    <td class="text-red">R$ ${despReal.toFixed(2)}</td>
+                    <td style="font-weight: bold; color: ${saldoOrc >= 0 ? '#16a34a' : '#ef4444'}">R$ ${saldoOrc.toFixed(2)}</td>
+                    <td style="font-weight: bold; color: ${saldoReal >= 0 ? '#16a34a' : '#ef4444'}">R$ ${saldoReal.toFixed(2)}</td>
+                `;
+                tabelaAnoMes.appendChild(trAno);
+            });
         }
 
-        mudarMesFiltro();
+        renderizar();
     </script>
 </body>
 </html>

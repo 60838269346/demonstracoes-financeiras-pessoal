@@ -11,6 +11,8 @@
             --card-bg: #ffffff;
             --text: #1e293b;
             --border: #e2e8f0;
+            --danger: #ef4444;
+            --success: #16a34a;
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -99,6 +101,8 @@
             border-radius: 12px;
             border: 1px solid var(--border);
         }
+        .text-red { color: var(--danger); font-weight: bold; }
+        .text-green { color: var(--success); font-weight: bold; }
     </style>
 </head>
 <body>
@@ -128,7 +132,7 @@
 
         <div class="summary-box">
             <span>Total Receitas (Real): R$ <span id="totReceitas">0.00</span></span>
-            <span>Total Despesas (Real): R$ <span id="totDespesas">0.00</span></span>
+            <span>Total Despesas (Real): R$ <span id="totDespesas" class="text-red">0.00</span></span>
             <span>Saldo Atual: R$ <span id="totSaldo">0.00</span></span>
         </div>
 
@@ -155,6 +159,13 @@
                         </select>
                     </div>
                     <div class="form-group">
+                        <label>Tipo</label>
+                        <select id="orcTipo">
+                            <option value="Despesa">Despesa (Gasto)</option>
+                            <option value="Receita">Receita (Entrada)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label>Categoria</label>
                         <select id="orcCategoria">
                             <option value="Alimentação">Alimentação</option>
@@ -163,6 +174,7 @@
                             <option value="Lazer">Lazer</option>
                             <option value="Saúde">Saúde</option>
                             <option value="Educação">Educação</option>
+                            <option value="Salário/Renda">Salário/Renda</option>
                             <option value="Outros">Outros</option>
                         </select>
                     </div>
@@ -234,10 +246,10 @@
             <table>
                 <thead>
                     <tr>
-                        <th>Categoria</th>
+                        <th>Tipo / Categoria</th>
                         <th>Orçado</th>
                         <th>Realizado</th>
-                        <th>Diferença (Orçado - Real)</th>
+                        <th>Diferença</th>
                     </tr>
                 </thead>
                 <tbody id="tabelaDRE"></tbody>
@@ -276,24 +288,22 @@
         const totSaldo = document.getElementById('totSaldo');
         const filtroMes = document.getElementById('filtroMes');
 
-        // Salvar Orçamento
         orcamentoForm.addEventListener('submit', function(e) {
             e.preventDefault();
             const novoOrc = {
                 id: Date.now(),
                 mes: document.getElementById('orcMes').value,
+                tipo: document.getElementById('orcTipo').value,
                 categoria: document.getElementById('orcCategoria').value,
                 valor: parseFloat(document.getElementById('orcValor').value)
             };
-            // Remove orçamento anterior da mesma categoria/mês se houver
-            orcamentos = orcamentos.filter(o => !(o.mes === novoOrc.mes && o.categoria === novoOrc.categoria));
+            orcamentos = orcamentos.filter(o => !(o.mes === novoOrc.mes && o.tipo === novoOrc.tipo && o.categoria === novoOrc.categoria));
             orcamentos.push(novoOrc);
             localStorage.setItem('orcamentos', JSON.stringify(orcamentos));
             renderizar();
             orcamentoForm.reset();
         });
 
-        // Salvar Lançamento Real
         transacaoForm.addEventListener('submit', function(e) {
             e.preventDefault();
             const novaTrans = {
@@ -322,15 +332,15 @@
             let rTotal = 0, dTotal = 0;
             const mesAtual = filtroMes.value;
 
-            // Renderiza extrato de caixa
             transacoes.forEach(t => {
+                const corTipo = t.tipo === 'Despesa' ? 'text-red' : 'text-green';
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td><strong>${t.mes}</strong></td>
-                    <td style="color: ${t.tipo === 'Receita' ? 'green' : 'red'}; font-weight:bold;">${t.tipo}</td>
+                    <td class="${corTipo}">${t.tipo}</td>
                     <td>${t.categoria}</td>
                     <td>${t.descricao}</td>
-                    <td>R$ ${t.valor.toFixed(2)}</td>
+                    <td class="${corTipo}">R$ ${t.valor.toFixed(2)}</td>
                     <td><button onclick="deletarTransacao(${t.id})" style="background: #ef4444; padding: 5px 10px; width:auto;">X</button></td>
                 `;
                 tabelaCaixa.appendChild(tr);
@@ -345,33 +355,37 @@
             totDespesas.innerText = dTotal.toFixed(2);
             const saldo = rTotal - dTotal;
             totSaldo.innerText = saldo.toFixed(2);
-            totSaldo.style.color = saldo >= 0 ? 'green' : 'red';
+            totSaldo.style.color = saldo >= 0 ? '#16a34a' : '#ef4444';
 
-            // Monta o DRE combinando Orçado vs Realizado para o mês selecionado
-            let categoriasDespesas = ['Alimentação', 'Moradia', 'Transporte', 'Lazer', 'Saúde', 'Educação', 'Outros'];
-            
-            categoriasDespesas.forEach(cat => {
-                // Pega o orçado para esta categoria neste mês
-                let objOrc = orcamentos.find(o => o.mes === mesAtual && o.categoria === cat);
-                let valorOrcado = objOrc ? objOrc.valor : 0;
+            // Coleta todas as chaves únicas de Orçamento e Realizado para o mês
+            let itensDRE = {};
 
-                // Soma o realizado para esta categoria neste mês
-                let valorRealizado = transacoes
-                    .filter(t => t.mes === mesAtual && t.tipo === 'Despesa' && t.categoria === cat)
-                    .reduce((acc, t) => acc + t.valor, 0);
-
-                if(valorOrcado > 0 || valorRealizado > 0) {
-                    let diff = valorOrcado - valorRealizado;
-                    const trDRE = document.createElement('tr');
-                    trDRE.innerHTML = `
-                        <td>${cat}</td>
-                        <td>R$ ${valorOrcado.toFixed(2)}</td>
-                        <td>R$ ${valorRealizado.toFixed(2)}</td>
-                        <td style="color: ${diff >= 0 ? 'green' : 'red'}; font-weight:bold;">R$ ${diff.toFixed(2)}</td>
-                    `;
-                    tabelaDRE.appendChild(trDRE);
-                }
+            orcamentos.filter(o => o.mes === mesAtual).forEach(o => {
+                let chave = o.tipo + '|' + o.categoria;
+                if(!itensDRE[chave]) itensDRE[chave] = { tipo: o.tipo, categoria: o.categoria, orcado: o.valor, realizado: 0 };
+                else itensDRE[chave].orcado = o.valor;
             });
+
+            transacoes.filter(t => t.mes === mesAtual).forEach(t => {
+                let chave = t.tipo + '|' + t.categoria;
+                if(!itensDRE[chave]) itensDRE[chave] = { tipo: t.tipo, categoria: t.categoria, orcado: 0, realizado: t.valor };
+                else itensDRE[chave].realizado += t.valor;
+            });
+
+            for(let chave in itensDRE) {
+                let item = itensDRE[chave];
+                let diff = item.tipo === 'Receita' ? (item.realizado - item.orcado) : (item.orcado - item.realizado);
+                let corClasse = item.tipo === 'Despesa' ? 'text-red' : 'text-green';
+
+                const trDRE = document.createElement('tr');
+                trDRE.innerHTML = `
+                    <td><span class="${corClasse}">[${item.tipo}]</span> ${item.categoria}</td>
+                    <td>R$ ${item.orcado.toFixed(2)}</td>
+                    <td>R$ ${item.realizado.toFixed(2)}</td>
+                    <td class="${diff >= 0 ? 'text-green' : 'text-red'}">R$ ${diff.toFixed(2)}</td>
+                `;
+                tabelaDRE.appendChild(trDRE);
+            }
         }
         renderizar();
     </script>

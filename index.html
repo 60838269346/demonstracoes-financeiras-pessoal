@@ -30,7 +30,10 @@
             text-align: center;
             margin-bottom: 30px;
         }
-        h1 { color: var(--primary); margin-bottom: 5px; }
+        h1 {
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
         .grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -48,11 +51,21 @@
             border: 1px solid var(--border);
             margin-bottom: 20px;
         }
-        .card h2 { margin-top: 0; font-size: 1.25rem; border-bottom: 2px solid var(--border); padding-bottom: 10px; }
+        .card h2 {
+            margin-top: 0;
+            font-size: 1.25rem;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 10px;
+        }
         .form-group {
             margin-bottom: 15px;
         }
-        label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.9rem; }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
         input, select {
             width: 100%;
             padding: 10px;
@@ -70,11 +83,28 @@
             font-weight: bold;
             width: 100%;
         }
-        button:hover { background-color: #1d4ed8; }
-        .btn-danger { background-color: var(--danger) !important; padding: 5px 10px; width: auto; font-size: 0.85rem; }
-        .btn-danger:hover { background-color: #dc2626 !important; }
-        .btn-warning { background-color: var(--warning) !important; padding: 5px 10px; width: auto; font-size: 0.85rem; color: white; }
-        .btn-warning:hover { background-color: #d97706 !important; }
+        button:hover {
+            background-color: #1d4ed8;
+        }
+        .btn-danger {
+            background-color: var(--danger) !important;
+            padding: 5px 10px;
+            width: auto;
+            font-size: 0.85rem;
+        }
+        .btn-danger:hover {
+            background-color: #dc2626 !important;
+        }
+        .btn-warning {
+            background-color: var(--warning) !important;
+            padding: 5px 10px;
+            width: auto;
+            font-size: 0.85rem;
+            color: white;
+        }
+        .btn-warning:hover {
+            background-color: #d97706 !important;
+        }
         table {
             width: 100%;
             border-collapse: collapse;
@@ -86,7 +116,9 @@
             text-align: left;
             border-bottom: 1px solid var(--border);
         }
-        th { background-color: #f1f5f9; }
+        th {
+            background-color: #f1f5f9;
+        }
         .summary-box {
             display: flex;
             justify-content: space-between;
@@ -106,15 +138,21 @@
             border-radius: 12px;
             border: 1px solid var(--border);
         }
-        .text-red { color: var(--danger); font-weight: bold; }
-        .text-green { color: var(--success); font-weight: bold; }
+        .text-red {
+            color: var(--danger);
+            font-weight: bold;
+        }
+        .text-green {
+            color: var(--success);
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
             <h1>Demonstrações Financeiras Pessoais</h1>
-            <p>Controle Inteligente: Planejamento Orçamentário vs. Fluxo Real</p>
+            <p>Controle de Fluxo de Caixa: Orçado vs. Realizado</p>
         </header>
 
         <div class="filter-container">
@@ -251,20 +289,20 @@
             </div>
         </div>
 
-        <!-- DRE / Comparativo Orçado vs Realizado -->
+        <!-- Tabela Comparativa: Orçado vs Realizado -->
         <div class="card">
-            <h2>DRE Simplificado & Comparativo do Mês</h2>
+            <h2>Fluxo de Caixa: Comparativo Orçado vs. Realizado do Mês</h2>
             <table>
                 <thead>
                     <tr>
                         <th>Tipo / Categoria</th>
-                        <th>Orçado</th>
-                        <th>Realizado</th>
+                        <th>Orçado (Meta)</th>
+                        <th>Realizado (Efetivo)</th>
                         <th>Diferença</th>
                         <th>Ações (Orçamento)</th>
                     </tr>
                 </thead>
-                <tbody id="tabelaDRE"></tbody>
+                <tbody id="tabelaOrcadoRealizado"></tbody>
             </table>
         </div>
 
@@ -294,7 +332,7 @@
         const orcamentoForm = document.getElementById('orcamentoForm');
         const transacaoForm = document.getElementById('transacaoForm');
         const tabelaCaixa = document.getElementById('tabelaCaixa');
-        const tabelaDRE = document.getElementById('tabelaDRE');
+        const tabelaOrcadoRealizado = document.getElementById('tabelaOrcadoRealizado');
         const totReceitas = document.getElementById('totReceitas');
         const totDespesas = document.getElementById('totDespesas');
         const totSaldo = document.getElementById('totSaldo');
@@ -313,6 +351,7 @@
             e.preventDefault();
             const editId = document.getElementById('editOrcId').value;
             const mesAtualNoForm = orcMes.value;
+
             const novoOrc = {
                 id: editId ? Number(editId) : Date.now(),
                 mes: mesAtualNoForm,
@@ -332,11 +371,9 @@
             }
 
             localStorage.setItem('orcamentos', JSON.stringify(orcamentos));
-            
             filtroMes.value = mesAtualNoForm;
             orcMes.value = mesAtualNoForm;
             transMes.value = mesAtualNoForm;
-
             renderizar();
             orcamentoForm.reset();
             orcMes.value = mesAtualNoForm;
@@ -346,6 +383,7 @@
             e.preventDefault();
             const editId = document.getElementById('editTransId').value;
             const mesAtualNoForm = transMes.value;
+
             const novaTrans = {
                 id: editId ? Number(editId) : Date.now(),
                 mes: mesAtualNoForm,
@@ -365,11 +403,9 @@
             }
 
             localStorage.setItem('transacoes', JSON.stringify(transacoes));
-
             filtroMes.value = mesAtualNoForm;
             orcMes.value = mesAtualNoForm;
             transMes.value = mesAtualNoForm;
-
             renderizar();
             transacaoForm.reset();
             transMes.value = mesAtualNoForm;
@@ -439,7 +475,7 @@
 
         function renderizar() {
             tabelaCaixa.innerHTML = '';
-            tabelaDRE.innerHTML = '';
+            tabelaOrcadoRealizado.innerHTML = '';
             let rTotal = 0, dTotal = 0;
             const mesAtual = filtroMes.value;
 
@@ -471,33 +507,33 @@
             totSaldo.innerText = saldo.toFixed(2);
             totSaldo.style.color = saldo >= 0 ? '#16a34a' : '#ef4444';
 
-            let itensDRE = {};
+            let itensFluxo = {};
 
             orcamentos.filter(o => o.mes === mesAtual).forEach(o => {
                 let chave = o.tipo + '|' + o.categoria;
-                if(!itensDRE[chave]) {
-                    itensDRE[chave] = { id: o.id, tipo: o.tipo, categoria: o.categoria, orcado: o.valor, realizado: 0 };
+                if(!itensFluxo[chave]) {
+                    itensFluxo[chave] = { id: o.id, tipo: o.tipo, categoria: o.categoria, orcado: o.valor, realizado: 0 };
                 } else {
-                    itensDRE[chave].orcado += o.valor;
+                    itensFluxo[chave].orcado += o.valor;
                 }
             });
 
             transacoes.filter(t => t.mes === mesAtual).forEach(t => {
                 let chave = t.tipo + '|' + t.categoria;
-                if(!itensDRE[chave]) {
-                    itensDRE[chave] = { tipo: t.tipo, categoria: t.categoria, orcado: 0, realizado: t.valor };
+                if(!itensFluxo[chave]) {
+                    itensFluxo[chave] = { tipo: t.tipo, categoria: t.categoria, orcado: 0, realizado: t.valor };
                 } else {
-                    itensDRE[chave].realizado += t.valor;
+                    itensFluxo[chave].realizado += t.valor;
                 }
             });
 
-            for(let chave in itensDRE) {
-                let item = itensDRE[chave];
+            for(let chave in itensFluxo) {
+                let item = itensFluxo[chave];
                 let diff = item.tipo === 'Receita' ? (item.realizado - item.orcado) : (item.orcado - item.realizado);
                 let corClasse = item.tipo === 'Despesa' ? 'text-red' : 'text-green';
 
-                const trDRE = document.createElement('tr');
-                trDRE.innerHTML = `
+                const trFluxo = document.createElement('tr');
+                trFluxo.innerHTML = `
                     <td><span class="${corClasse}">[${item.tipo}]</span> ${item.categoria}</td>
                     <td>R$ ${item.orcado.toFixed(2)}</td>
                     <td>R$ ${item.realizado.toFixed(2)}</td>
@@ -506,10 +542,10 @@
                         ${item.id ? `<button class="btn-warning" onclick="editarOrcamento(${item.id})">Editar</button> <button class="btn-danger" onclick="deletarOrcamento(${item.id})">Excluir</button>` : '-'}
                     </td>
                 `;
-                tabelaDRE.appendChild(trDRE);
+                tabelaOrcadoRealizado.appendChild(trFluxo);
             }
         }
-        
+
         mudarMesFiltro();
     </script>
 </body>

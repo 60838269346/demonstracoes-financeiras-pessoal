@@ -23,7 +23,7 @@
             padding: 20px;
         }
         .container {
-            max-width: 1500px;
+            max-width: 1600px;
             margin: 0 auto;
         }
         header {
@@ -88,7 +88,7 @@
         }
         .btn-danger {
             background-color: var(--danger) !important;
-            padding: 5px 10px;
+            padding: 6px 12px;
             width: auto;
             font-size: 0.85rem;
         }
@@ -97,7 +97,7 @@
         }
         .btn-warning {
             background-color: var(--warning) !important;
-            padding: 5px 10px;
+            padding: 6px 12px;
             width: auto;
             font-size: 0.85rem;
             color: white;
@@ -109,25 +109,27 @@
             width: 100%;
             border-collapse: collapse;
             margin-top: 10px;
-            font-size: 0.78rem;
+            font-size: 0.82rem;
         }
         th, td {
-            padding: 6px 8px;
+            padding: 10px 10px;
             text-align: right;
             border-bottom: 1px solid var(--border);
             border-right: 1px solid #f1f5f9;
+            height: 25px;
         }
         th:first-child, td:first-child {
             text-align: left;
             position: sticky;
             left: 0;
             background: #ffffff;
-            z-index: 1;
-            min-width: 220px;
+            z-index: 2;
+            min-width: 240px;
             border-right: 2px solid var(--border);
         }
         th {
             background-color: #f1f5f9;
+            font-weight: 700;
         }
         .text-red {
             color: var(--danger);
@@ -145,7 +147,7 @@
             font-weight: bold;
         }
         .row-sub {
-            padding-left: 15px !important;
+            padding-left: 20px !important;
         }
     </style>
 </head>
@@ -310,7 +312,6 @@
                             <th colspan="2" style="text-align: center;">Dezembro</th>
                         </tr>
                         <tr>
-                            <!-- Subcabeçalhos de cada mês -->
                             <th>Orç.</th><th>Real.</th>
                             <th>Orç.</th><th>Real.</th>
                             <th>Orç.</th><th>Real.</th>
@@ -530,7 +531,6 @@
             tabelaOrcamentosCadastrados.innerHTML = '';
             tabelaAnaliticaAno.innerHTML = '';
 
-            // Extrato de Lançamentos Reais
             transacoes.forEach(t => {
                 const corTipo = t.tipo === 'Despesa' ? 'text-red' : 'text-green';
                 const tr = document.createElement('tr');
@@ -548,7 +548,6 @@
                 tabelaCaixa.appendChild(tr);
             });
 
-            // Orçamentos Cadastrados
             orcamentos.forEach(o => {
                 const corTipo = o.tipo === 'Despesa' ? 'text-red' : 'text-green';
                 const tr = document.createElement('tr');
@@ -566,7 +565,6 @@
                 tabelaOrcamentosCadastrados.appendChild(tr);
             });
 
-            // Função para renderizar linhas com valores Orçado/Realizado lado a lado por mês
             function criarLinhaHorizontal(titulo, categoria, tipoCalculo, isGrupo = false, classeExtra = '') {
                 const tr = document.createElement('tr');
                 if(isGrupo) tr.className = 'row-group';
@@ -586,7 +584,7 @@
                         transacoes.filter(t => t.mes === mes && contasReceita.includes(t.categoria)).forEach(t => valReal += t.valor);
                     } else if(tipoCalculo === 'total_despesas') {
                         orcamentos.filter(o => o.mes === mes && contasDespesa.includes(o.categoria)).forEach(o => valOrc += o.valor);
-                        transacoes.filter(t => t.mes === mes && contasDespesa.includes(o.categoria)).forEach(t => valReal += t.valor);
+                        transacoes.filter(t => t.mes === mes && contasDespesa.includes(t.categoria)).forEach(t => valReal += t.valor);
                     } else if(tipoCalculo === 'sobra_bruta') {
                         let recOrc = 0, despOrc = 0, recReal = 0, despReal = 0;
                         orcamentos.filter(o => o.mes === mes && contasReceita.includes(o.categoria)).forEach(o => recOrc += o.valor);

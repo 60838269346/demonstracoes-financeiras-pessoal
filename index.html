@@ -179,6 +179,10 @@
                         </select>
                     </div>
                     <div class="form-group">
+                        <label>Observação / Descrição da Meta</label>
+                        <input type="text" id="orcDescricao" placeholder="Ex: Meta mercado, Salário base..." required>
+                    </div>
+                    <div class="form-group">
                         <label>Valor Orçado (R$)</label>
                         <input type="number" step="0.01" id="orcValor" placeholder="0.00" required>
                     </div>
@@ -294,10 +298,10 @@
                 id: Date.now(),
                 mes: document.getElementById('orcMes').value,
                 tipo: document.getElementById('orcTipo').value,
-                categoria: document.getElementById('orcategoria').value,
+                categoria: document.getElementById('orcCategoria').value,
+                descricao: document.getElementById('orcDescricao').value,
                 valor: parseFloat(document.getElementById('orcValor').value)
             };
-            orcamentos = orcamentos.filter(o => !(o.mes === novoOrc.mes && o.tipo === novoOrc.tipo && o.categoria === novoOrc.categoria));
             orcamentos.push(novoOrc);
             localStorage.setItem('orcamentos', JSON.stringify(orcamentos));
             renderizar();
@@ -362,7 +366,7 @@
             orcamentos.filter(o => o.mes === mesAtual).forEach(o => {
                 let chave = o.tipo + '|' + o.categoria;
                 if(!itensDRE[chave]) itensDRE[chave] = { tipo: o.tipo, categoria: o.categoria, orcado: o.valor, realizado: 0 };
-                else itensDRE[chave].orcado = o.valor;
+                else itensDRE[chave].orcado += o.valor;
             });
 
             transacoes.filter(t => t.mes === mesAtual).forEach(t => {

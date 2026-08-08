@@ -119,7 +119,7 @@
 
         <div class="filter-container">
             <label for="filtroMes" style="margin:0; white-space:nowrap;">Visualizar Mês:</label>
-            <select id="filtroMes" onchange="renderizar()">
+            <select id="filtroMes" onchange="mudarMesFiltro()">
                 <option value="Janeiro">Janeiro</option>
                 <option value="Fevereiro">Fevereiro</option>
                 <option value="Março">Março</option>
@@ -261,7 +261,6 @@
                         <th>Orçado</th>
                         <th>Realizado</th>
                         <th>Diferença</th>
-                        <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody id="tabelaDRE"></tbody>
@@ -299,13 +298,23 @@
         const totDespesas = document.getElementById('totDespesas');
         const totSaldo = document.getElementById('totSaldo');
         const filtroMes = document.getElementById('filtroMes');
+        const orcMes = document.getElementById('orcMes');
+        const transMes = document.getElementById('transMes');
+
+        function mudarMesFiltro() {
+            const mesSelecionado = filtroMes.value;
+            orcMes.value = mesSelecionado;
+            transMes.value = mesSelecionado;
+            renderizar();
+        }
 
         orcamentoForm.addEventListener('submit', function(e) {
             e.preventDefault();
             const editId = document.getElementById('editOrcId').value;
+            const mesAtualNoForm = orcMes.value;
             const novoOrc = {
                 id: editId ? Number(editId) : Date.now(),
-                mes: document.getElementById('orcMes').value,
+                mes: mesAtualNoForm,
                 tipo: document.getElementById('orcTipo').value,
                 categoria: document.getElementById('orcCategoria').value,
                 descricao: document.getElementById('orcDescricao').value,
@@ -322,16 +331,24 @@
             }
 
             localStorage.setItem('orcamentos', JSON.stringify(orcamentos));
+            
+            // Mantém o mês ativo nos selects
+            filtroMes.value = mesAtualNoForm;
+            orcMes.value = mesAtualNoForm;
+            transMes.value = mesAtualNoForm;
+
             renderizar();
             orcamentoForm.reset();
+            orcMes.value = mesAtualNoForm; // Restaura após reset
         });
 
         transacaoForm.addEventListener('submit', function(e) {
             e.preventDefault();
             const editId = document.getElementById('editTransId').value;
+            const mesAtualNoForm = transMes.value;
             const novaTrans = {
                 id: editId ? Number(editId) : Date.now(),
-                mes: document.getElementById('transMes').value,
+                mes: mesAtualNoForm,
                 tipo: document.getElementById('transTipo').value,
                 categoria: document.getElementById('transCategoria').value,
                 descricao: document.getElementById('transDescricao').value,
@@ -348,8 +365,15 @@
             }
 
             localStorage.setItem('transacoes', JSON.stringify(transacoes));
+
+            // Mantém o mês ativo nos selects
+            filtroMes.value = mesAtualNoForm;
+            orcMes.value = mesAtualNoForm;
+            transMes.value = mesAtualNoForm;
+
             renderizar();
             transacaoForm.reset();
+            transMes.value = mesAtualNoForm; // Restaura após reset
         });
 
         function editarOrcamento(id) {
@@ -452,14 +476,20 @@
 
             orcamentos.filter(o => o.mes === mesAtual).forEach(o => {
                 let chave = o.tipo + '|' + o.categoria;
-                if(!itensDRE[chave]) itensDRE[chave] = { id: o.id, tipo: o.tipo, categoria: o.categoria, orcado: o.valor, realizado: 0 };
-                else itensDRE[chave].orcado += o.valor;
+                if(!itensDRE[chave]) {
+                    itensDRE[chave] = { tipo: o.tipo, categoria: o.categoria, orcado: o.valor, realizado: 0 };
+                } else {
+                    itensDRE[chave].orcado += o.valor;
+                }
             });
 
             transacoes.filter(t => t.mes === mesAtual).forEach(t => {
                 let chave = t.tipo + '|' + t.categoria;
-                if(!itensDRE[chave]) itensDRE[chave] = { tipo: t.tipo, categoria: t.categoria, orcado: 0, realizado: t.valor };
-                else itensDRE[chave].realizado += t.valor;
+                if(!itensDRE[chave]) {
+                    itensDRE[chave] = { tipo: t.tipo, categoria: t.categoria, orcado: 0, realizado: t.valor };
+                } else {
+                    itensDRE[chave].realizado += t.valor;
+                }
             });
 
             for(let chave in itensDRE) {
@@ -473,14 +503,13 @@
                     <td>R$ ${item.orcado.toFixed(2)}</td>
                     <td>R$ ${item.realizado.toFixed(2)}</td>
                     <td class="${diff >= 0 ? 'text-green' : 'text-red'}">R$ ${diff.toFixed(2)}</td>
-                    <td>
-                        ${item.id ? `<button class="btn-warning" onclick="editarOrcamento(${item.id})">Editar</button> <button class="btn-danger" onclick="deletarOrcamento(${item.id})">Excluir</button>` : '-'}
-                    </td>
                 `;
                 tabelaDRE.appendChild(trDRE);
             }
         }
-        renderizar();
+        
+        // Inicializa com o mês padrão
+        mudarMesFiltro();
     </script>
 </body>
 </html>

@@ -23,7 +23,7 @@
             padding: 20px;
         }
         .container {
-            max-width: 1200px;
+            max-width: 1350px;
             margin: 0 auto;
         }
         header {
@@ -109,10 +109,10 @@
             width: 100%;
             border-collapse: collapse;
             margin-top: 10px;
-            font-size: 0.9rem;
+            font-size: 0.82rem;
         }
         th, td {
-            padding: 10px;
+            padding: 8px;
             text-align: left;
             border-bottom: 1px solid var(--border);
         }
@@ -130,13 +130,20 @@
         .table-container {
             overflow-x: auto;
         }
+        .row-group {
+            background-color: #f8fafc;
+            font-weight: bold;
+        }
+        .row-sub {
+            padding-left: 20px !important;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
             <h1>Demonstrações Financeiras Pessoais</h1>
-            <p>Fluxo de Caixa Projetado: Visão Mês a Mês</p>
+            <p>Fluxo de Caixa Analítico Completo: Visão Mês a Mês</p>
         </header>
 
         <div class="grid">
@@ -165,26 +172,37 @@
                     <div class="form-group">
                         <label>Tipo</label>
                         <select id="orcTipo">
-                            <option value="Despesa">Despesa (Gasto)</option>
                             <option value="Receita">Receita (Entrada)</option>
+                            <option value="Despesa">Despesa (Gasto / Saída)</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Categoria</label>
+                        <label>Conta Analítica</label>
                         <select id="orcCategoria">
-                            <option value="Alimentação">Alimentação</option>
-                            <option value="Moradia">Moradia</option>
-                            <option value="Transporte">Transporte</option>
-                            <option value="Lazer">Lazer</option>
-                            <option value="Saúde">Saúde</option>
-                            <option value="Educação">Educação</option>
-                            <option value="Salário/Renda">Salário/Renda</option>
-                            <option value="Outros">Outros</option>
+                            <optgroup label="RECEITAS">
+                                <option value="1 Receita bruta">1 Receita bruta</option>
+                                <option value="2 outras receitas">2 outras receitas</option>
+                            </optgroup>
+                            <optgroup label="DESPESAS">
+                                <option value="1 Aluguel">1 Aluguel</option>
+                                <option value="2 cartão de crédito itau">2 cartão de crédito itau</option>
+                                <option value="3 Cartão Mercado Pago">3 Cartão Mercado Pago</option>
+                                <option value="4 Cartão Magalu">4 Cartão Magalu</option>
+                                <option value="5 Supermercado">5 Supermercado</option>
+                                <option value="6 Depesas fixas">6 Depesas fixas</option>
+                                <option value="7 Despesas Variaveis">7 Despesas Variaveis</option>
+                            </optgroup>
+                            <optgroup label="DETALHAMENTO SEMANAL">
+                                <option value="1 Gasto semana 1">1 Gasto semana 1</option>
+                                <option value="2 Gasto Semana 2">2 Gasto Semana 2</option>
+                                <option value="3 Gasto semana 3">3 Gasto semana 3</option>
+                                <option value="4 Gasto semana 4">4 Gasto semana 4</option>
+                            </optgroup>
                         </select>
                     </div>
                     <div class="form-group">
                         <label>Observação / Descrição da Meta</label>
-                        <input type="text" id="orcDescricao" placeholder="Ex: Meta mercado, Salário base..." required>
+                        <input type="text" id="orcDescricao" placeholder="Ex: Salário base, Compra específica..." required>
                     </div>
                     <div class="form-group">
                         <label>Valor Orçado (R$)</label>
@@ -219,21 +237,32 @@
                     <div class="form-group">
                         <label>Tipo</label>
                         <select id="transTipo">
-                            <option value="Despesa">Despesa (Gasto)</option>
                             <option value="Receita">Receita (Entrada)</option>
+                            <option value="Despesa">Despesa (Gasto / Saída)</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Categoria</label>
+                        <label>Conta Analítica</label>
                         <select id="transCategoria">
-                            <option value="Alimentação">Alimentação</option>
-                            <option value="Moradia">Moradia</option>
-                            <option value="Transporte">Transporte</option>
-                            <option value="Lazer">Lazer</option>
-                            <option value="Saúde">Saúde</option>
-                            <option value="Educação">Educação</option>
-                            <option value="Salário/Renda">Salário/Renda</option>
-                            <option value="Outros">Outros</option>
+                            <optgroup label="RECEITAS">
+                                <option value="1 Receita bruta">1 Receita bruta</option>
+                                <option value="2 outras receitas">2 outras receitas</option>
+                            </optgroup>
+                            <optgroup label="DESPESAS">
+                                <option value="1 Aluguel">1 Aluguel</option>
+                                <option value="2 cartão de crédito itau">2 cartão de crédito itau</option>
+                                <option value="3 Cartão Mercado Pago">3 Cartão Mercado Pago</option>
+                                <option value="4 Cartão Magalu">4 Cartão Magalu</option>
+                                <option value="5 Supermercado">5 Supermercado</option>
+                                <option value="6 Depesas fixas">6 Depesas fixas</option>
+                                <option value="7 Despesas Variaveis">7 Despesas Variaveis</option>
+                            </optgroup>
+                            <optgroup label="DETALHAMENTO SEMANAL">
+                                <option value="1 Gasto semana 1">1 Gasto semana 1</option>
+                                <option value="2 Gasto Semana 2">2 Gasto Semana 2</option>
+                                <option value="3 Gasto semana 3">3 Gasto semana 3</option>
+                                <option value="4 Gasto semana 4">4 Gasto semana 4</option>
+                            </optgroup>
                         </select>
                     </div>
                     <div class="form-group">
@@ -249,23 +278,29 @@
             </div>
         </div>
 
-        <!-- Tabela Visão Anual: Mês a Mês -->
+        <!-- Tabela Visão Analítica Mês a Mês -->
         <div class="card">
-            <h2>Projeção Anual: Fluxo de Caixa Mês a Mês (Orçado vs. Realizado)</h2>
+            <h2>Projeção Analítica Anual: Fluxo de Caixa Mês a Mês (Orçado vs. Realizado)</h2>
             <div class="table-container">
                 <table>
                     <thead>
                         <tr>
-                            <th>Mês</th>
-                            <th>Total Receitas (Orçado)</th>
-                            <th>Total Receitas (Real)</th>
-                            <th>Total Despesas (Orçado)</th>
-                            <th>Total Despesas (Real)</th>
-                            <th>Saldo (Orçado)</th>
-                            <th>Saldo (Real)</th>
+                            <th>Contas / Categorias</th>
+                            <th>Janeiro</th>
+                            <th>Fevereiro</th>
+                            <th>Março</th>
+                            <th>Abril</th>
+                            <th>Maio</th>
+                            <th>Junho</th>
+                            <th>Julho</th>
+                            <th>Agosto</th>
+                            <th>Setembro</th>
+                            <th>Outubro</th>
+                            <th>Novembro</th>
+                            <th>Dezembro</th>
                         </tr>
                     </thead>
-                    <tbody id="tabelaAnoMes"></tbody>
+                    <tbody id="tabelaAnaliticaAno"></tbody>
                 </table>
             </div>
         </div>
@@ -320,11 +355,28 @@
             "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
         ];
 
+        const contasReceita = ["1 Receita bruta", "2 outras receitas"];
+        const contasDespesa = [
+            "1 Aluguel", 
+            "2 cartão de crédito itau", 
+            "3 Cartão Mercado Pago", 
+            "4 Cartão Magalu", 
+            "5 Supermercado", 
+            "6 Depesas fixas", 
+            "7 Despesas Variaveis"
+        ];
+        const contasSemanais = [
+            "1 Gasto semana 1", 
+            "2 Gasto Semana 2", 
+            "3 Gasto semana 3", 
+            "4 Gasto semana 4"
+        ];
+
         const orcamentoForm = document.getElementById('orcamentoForm');
         const transacaoForm = document.getElementById('transacaoForm');
         const tabelaCaixa = document.getElementById('tabelaCaixa');
         const tabelaOrcamentosCadastrados = document.getElementById('tabelaOrcamentosCadastrados');
-        const tabelaAnoMes = document.getElementById('tabelaAnoMes');
+        const tabelaAnaliticaAno = document.getElementById('tabelaAnaliticaAno');
         const orcMes = document.getElementById('orcMes');
         const transMes = document.getElementById('transMes');
 
@@ -451,9 +503,9 @@
         function renderizar() {
             tabelaCaixa.innerHTML = '';
             tabelaOrcamentosCadastrados.innerHTML = '';
-            tabelaAnoMes.innerHTML = '';
+            tabelaAnaliticaAno.innerHTML = '';
 
-            // Renderizar Extrato de Transações
+            // Extrato de Lançamentos Reais
             transacoes.forEach(t => {
                 const corTipo = t.tipo === 'Despesa' ? 'text-red' : 'text-green';
                 const tr = document.createElement('tr');
@@ -471,7 +523,7 @@
                 tabelaCaixa.appendChild(tr);
             });
 
-            // Renderizar Orçamentos Cadastrados
+            // Orçamentos Cadastrados
             orcamentos.forEach(o => {
                 const corTipo = o.tipo === 'Despesa' ? 'text-red' : 'text-green';
                 const tr = document.createElement('tr');
@@ -489,35 +541,101 @@
                 tabelaOrcamentosCadastrados.appendChild(tr);
             });
 
-            // Renderizar Tabela Mês a Mês (Anual)
-            mesesAno.forEach(mes => {
-                let recOrc = 0, recReal = 0, despOrc = 0, despReal = 0;
+            // Função auxiliar para montar as linhas da tabela analítica
+            function criarLinhaAnalitica(titulo, categoria, tipoValor, isGrupo = false, classeExtra = '') {
+                const tr = document.createElement('tr');
+                if(isGrupo) tr.className = 'row-group';
+                if(classeExtra) tr.className += ' ' + classeExtra;
 
-                orcamentos.filter(o => o.mes === mes).forEach(o => {
-                    if(o.tipo === 'Receita') recOrc += o.valor;
-                    if(o.tipo === 'Despesa') despOrc += o.valor;
+                let html = `<td>${titulo}</td>`;
+
+                mesesAno.forEach(mes => {
+                    let totalVal = 0;
+                    if(tipoValor === 'orcado') {
+                        orcamentos.filter(o => o.mes === mes && o.categoria === categoria).forEach(o => totalVal += o.valor);
+                    } else if(tipoValor === 'realizado') {
+                        transacoes.filter(t => t.mes === mes && t.categoria === categoria).forEach(t => totalVal += t.valor);
+                    } else if(tipoValor === 'total_rec_orc') {
+                        orcamentos.filter(o => o.mes === mes && contasReceita.includes(o.categoria)).forEach(o => totalVal += o.valor);
+                    } else if(tipoValor === 'total_rec_real') {
+                        transacoes.filter(t => t.mes === mes && contasReceita.includes(t.categoria)).forEach(t => totalVal += t.valor);
+                    } else if(tipoValor === 'total_desp_orc') {
+                        orcamentos.filter(o => o.mes === mes && contasDespesa.includes(o.categoria)).forEach(o => totalVal += o.valor);
+                    } else if(tipoValor === 'total_desp_real') {
+                        transacoes.filter(t => t.mes === mes && contasDespesa.includes(t.categoria)).forEach(t => totalVal += t.valor);
+                    } else if(tipoValor === 'sobra_bruta_orc') {
+                        let rec = 0, desp = 0;
+                        orcamentos.filter(o => o.mes === mes && contasReceita.includes(o.categoria)).forEach(o => rec += o.valor);
+                        orcamentos.filter(o => o.mes === mes && contasDespesa.includes(o.categoria)).forEach(o => desp += o.valor);
+                        totalVal = rec - desp;
+                    } else if(tipoValor === 'sobra_bruta_real') {
+                        let rec = 0, desp = 0;
+                        transacoes.filter(t => t.mes === mes && contasReceita.includes(t.categoria)).forEach(t => rec += t.valor);
+                        transacoes.filter(t => t.mes === mes && contasDespesa.includes(t.categoria)).forEach(t => desp += t.valor);
+                        totalVal = rec - desp;
+                    } else if(tipoValor === 'total_semanal_orc') {
+                        orcamentos.filter(o => o.mes === mes && contasSemanais.includes(o.categoria)).forEach(o => totalVal += o.valor);
+                    } else if(tipoValor === 'total_semanal_real') {
+                        transacoes.filter(t => t.mes === mes && contasSemanais.includes(t.categoria)).forEach(t => totalVal += t.valor);
+                    } else if(tipoValor === 'sobra_liq_orc') {
+                        let rec = 0, desp = 0, sem = 0;
+                        orcamentos.filter(o => o.mes === mes && contasReceita.includes(o.categoria)).forEach(o => rec += o.valor);
+                        orcamentos.filter(o => o.mes === mes && contasDespesa.includes(o.categoria)).forEach(o => desp += o.valor);
+                        orcamentos.filter(o => o.mes === mes && contasSemanais.includes(o.categoria)).forEach(o => sem += o.valor);
+                        totalVal = (rec - desp) - sem;
+                    } else if(tipoValor === 'sobra_liq_real') {
+                        let rec = 0, desp = 0, sem = 0;
+                        transacoes.filter(t => t.mes === mes && contasReceita.includes(t.categoria)).forEach(t => rec += t.valor);
+                        transacoes.filter(t => t.mes === mes && contasDespesa.includes(t.categoria)).forEach(t => desp += t.valor);
+                        transacoes.filter(t => t.mes === mes && contasSemanais.includes(t.categoria)).forEach(t => sem += t.valor);
+                        totalVal = (rec - desp) - sem;
+                    }
+
+                    let corEstilo = '';
+                    if(tipoValor.includes('sobra') || tipoValor.includes('total')) {
+                        corEstilo = `style="font-weight: bold; color: ${totalVal >= 0 ? '#16a34a' : '#ef4444'};"`;
+                    }
+                    html += `<td ${corEstilo}>R$ ${totalVal.toFixed(2)}</td>`;
                 });
 
-                transacoes.filter(t => t.mes === mes).forEach(t => {
-                    if(t.tipo === 'Receita') recReal += t.valor;
-                    if(t.tipo === 'Despesa') despReal += t.valor;
-                });
+                tr.innerHTML = html;
+                tabelaAnaliticaAno.appendChild(tr);
+            }
 
-                let saldoOrc = recOrc - despOrc;
-                let saldoReal = recReal - despReal;
+            // 1. RECEITA
+            criarLinhaAnalitica("RECEITA:", "", "", true);
+            criarLinhaAnalitica("1 Receita bruta (Orçado)", "1 Receita bruta", "orcado", false, "row-sub");
+            criarLinhaAnalitica("1 Receita bruta (Realizado)", "1 Receita bruta", "realizado", false, "row-sub");
+            criarLinhaAnalitica("2 outras receitas (Orçado)", "2 outras receitas", "orcado", false, "row-sub");
+            criarLinhaAnalitica("2 outras receitas (Realizado)", "2 outras receitas", "realizado", false, "row-sub");
+            criarLinhaAnalitica("Total Receitas (Orçado)", "", "total_rec_orc", true, "text-green");
+            criarLinhaAnalitica("Total Receitas (Realizado)", "", "total_rec_real", true, "text-green");
 
-                const trAno = document.createElement('tr');
-                trAno.innerHTML = `
-                    <td><strong>${mes}</strong></td>
-                    <td>R$ ${recOrc.toFixed(2)}</td>
-                    <td class="text-green">R$ ${recReal.toFixed(2)}</td>
-                    <td>R$ ${despOrc.toFixed(2)}</td>
-                    <td class="text-red">R$ ${despReal.toFixed(2)}</td>
-                    <td style="font-weight: bold; color: ${saldoOrc >= 0 ? '#16a34a' : '#ef4444'}">R$ ${saldoOrc.toFixed(2)}</td>
-                    <td style="font-weight: bold; color: ${saldoReal >= 0 ? '#16a34a' : '#ef4444'}">R$ ${saldoReal.toFixed(2)}</td>
-                `;
-                tabelaAnoMes.appendChild(trAno);
+            // 2. DESPESAS
+            criarLinhaAnalitica("DESPESAS:", "", "", true);
+            contasDespesa.forEach(cat => {
+                criarLinhaAnalitica(`${cat} (Orçado)`, cat, "orcado", false, "row-sub");
+                criarLinhaAnalitica(`${cat} (Realizado)`, cat, "realizado", false, "row-sub");
             });
+            criarLinhaAnalitica("Total Despesas (Orçado)", "", "total_desp_orc", true, "text-red");
+            criarLinhaAnalitica("Total Despesas (Realizado)", "", "total_desp_real", true, "text-red");
+
+            // = SOBRA BRUTA
+            criarLinhaAnalitica("= SOBRA BRUTA (Orçado)", "", "sobra_bruta_orc", true);
+            criarLinhaAnalitica("= SOBRA BRUTA (Realizado)", "", "sobra_bruta_real", true);
+
+            // 3. DETALHAMENTO SEMANAL
+            criarLinhaAnalitica("DETALHAMENTO SEMANAL:", "", "", true);
+            contasSemanais.forEach(cat => {
+                criarLinhaAnalitica(`${cat} (Orçado)`, cat, "orcado", false, "row-sub");
+                criarLinhaAnalitica(`${cat} (Realizado)`, cat, "realizado", false, "row-sub");
+            });
+            criarLinhaAnalitica("Total Gastos Semanais (Orçado)", "", "total_semanal_orc", true);
+            criarLinhaAnalitica("Total Gastos Semanais (Realizado)", "", "total_semanal_real", true);
+
+            // = SOBRA LIQUIDA (GUARDAR)
+            criarLinhaAnalitica("= SOBRA LIQUIDA( Guardar ) (Orçado)", "", "sobra_liq_orc", true);
+            criarLinhaAnalitica("= SOBRA LIQUIDA( Guardar ) (Realizado)", "", "sobra_liq_real", true);
         }
 
         renderizar();

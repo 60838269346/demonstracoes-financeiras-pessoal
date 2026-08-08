@@ -131,7 +131,7 @@
         </div>
 
         <div class="summary-box">
-            <span>Total Receitas (Real): R$ <span id="totReceitas">0.00</span></span>
+            <span>Total Receitas (Real): R$ <span id="totReceitas" class="text-green">0.00</span></span>
             <span>Total Despesas (Real): R$ <span id="totDespesas" class="text-red">0.00</span></span>
             <span>Saldo Atual: R$ <span id="totSaldo">0.00</span></span>
         </div>
@@ -228,8 +228,8 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Descrição Detalhada</label>
-                        <input type="text" id="transDescricao" placeholder="Ex: Supermercado, Aluguel..." required>
+                        <label>Observação / Descrição Detalhada</label>
+                        <input type="text" id="transDescricao" placeholder="Ex: Supermercado Extra, Aluguel..." required>
                     </div>
                     <div class="form-group">
                         <label>Valor Real (R$)</label>
@@ -265,7 +265,7 @@
                         <th>Mês</th>
                         <th>Tipo</th>
                         <th>Categoria</th>
-                        <th>Descrição</th>
+                        <th>Observação</th>
                         <th>Valor</th>
                         <th>Ação</th>
                     </tr>
@@ -294,7 +294,7 @@
                 id: Date.now(),
                 mes: document.getElementById('orcMes').value,
                 tipo: document.getElementById('orcTipo').value,
-                categoria: document.getElementById('orcCategoria').value,
+                categoria: document.getElementById('orcategoria').value,
                 valor: parseFloat(document.getElementById('orcValor').value)
             };
             orcamentos = orcamentos.filter(o => !(o.mes === novoOrc.mes && o.tipo === novoOrc.tipo && o.categoria === novoOrc.categoria));
@@ -357,7 +357,6 @@
             totSaldo.innerText = saldo.toFixed(2);
             totSaldo.style.color = saldo >= 0 ? '#16a34a' : '#ef4444';
 
-            // Coleta todas as chaves únicas de Orçamento e Realizado para o mês
             let itensDRE = {};
 
             orcamentos.filter(o => o.mes === mesAtual).forEach(o => {

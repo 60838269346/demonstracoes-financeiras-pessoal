@@ -43,6 +43,7 @@
             border-radius: 12px;
             box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
             border: 1px solid var(--border);
+            margin-bottom: 20px;
         }
         .card h2 { margin-top: 0; font-size: 1.25rem; border-bottom: 2px solid var(--border); padding-bottom: 10px; }
         .form-group {
@@ -104,13 +105,12 @@
     <div class="container">
         <header>
             <h1>Demonstrações Financeiras Pessoais</h1>
-            <p>Controle Inteligente: Orçamento vs. Realidade (Fluxo de Caixa & DRE por Mês)</p>
+            <p>Controle Inteligente: Planejamento Orçamentário vs. Fluxo Real</p>
         </header>
 
         <div class="filter-container">
-            <label for="filtroMes" style="margin:0; white-space:nowrap;">Filtrar DRE por Mês:</label>
+            <label for="filtroMes" style="margin:0; white-space:nowrap;">Visualizar Mês:</label>
             <select id="filtroMes" onchange="renderizar()">
-                <option value="Todos">Todos os Meses (Geral)</option>
                 <option value="Janeiro">Janeiro</option>
                 <option value="Fevereiro">Fevereiro</option>
                 <option value="Março">Março</option>
@@ -127,19 +127,60 @@
         </div>
 
         <div class="summary-box">
-            <span>Total Receitas: R$ <span id="totReceitas">0.00</span></span>
-            <span>Total Despesas: R$ <span id="totDespesas">0.00</span></span>
+            <span>Total Receitas (Real): R$ <span id="totReceitas">0.00</span></span>
+            <span>Total Despesas (Real): R$ <span id="totDespesas">0.00</span></span>
             <span>Saldo Atual: R$ <span id="totSaldo">0.00</span></span>
         </div>
 
         <div class="grid">
-            <!-- Formulário de Lançamentos -->
+            <!-- BLOCO 1: Planejamento Orçamentário -->
             <div class="card">
-                <h2>Novo Lançamento</h2>
+                <h2>1. Definir Orçamento Mensal (Meta)</h2>
+                <form id="orcamentoForm">
+                    <div class="form-group">
+                        <label>Mês de Referência</label>
+                        <select id="orcMes">
+                            <option value="Janeiro">Janeiro</option>
+                            <option value="Fevereiro">Fevereiro</option>
+                            <option value="Março">Março</option>
+                            <option value="Abril">Abril</option>
+                            <option value="Maio">Maio</option>
+                            <option value="Junho">Junho</option>
+                            <option value="Julho">Julho</option>
+                            <option value="Agosto">Agosto</option>
+                            <option value="Setembro">Setembro</option>
+                            <option value="Outubro">Outubro</option>
+                            <option value="Novembro">Novembro</option>
+                            <option value="Dezembro">Dezembro</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Categoria</label>
+                        <select id="orcCategoria">
+                            <option value="Alimentação">Alimentação</option>
+                            <option value="Moradia">Moradia</option>
+                            <option value="Transporte">Transporte</option>
+                            <option value="Lazer">Lazer</option>
+                            <option value="Saúde">Saúde</option>
+                            <option value="Educação">Educação</option>
+                            <option value="Outros">Outros</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Valor Orçado (R$)</label>
+                        <input type="number" step="0.01" id="orcValor" placeholder="0.00" required>
+                    </div>
+                    <button type="submit">Salvar Orçamento</button>
+                </form>
+            </div>
+
+            <!-- BLOCO 2: Lançamentos Reais (Fluxo de Caixa) -->
+            <div class="card">
+                <h2>2. Lançamento Real (Entradas e Saídas)</h2>
                 <form id="transacaoForm">
                     <div class="form-group">
                         <label>Mês de Referência</label>
-                        <select id="mes">
+                        <select id="transMes">
                             <option value="Janeiro">Janeiro</option>
                             <option value="Fevereiro">Fevereiro</option>
                             <option value="Março">Março</option>
@@ -156,14 +197,14 @@
                     </div>
                     <div class="form-group">
                         <label>Tipo</label>
-                        <select id="tipo">
-                            <option value="Receita">Receita</option>
-                            <option value="Despesa">Despesa</option>
+                        <select id="transTipo">
+                            <option value="Despesa">Despesa (Gasto)</option>
+                            <option value="Receita">Receita (Entrada)</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label>Categoria</label>
-                        <select id="categoria">
+                        <select id="transCategoria">
                             <option value="Alimentação">Alimentação</option>
                             <option value="Moradia">Moradia</option>
                             <option value="Transporte">Transporte</option>
@@ -176,40 +217,36 @@
                     </div>
                     <div class="form-group">
                         <label>Descrição Detalhada</label>
-                        <input type="text" id="descricao" placeholder="Ex: Supermercado, Aluguel..." required>
+                        <input type="text" id="transDescricao" placeholder="Ex: Supermercado, Aluguel..." required>
                     </div>
                     <div class="form-group">
-                        <label>Valor Realizado (R$)</label>
-                        <input type="number" step="0.01" id="valor" placeholder="0.00" required>
+                        <label>Valor Real (R$)</label>
+                        <input type="number" step="0.01" id="transValor" placeholder="0.00" required>
                     </div>
-                    <div class="form-group">
-                        <label>Valor Orçado (Meta) (R$)</label>
-                        <input type="number" step="0.01" id="orcamento" placeholder="0.00" required>
-                    </div>
-                    <button type="submit">Adicionar Lançamento</button>
+                    <button type="submit">Adicionar Lançamento Real</button>
                 </form>
-            </div>
-
-            <!-- DRE / Resumo Orçamentário -->
-            <div class="card">
-                <h2>DRE Simplificado & Orçamento</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Categoria</th>
-                            <th>Orçado</th>
-                            <th>Realizado</th>
-                            <th>Diferença</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabelaDRE"></tbody>
-                </table>
             </div>
         </div>
 
-        <!-- Fluxo de Caixa -->
+        <!-- DRE / Comparativo Orçado vs Realizado -->
         <div class="card">
-            <h2>Fluxo de Caixa (Lançamentos)</h2>
+            <h2>DRE Simplificado & Comparativo do Mês</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Categoria</th>
+                        <th>Orçado</th>
+                        <th>Realizado</th>
+                        <th>Diferença (Orçado - Real)</th>
+                    </tr>
+                </thead>
+                <tbody id="tabelaDRE"></tbody>
+            </table>
+        </div>
+
+        <!-- Histórico de Fluxo de Caixa -->
+        <div class="card">
+            <h2>Extrato de Lançamentos Reais</h2>
             <table>
                 <thead>
                     <tr>
@@ -217,8 +254,7 @@
                         <th>Tipo</th>
                         <th>Categoria</th>
                         <th>Descrição</th>
-                        <th>Realizado</th>
-                        <th>Orçado</th>
+                        <th>Valor</th>
                         <th>Ação</th>
                     </tr>
                 </thead>
@@ -228,8 +264,11 @@
     </div>
 
     <script>
+        let orcamentos = JSON.parse(localStorage.getItem('orcamentos')) || [];
         let transacoes = JSON.parse(localStorage.getItem('transacoes')) || [];
-        const form = document.getElementById('transacaoForm');
+
+        const orcamentoForm = document.getElementById('orcamentoForm');
+        const transacaoForm = document.getElementById('transacaoForm');
         const tabelaCaixa = document.getElementById('tabelaCaixa');
         const tabelaDRE = document.getElementById('tabelaDRE');
         const totReceitas = document.getElementById('totReceitas');
@@ -237,28 +276,42 @@
         const totSaldo = document.getElementById('totSaldo');
         const filtroMes = document.getElementById('filtroMes');
 
-        form.addEventListener('submit', function(e) {
+        // Salvar Orçamento
+        orcamentoForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            const novaTransacao = {
+            const novoOrc = {
                 id: Date.now(),
-                mes: document.getElementById('mes').value,
-                tipo: document.getElementById('tipo').value,
-                categoria: document.getElementById('categoria').value,
-                descricao: document.getElementById('descricao').value,
-                valor: parseFloat(document.getElementById('valor').value),
-                orcamento: parseFloat(document.getElementById('orcamento').value) || 0
+                mes: document.getElementById('orcMes').value,
+                categoria: document.getElementById('orcCategoria').value,
+                valor: parseFloat(document.getElementById('orcValor').value)
             };
-            transacoes.push(novaTransacao);
-            salvarEAtualizar();
-            form.reset();
+            // Remove orçamento anterior da mesma categoria/mês se houver
+            orcamentos = orcamentos.filter(o => !(o.mes === novoOrc.mes && o.categoria === novoOrc.categoria));
+            orcamentos.push(novoOrc);
+            localStorage.setItem('orcamentos', JSON.stringify(orcamentos));
+            renderizar();
+            orcamentoForm.reset();
         });
 
-        function deletar(id) {
-            transacoes = transacoes.filter(t => t.id !== id);
-            salvarEAtualizar();
-        }
+        // Salvar Lançamento Real
+        transacaoForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const novaTrans = {
+                id: Date.now(),
+                mes: document.getElementById('transMes').value,
+                tipo: document.getElementById('transTipo').value,
+                categoria: document.getElementById('transCategoria').value,
+                descricao: document.getElementById('transDescricao').value,
+                valor: parseFloat(document.getElementById('transValor').value)
+            };
+            transacoes.push(novaTrans);
+            localStorage.setItem('transacoes', JSON.stringify(transacoes));
+            renderizar();
+            transacaoForm.reset();
+        });
 
-        function salvarEAtualizar() {
+        function deletarTransacao(id) {
+            transacoes = transacoes.filter(t => t.id !== id);
             localStorage.setItem('transacoes', JSON.stringify(transacoes));
             renderizar();
         }
@@ -267,11 +320,10 @@
             tabelaCaixa.innerHTML = '';
             tabelaDRE.innerHTML = '';
             let rTotal = 0, dTotal = 0;
-            let resumoDRE = {};
-            const mesSelecionado = filtroMes.value;
+            const mesAtual = filtroMes.value;
 
+            // Renderiza extrato de caixa
             transacoes.forEach(t => {
-                // Preenche a tabela completa de fluxo de caixa
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td><strong>${t.mes}</strong></td>
@@ -279,23 +331,13 @@
                     <td>${t.categoria}</td>
                     <td>${t.descricao}</td>
                     <td>R$ ${t.valor.toFixed(2)}</td>
-                    <td>R$ ${t.orcamento.toFixed(2)}</td>
-                    <td><button onclick="deletar(${t.id})" style="background: #ef4444; padding: 5px 10px; width:auto;">X</button></td>
+                    <td><button onclick="deletarTransacao(${t.id})" style="background: #ef4444; padding: 5px 10px; width:auto;">X</button></td>
                 `;
                 tabelaCaixa.appendChild(tr);
 
-                // Totais gerais (Independente do filtro de visualização do DRE)
-                if(t.tipo === 'Receita') rTotal += t.valor;
-                if(t.tipo === 'Despesa') dTotal += t.valor;
-
-                // Agrupamento para a DRE considerando o filtro do mês
-                if(t.tipo === 'Despesa' && (mesSelecionado === 'Todos' || t.mes === mesSelecionado)) {
-                    if(!resumoDRE[t.categoria]) {
-                        resumoDRE[t.categoria] = { orcado: t.orcamento, realizado: t.valor };
-                    } else {
-                        resumoDRE[t.categoria].realizado += t.valor;
-                        resumoDRE[t.categoria].orcado += t.orcamento;
-                    }
+                if(t.mes === mesAtual) {
+                    if(t.tipo === 'Receita') rTotal += t.valor;
+                    if(t.tipo === 'Despesa') dTotal += t.valor;
                 }
             });
 
@@ -305,22 +347,33 @@
             totSaldo.innerText = saldo.toFixed(2);
             totSaldo.style.color = saldo >= 0 ? 'green' : 'red';
 
-            // Monta as linhas da DRE com colunas lado a lado
-            for(let cat in resumoDRE) {
-                let item = resumoDRE[cat];
-                let diff = item.orcado - item.realizado;
-                const trDRE = document.createElement('tr');
-                trDRE.innerHTML = `
-                    <td>${cat}</td>
-                    <td>R$ ${item.orcado.toFixed(2)}</td>
-                    <td>R$ ${item.realizado.toFixed(2)}</td>
-                    <td style="color: ${diff >= 0 ? 'green' : 'red'}; font-weight:bold;">R$ ${diff.toFixed(2)}</td>
-                `;
-                tabelaDRE.appendChild(trDRE);
-            }
+            // Monta o DRE combinando Orçado vs Realizado para o mês selecionado
+            let categoriasDespesas = ['Alimentação', 'Moradia', 'Transporte', 'Lazer', 'Saúde', 'Educação', 'Outros'];
+            
+            categoriasDespesas.forEach(cat => {
+                // Pega o orçado para esta categoria neste mês
+                let objOrc = orcamentos.find(o => o.mes === mesAtual && o.categoria === cat);
+                let valorOrcado = objOrc ? objOrc.valor : 0;
+
+                // Soma o realizado para esta categoria neste mês
+                let valorRealizado = transacoes
+                    .filter(t => t.mes === mesAtual && t.tipo === 'Despesa' && t.categoria === cat)
+                    .reduce((acc, t) => acc + t.valor, 0);
+
+                if(valorOrcado > 0 || valorRealizado > 0) {
+                    let diff = valorOrcado - valorRealizado;
+                    const trDRE = document.createElement('tr');
+                    trDRE.innerHTML = `
+                        <td>${cat}</td>
+                        <td>R$ ${valorOrcado.toFixed(2)}</td>
+                        <td>R$ ${valorRealizado.toFixed(2)}</td>
+                        <td style="color: ${diff >= 0 ? 'green' : 'red'}; font-weight:bold;">R$ ${diff.toFixed(2)}</td>
+                    `;
+                    tabelaDRE.appendChild(trDRE);
+                }
+            });
         }
         renderizar();
     </script>
 </body>
 </html>
-         

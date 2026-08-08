@@ -116,7 +116,7 @@
             text-align: right;
             border-bottom: 1px solid var(--border);
             border-right: 1px solid #f1f5f9;
-            min-width: 95px; /* Garante espaço proporcional para caber valores e o título Orç. / Real. */
+            min-width: 95px;
             white-space: nowrap;
         }
         th:first-child, td:first-child {
@@ -150,13 +150,17 @@
         .row-sub {
             padding-left: 20px !important;
         }
+        .col-analise {
+            background-color: #f8fafc;
+            font-size: 0.78rem;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
             <h1>Demonstrações Financeiras Pessoais</h1>
-            <p>Fluxo de Caixa Analítico: Orçado vs Realizado (Mês a Mês Horizontal)</p>
+            <p>Fluxo de Caixa Analítico: Orçado vs Realizado com Análise Horizontal</p>
         </header>
 
         <div class="grid">
@@ -291,40 +295,40 @@
             </div>
         </div>
 
-        <!-- Tabela Visão Analítica Mês a Mês Horizontal -->
+        <!-- Tabela Visão Analítica Mês a Mês Horizontal com Análise Horizontal -->
         <div class="card">
-            <h2>Projeção Analítica Anual: Orçado vs Realizado (Mês a Mês)</h2>
+            <h2>Projeção Analítica Anual: Orçado vs Realizado & Análise Horizontal (%)</h2>
             <div class="table-container">
                 <table>
                     <thead>
                         <tr>
                             <th rowspan="2" style="vertical-align: middle;">Contas / Categorias</th>
-                            <th colspan="2" style="text-align: center;">Janeiro</th>
-                            <th colspan="2" style="text-align: center;">Fevereiro</th>
-                            <th colspan="2" style="text-align: center;">Março</th>
-                            <th colspan="2" style="text-align: center;">Abril</th>
-                            <th colspan="2" style="text-align: center;">Maio</th>
-                            <th colspan="2" style="text-align: center;">Junho</th>
-                            <th colspan="2" style="text-align: center;">Julho</th>
-                            <th colspan="2" style="text-align: center;">Agosto</th>
-                            <th colspan="2" style="text-align: center;">Setembro</th>
-                            <th colspan="2" style="text-align: center;">Outubro</th>
-                            <th colspan="2" style="text-align: center;">Novembro</th>
-                            <th colspan="2" style="text-align: center;">Dezembro</th>
+                            <th colspan="3" style="text-align: center;">Janeiro</th>
+                            <th colspan="3" style="text-align: center;">Fevereiro</th>
+                            <th colspan="3" style="text-align: center;">Março</th>
+                            <th colspan="3" style="text-align: center;">Abril</th>
+                            <th colspan="3" style="text-align: center;">Maio</th>
+                            <th colspan="3" style="text-align: center;">Junho</th>
+                            <th colspan="3" style="text-align: center;">Julho</th>
+                            <th colspan="3" style="text-align: center;">Agosto</th>
+                            <th colspan="3" style="text-align: center;">Setembro</th>
+                            <th colspan="3" style="text-align: center;">Outubro</th>
+                            <th colspan="3" style="text-align: center;">Novembro</th>
+                            <th colspan="3" style="text-align: center;">Dezembro</th>
                         </tr>
                         <tr>
-                            <th>Orç.</th><th>Real.</th>
-                            <th>Orç.</th><th>Real.</th>
-                            <th>Orç.</th><th>Real.</th>
-                            <th>Orç.</th><th>Real.</th>
-                            <th>Orç.</th><th>Real.</th>
-                            <th>Orç.</th><th>Real.</th>
-                            <th>Orç.</th><th>Real.</th>
-                            <th>Orç.</th><th>Real.</th>
-                            <th>Orç.</th><th>Real.</th>
-                            <th>Orç.</th><th>Real.</th>
-                            <th>Orç.</th><th>Real.</th>
-                            <th>Orç.</th><th>Real.</th>
+                            <th>Orçado</th><th>Real.</th><th>Δ%</th>
+                            <th>Orçado</th><th>Real.</th><th>Δ%</th>
+                            <th>Orçado</th><th>Real.</th><th>Δ%</th>
+                            <th>Orçado</th><th>Real.</th><th>Δ%</th>
+                            <th>Orçado</th><th>Real.</th><th>Δ%</th>
+                            <th>Orçado</th><th>Real.</th><th>Δ%</th>
+                            <th>Orçado</th><th>Real.</th><th>Δ%</th>
+                            <th>Orçado</th><th>Real.</th><th>Δ%</th>
+                            <th>Orçado</th><th>Real.</th><th>Δ%</th>
+                            <th>Orçado</th><th>Real.</th><th>Δ%</th>
+                            <th>Orçado</th><th>Real.</th><th>Δ%</th>
+                            <th>Orçado</th><th>Real.</th><th>Δ%</th>
                         </tr>
                     </thead>
                     <tbody id="tabelaAnaliticaAno"></tbody>
@@ -573,7 +577,9 @@
 
                 let html = `<td>${titulo}</td>`;
 
-                mesesAno.forEach(mes => {
+                let valorMesAnteriorReal = null;
+
+                mesesAno.forEach((mes, index) => {
                     let valOrc = 0;
                     let valReal = 0;
 
@@ -611,11 +617,28 @@
                         valReal = (recReal - despReal) - semReal;
                     }
 
+                    // Cálculo da Análise Horizontal (Variação Percentual em relação ao mês anterior no Realizado)
+                    let variacaoPerc = 0;
+                    let temVariacao = false;
+                    if (index > 0 && valorMesAnteriorReal !== null && valorMesAnteriorReal !== 0) {
+                        variacaoPerc = ((valReal - valorMesAnteriorReal) / Math.abs(valorMesAnteriorReal)) * 100;
+                        temVariacao = true;
+                    }
+                    valorMesAnteriorReal = valReal;
+
                     let estiloOrc = tipoCalculo.includes('sobra') || tipoCalculo.includes('total') ? `style="font-weight: bold; color: ${valOrc >= 0 ? '#16a34a' : '#ef4444'};"` : '';
                     let estiloReal = tipoCalculo.includes('sobra') || tipoCalculo.includes('total') ? `style="font-weight: bold; color: ${valReal >= 0 ? '#16a34a' : '#ef4444'};"` : '';
+                    
+                    let textoDelta = "-";
+                    let corDelta = "";
+                    if (temVariacao) {
+                        textoDelta = (variacaoPerc > 0 ? "+" : "") + variacaoPerc.toFixed(1) + "%";
+                        corDelta = variacaoPerc >= 0 ? "color: #16a34a;" : "color: #ef4444;";
+                    }
 
                     html += `<td ${estiloOrc}>R$ ${valOrc.toFixed(2)}</td>`;
                     html += `<td ${estiloReal}>R$ ${valReal.toFixed(2)}</td>`;
+                    html + `<td class="col-analise" style="font-weight: 600; ${corDelta}">${textoDelta}</td>`;
                 });
 
                 tr.innerHTML = html;

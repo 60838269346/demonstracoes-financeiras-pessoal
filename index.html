@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demonstrações Financeiras Pessoais</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --border: #e2e8f0;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        h1 { color: var(--primary); margin-bottom: 5px; }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        @media (max-width: 768px) {
+            .grid { grid-template-columns: 1fr; }
+        }
+        .card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            border: 1px solid var(--border);
+        }
+        .card h2 { margin-top: 0; font-size: 1.25rem; border-bottom: 2px solid var(--border); padding-bottom: 10px; }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.9rem; }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+        }
+        button:hover { background-color: #1d4ed8; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        th { background-color: #f1f5f9; }
+        .summary-box {
+            display: flex;
+            justify-content: space-between;
+            background: #e0f2fe;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Demonstrações Financeiras Pessoais</h1>
+            <p>Controle Inteligente: Orçamento vs. Realidade (Fluxo de Caixa & DRE)</p>
+        </header>
+
+        <div class="summary-box">
+            <span>Total Receitas: R$ <span id="totReceitas">0.00</span></span>
+            <span>Total Despesas: R$ <span id="totDespesas">0.00</span></span>
+            <span>Saldo Atual: R$ <span id="totSaldo">0.00</span></span>
+        </div>
+
+        <div class="grid">
+            <!-- Formulário de Lançamentos -->
+            <div class="card">
+                <h2>Novo Lançamento</h2>
+                <form id="transacaoForm">
+                    <div class="form-group">
+                        <label>Tipo</label>
+                        <select id="tipo">
+                            <option value="Receita">Receita</option>
+                            <option value="Despesa">Despesa</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Descrição</label>
+                        <input type="text" id="descricao" placeholder="Ex: Salário, Supermercado..." required>
+                    </div>
+                    <div class="form-group">
+                        <label>Valor (R$)</label>
+                        <input type="number" step="0.01" id="valor" placeholder="0.00" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Natureza (Fixo ou Variável)</label>
+                        <select id="natureza">
+                            <option value="Fixo">Fixo</option>
+                            <option value="Variável">Variável</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Urgência (Urgente ou Não Urgente)</label>
+                        <select id="urgencia">
+                            <option value="Urgente">Urgente (Essencial)</option>
+                            <option value="Não Urgente">Não Urgente (Supérfluo)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Orçamento Planejado (Meta) para o item</label>
+                        <input type="number" step="0.01" id="orcamento" placeholder="0.00">
+                    </div>
+                    <button type="submit">Adicionar Lançamento</button>
+                </form>
+            </div>
+
+            <!-- DRE / Resumo Orçamentário -->
+            <div class="card">
+                <h2>DRE Simplificado & Orçamento</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Categoria / Item</th>
+                            <th>Orçado</th>
+                            <th>Realizado</th>
+                            <th>Diferença</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaDRE"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Fluxo de Caixa -->
+        <div class="card">
+            <h2>Fluxo de Caixa (Lançamentos)</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tipo</th>
+                        <th>Descrição</th>
+                        <th>Natureza</th>
+                        <th>Urgência</th>
+                        <th>Valor</th>
+                        <th>Ação</th>
+                    </tr>
+                </thead>
+                <tbody id="tabelaCaixa"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        let transacoes = JSON.parse(localStorage.getItem('transacoes')) || [];
+        const form = document.getElementById('transacaoForm');
+        const tabelaCaixa = document.getElementById('tabelaCaixa');
+        const tabelaDRE = document.getElementById('tabelaDRE');
+        const totReceitas = document.getElementById('totReceitas');
+        const totDespesas = document.getElementById('totDespesas');
+        const totSaldo = document.getElementById('totSaldo');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const novaTransacao = {
+                id: Date.now(),
+                tipo: document.getElementById('tipo').value,
+                descricao: document.getElementById('descricao').value,
+                valor: parseFloat(document.getElementById('valor').value),
+                natureza: document.getElementById('natureza').value,
+                urgencia: document.getElementById('urgencia').value,
+                orcamento: parseFloat(document.getElementById('orcamento').value) || 0
+            };
+            transacoes.push(novaTransacao);
+            salvarEAtualizar();
+            form.reset();
+        });
+
+        function deletar(id) {
+            transacoes = transacoes.filter(t => t.id !== id);
+            salvarEAtualizar();
+        }
+
+        function salvarEAtualizar() {
+            localStorage.setItem('transacoes', JSON.stringify(transacoes));
+            renderizar();
+        }
+
+        function renderizar() {
+            tabelaCaixa.innerHTML = '';
+            tabelaDRE.innerHTML = '';
+            let rTotal = 0, dTotal = 0;
+            let resumoDRE = {};
+
+            transacoes.forEach(t => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="color: ${t.tipo === 'Receita' ? 'green' : 'red'}; font-weight:bold;">${t.tipo}</td>
+                    <td>${t.descricao}</td>
+                    <td>${t.natureza}</td>
+                    <td>${t.urgencia}</td>
+                    <td>R$ ${t.valor.toFixed(2)}</td>
+                    <td><button onclick="deletar(${t.id})" style="background: #ef4444; padding: 5px 10px; width:auto;">X</button></td>
+                `;
+                tabelaCaixa.appendChild(tr);
+
+                if(t.tipo === 'Receita') rTotal += t.valor;
+                if(t.tipo === 'Despesa') {
+                    dTotal += t.valor;
+                    if(!resumoDRE[t.descricao]) {
+                        resumoDRE[t.descricao] = { orcado: t.orcamento, realizado: t.valor };
+                    } else {
+                        resumoDRE[t.descricao].realizado += t.valor;
+                        resumoDRE[t.descricao].orcado += t.orcamento;
+                    }
+                }
+            });
+
+            totReceitas.innerText = rTotal.toFixed(2);
+            totDespesas.innerText = dTotal.toFixed(2);
+            const saldo = rTotal - dTotal;
+            totSaldo.innerText = saldo.toFixed(2);
+            totSaldo.style.color = saldo >= 0 ? 'green' : 'red';
+
+            for(let desc in resumoDRE) {
+                let item = resumoDRE[desc];
+                let diff = item.orcado - item.realizado;
+                const trDRE = document.createElement('tr');
+                trDRE.innerHTML = `
+                    <td>${desc}</td>
+                    <td>R$ ${item.orcado.toFixed(2)}</td>
+                    <td>R$ ${item.realizado.toFixed(2)}</td>
+                    <td style="color: ${diff >= 0 ? 'green' : 'red'}; font-weight:bold;">R$ ${diff.toFixed(2)}</td>
+                `;
+                tabelaDRE.appendChild(trDRE);
+            }
+        }
+        renderizar();
+    </script>
+</body>
+</html>

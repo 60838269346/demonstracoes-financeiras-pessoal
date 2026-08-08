@@ -88,14 +88,43 @@
             margin-bottom: 20px;
             font-weight: bold;
         }
+        .filter-container {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            background: var(--card-bg);
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
             <h1>Demonstrações Financeiras Pessoais</h1>
-            <p>Controle Inteligente: Orçamento vs. Realidade (Fluxo de Caixa & DRE)</p>
+            <p>Controle Inteligente: Orçamento vs. Realidade (Fluxo de Caixa & DRE por Mês)</p>
         </header>
+
+        <div class="filter-container">
+            <label for="filtroMes" style="margin:0; white-space:nowrap;">Filtrar DRE por Mês:</label>
+            <select id="filtroMes" onchange="renderizar()">
+                <option value="Todos">Todos os Meses (Geral)</option>
+                <option value="Janeiro">Janeiro</option>
+                <option value="Fevereiro">Fevereiro</option>
+                <option value="Março">Março</option>
+                <option value="Abril">Abril</option>
+                <option value="Maio">Maio</option>
+                <option value="Junho">Junho</option>
+                <option value="Julho">Julho</option>
+                <option value="Agosto">Agosto</option>
+                <option value="Setembro">Setembro</option>
+                <option value="Outubro">Outubro</option>
+                <option value="Novembro">Novembro</option>
+                <option value="Dezembro">Dezembro</option>
+            </select>
+        </div>
 
         <div class="summary-box">
             <span>Total Receitas: R$ <span id="totReceitas">0.00</span></span>
@@ -109,6 +138,23 @@
                 <h2>Novo Lançamento</h2>
                 <form id="transacaoForm">
                     <div class="form-group">
+                        <label>Mês de Referência</label>
+                        <select id="mes">
+                            <option value="Janeiro">Janeiro</option>
+                            <option value="Fevereiro">Fevereiro</option>
+                            <option value="Março">Março</option>
+                            <option value="Abril">Abril</option>
+                            <option value="Maio">Maio</option>
+                            <option value="Junho">Junho</option>
+                            <option value="Julho">Julho</option>
+                            <option value="Agosto">Agosto</option>
+                            <option value="Setembro">Setembro</option>
+                            <option value="Outubro">Outubro</option>
+                            <option value="Novembro">Novembro</option>
+                            <option value="Dezembro">Dezembro</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label>Tipo</label>
                         <select id="tipo">
                             <option value="Receita">Receita</option>
@@ -116,7 +162,7 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Categoria (Para DRE e Orçamento)</label>
+                        <label>Categoria</label>
                         <select id="categoria">
                             <option value="Alimentação">Alimentação</option>
                             <option value="Moradia">Moradia</option>
@@ -130,29 +176,15 @@
                     </div>
                     <div class="form-group">
                         <label>Descrição Detalhada</label>
-                        <input type="text" id="descricao" placeholder="Ex: Supermercado Extra, Aluguel..." required>
+                        <input type="text" id="descricao" placeholder="Ex: Supermercado, Aluguel..." required>
                     </div>
                     <div class="form-group">
-                        <label>Valor (R$)</label>
+                        <label>Valor Realizado (R$)</label>
                         <input type="number" step="0.01" id="valor" placeholder="0.00" required>
                     </div>
                     <div class="form-group">
-                        <label>Natureza</label>
-                        <select id="natureza">
-                            <option value="Fixo">Fixo</option>
-                            <option value="Variável">Variável</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Urgência</label>
-                        <select id="urgencia">
-                            <option value="Urgente">Urgente (Essencial)</option>
-                            <option value="Não Urgente">Não Urgente (Supérfluo)</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Orçamento Planejado (Meta) para a Categoria</label>
-                        <input type="number" step="0.01" id="orcamento" placeholder="0.00">
+                        <label>Valor Orçado (Meta) (R$)</label>
+                        <input type="number" step="0.01" id="orcamento" placeholder="0.00" required>
                     </div>
                     <button type="submit">Adicionar Lançamento</button>
                 </form>
@@ -181,12 +213,12 @@
             <table>
                 <thead>
                     <tr>
+                        <th>Mês</th>
                         <th>Tipo</th>
                         <th>Categoria</th>
                         <th>Descrição</th>
-                        <th>Natureza</th>
-                        <th>Urgência</th>
-                        <th>Valor</th>
+                        <th>Realizado</th>
+                        <th>Orçado</th>
                         <th>Ação</th>
                     </tr>
                 </thead>
@@ -203,17 +235,17 @@
         const totReceitas = document.getElementById('totReceitas');
         const totDespesas = document.getElementById('totDespesas');
         const totSaldo = document.getElementById('totSaldo');
+        const filtroMes = document.getElementById('filtroMes');
 
         form.addEventListener('submit', function(e) {
             e.preventDefault();
             const novaTransacao = {
                 id: Date.now(),
+                mes: document.getElementById('mes').value,
                 tipo: document.getElementById('tipo').value,
                 categoria: document.getElementById('categoria').value,
                 descricao: document.getElementById('descricao').value,
                 valor: parseFloat(document.getElementById('valor').value),
-                natureza: document.getElementById('natureza').value,
-                urgencia: document.getElementById('urgencia').value,
                 orcamento: parseFloat(document.getElementById('orcamento').value) || 0
             };
             transacoes.push(novaTransacao);
@@ -236,28 +268,33 @@
             tabelaDRE.innerHTML = '';
             let rTotal = 0, dTotal = 0;
             let resumoDRE = {};
+            const mesSelecionado = filtroMes.value;
 
             transacoes.forEach(t => {
+                // Preenche a tabela completa de fluxo de caixa
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
+                    <td><strong>${t.mes}</strong></td>
                     <td style="color: ${t.tipo === 'Receita' ? 'green' : 'red'}; font-weight:bold;">${t.tipo}</td>
                     <td>${t.categoria}</td>
                     <td>${t.descricao}</td>
-                    <td>${t.natureza}</td>
-                    <td>${t.urgencia}</td>
                     <td>R$ ${t.valor.toFixed(2)}</td>
+                    <td>R$ ${t.orcamento.toFixed(2)}</td>
                     <td><button onclick="deletar(${t.id})" style="background: #ef4444; padding: 5px 10px; width:auto;">X</button></td>
                 `;
                 tabelaCaixa.appendChild(tr);
 
+                // Totais gerais (Independente do filtro de visualização do DRE)
                 if(t.tipo === 'Receita') rTotal += t.valor;
-                if(t.tipo === 'Despesa') {
-                    dTotal += t.valor;
+                if(t.tipo === 'Despesa') dTotal += t.valor;
+
+                // Agrupamento para a DRE considerando o filtro do mês
+                if(t.tipo === 'Despesa' && (mesSelecionado === 'Todos' || t.mes === mesSelecionado)) {
                     if(!resumoDRE[t.categoria]) {
                         resumoDRE[t.categoria] = { orcado: t.orcamento, realizado: t.valor };
                     } else {
                         resumoDRE[t.categoria].realizado += t.valor;
-                        resumoDRE[t.categoria].orcado = Math.max(resumoDRE[t.categoria].orcado, t.orcamento);
+                        resumoDRE[t.categoria].orcado += t.orcamento;
                     }
                 }
             });
@@ -268,6 +305,7 @@
             totSaldo.innerText = saldo.toFixed(2);
             totSaldo.style.color = saldo >= 0 ? 'green' : 'red';
 
+            // Monta as linhas da DRE com colunas lado a lado
             for(let cat in resumoDRE) {
                 let item = resumoDRE[cat];
                 let diff = item.orcado - item.realizado;
@@ -285,3 +323,4 @@
     </script>
 </body>
 </html>
+         

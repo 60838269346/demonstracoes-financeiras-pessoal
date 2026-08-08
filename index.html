@@ -23,7 +23,7 @@
             padding: 20px;
         }
         .container {
-            max-width: 1350px;
+            max-width: 1500px;
             margin: 0 auto;
         }
         header {
@@ -109,12 +109,22 @@
             width: 100%;
             border-collapse: collapse;
             margin-top: 10px;
-            font-size: 0.82rem;
+            font-size: 0.78rem;
         }
         th, td {
-            padding: 8px;
-            text-align: left;
+            padding: 6px 8px;
+            text-align: right;
             border-bottom: 1px solid var(--border);
+            border-right: 1px solid #f1f5f9;
+        }
+        th:first-child, td:first-child {
+            text-align: left;
+            position: sticky;
+            left: 0;
+            background: #ffffff;
+            z-index: 1;
+            min-width: 220px;
+            border-right: 2px solid var(--border);
         }
         th {
             background-color: #f1f5f9;
@@ -135,7 +145,7 @@
             font-weight: bold;
         }
         .row-sub {
-            padding-left: 20px !important;
+            padding-left: 15px !important;
         }
     </style>
 </head>
@@ -143,7 +153,7 @@
     <div class="container">
         <header>
             <h1>Demonstrações Financeiras Pessoais</h1>
-            <p>Fluxo de Caixa Analítico Completo: Visão Mês a Mês</p>
+            <p>Fluxo de Caixa Analítico: Orçado vs Realizado (Mês a Mês Horizontal)</p>
         </header>
 
         <div class="grid">
@@ -278,26 +288,41 @@
             </div>
         </div>
 
-        <!-- Tabela Visão Analítica Mês a Mês -->
+        <!-- Tabela Visão Analítica Mês a Mês Horizontal -->
         <div class="card">
-            <h2>Projeção Analítica Anual: Fluxo de Caixa Mês a Mês (Orçado vs. Realizado)</h2>
+            <h2>Projeção Analítica Anual: Orçado vs Realizado (Mês a Mês)</h2>
             <div class="table-container">
                 <table>
                     <thead>
                         <tr>
-                            <th>Contas / Categorias</th>
-                            <th>Janeiro</th>
-                            <th>Fevereiro</th>
-                            <th>Março</th>
-                            <th>Abril</th>
-                            <th>Maio</th>
-                            <th>Junho</th>
-                            <th>Julho</th>
-                            <th>Agosto</th>
-                            <th>Setembro</th>
-                            <th>Outubro</th>
-                            <th>Novembro</th>
-                            <th>Dezembro</th>
+                            <th rowspan="2" style="vertical-align: middle;">Contas / Categorias</th>
+                            <th colspan="2" style="text-align: center;">Janeiro</th>
+                            <th colspan="2" style="text-align: center;">Fevereiro</th>
+                            <th colspan="2" style="text-align: center;">Março</th>
+                            <th colspan="2" style="text-align: center;">Abril</th>
+                            <th colspan="2" style="text-align: center;">Maio</th>
+                            <th colspan="2" style="text-align: center;">Junho</th>
+                            <th colspan="2" style="text-align: center;">Julho</th>
+                            <th colspan="2" style="text-align: center;">Agosto</th>
+                            <th colspan="2" style="text-align: center;">Setembro</th>
+                            <th colspan="2" style="text-align: center;">Outubro</th>
+                            <th colspan="2" style="text-align: center;">Novembro</th>
+                            <th colspan="2" style="text-align: center;">Dezembro</th>
+                        </tr>
+                        <tr>
+                            <!-- Subcabeçalhos de cada mês -->
+                            <th>Orç.</th><th>Real.</th>
+                            <th>Orç.</th><th>Real.</th>
+                            <th>Orç.</th><th>Real.</th>
+                            <th>Orç.</th><th>Real.</th>
+                            <th>Orç.</th><th>Real.</th>
+                            <th>Orç.</th><th>Real.</th>
+                            <th>Orç.</th><th>Real.</th>
+                            <th>Orç.</th><th>Real.</th>
+                            <th>Orç.</th><th>Real.</th>
+                            <th>Orç.</th><th>Real.</th>
+                            <th>Orç.</th><th>Real.</th>
+                            <th>Orç.</th><th>Real.</th>
                         </tr>
                     </thead>
                     <tbody id="tabelaAnaliticaAno"></tbody>
@@ -541,8 +566,8 @@
                 tabelaOrcamentosCadastrados.appendChild(tr);
             });
 
-            // Função auxiliar para montar as linhas da tabela analítica
-            function criarLinhaAnalitica(titulo, categoria, tipoValor, isGrupo = false, classeExtra = '') {
+            // Função para renderizar linhas com valores Orçado/Realizado lado a lado por mês
+            function criarLinhaHorizontal(titulo, categoria, tipoCalculo, isGrupo = false, classeExtra = '') {
                 const tr = document.createElement('tr');
                 if(isGrupo) tr.className = 'row-group';
                 if(classeExtra) tr.className += ' ' + classeExtra;
@@ -550,52 +575,48 @@
                 let html = `<td>${titulo}</td>`;
 
                 mesesAno.forEach(mes => {
-                    let totalVal = 0;
-                    if(tipoValor === 'orcado') {
-                        orcamentos.filter(o => o.mes === mes && o.categoria === categoria).forEach(o => totalVal += o.valor);
-                    } else if(tipoValor === 'realizado') {
-                        transacoes.filter(t => t.mes === mes && t.categoria === categoria).forEach(t => totalVal += t.valor);
-                    } else if(tipoValor === 'total_rec_orc') {
-                        orcamentos.filter(o => o.mes === mes && contasReceita.includes(o.categoria)).forEach(o => totalVal += o.valor);
-                    } else if(tipoValor === 'total_rec_real') {
-                        transacoes.filter(t => t.mes === mes && contasReceita.includes(t.categoria)).forEach(t => totalVal += t.valor);
-                    } else if(tipoValor === 'total_desp_orc') {
-                        orcamentos.filter(o => o.mes === mes && contasDespesa.includes(o.categoria)).forEach(o => totalVal += o.valor);
-                    } else if(tipoValor === 'total_desp_real') {
-                        transacoes.filter(t => t.mes === mes && contasDespesa.includes(t.categoria)).forEach(t => totalVal += t.valor);
-                    } else if(tipoValor === 'sobra_bruta_orc') {
-                        let rec = 0, desp = 0;
-                        orcamentos.filter(o => o.mes === mes && contasReceita.includes(o.categoria)).forEach(o => rec += o.valor);
-                        orcamentos.filter(o => o.mes === mes && contasDespesa.includes(o.categoria)).forEach(o => desp += o.valor);
-                        totalVal = rec - desp;
-                    } else if(tipoValor === 'sobra_bruta_real') {
-                        let rec = 0, desp = 0;
-                        transacoes.filter(t => t.mes === mes && contasReceita.includes(t.categoria)).forEach(t => rec += t.valor);
-                        transacoes.filter(t => t.mes === mes && contasDespesa.includes(t.categoria)).forEach(t => desp += t.valor);
-                        totalVal = rec - desp;
-                    } else if(tipoValor === 'total_semanal_orc') {
-                        orcamentos.filter(o => o.mes === mes && contasSemanais.includes(o.categoria)).forEach(o => totalVal += o.valor);
-                    } else if(tipoValor === 'total_semanal_real') {
-                        transacoes.filter(t => t.mes === mes && contasSemanais.includes(t.categoria)).forEach(t => totalVal += t.valor);
-                    } else if(tipoValor === 'sobra_liq_orc') {
-                        let rec = 0, desp = 0, sem = 0;
-                        orcamentos.filter(o => o.mes === mes && contasReceita.includes(o.categoria)).forEach(o => rec += o.valor);
-                        orcamentos.filter(o => o.mes === mes && contasDespesa.includes(o.categoria)).forEach(o => desp += o.valor);
-                        orcamentos.filter(o => o.mes === mes && contasSemanais.includes(o.categoria)).forEach(o => sem += o.valor);
-                        totalVal = (rec - desp) - sem;
-                    } else if(tipoValor === 'sobra_liq_real') {
-                        let rec = 0, desp = 0, sem = 0;
-                        transacoes.filter(t => t.mes === mes && contasReceita.includes(t.categoria)).forEach(t => rec += t.valor);
-                        transacoes.filter(t => t.mes === mes && contasDespesa.includes(t.categoria)).forEach(t => desp += t.valor);
-                        transacoes.filter(t => t.mes === mes && contasSemanais.includes(t.categoria)).forEach(t => sem += t.valor);
-                        totalVal = (rec - desp) - sem;
+                    let valOrc = 0;
+                    let valReal = 0;
+
+                    if(tipoCalculo === 'categoria') {
+                        orcamentos.filter(o => o.mes === mes && o.categoria === categoria).forEach(o => valOrc += o.valor);
+                        transacoes.filter(t => t.mes === mes && t.categoria === categoria).forEach(t => valReal += t.valor);
+                    } else if(tipoCalculo === 'total_receitas') {
+                        orcamentos.filter(o => o.mes === mes && contasReceita.includes(o.categoria)).forEach(o => valOrc += o.valor);
+                        transacoes.filter(t => t.mes === mes && contasReceita.includes(t.categoria)).forEach(t => valReal += t.valor);
+                    } else if(tipoCalculo === 'total_despesas') {
+                        orcamentos.filter(o => o.mes === mes && contasDespesa.includes(o.categoria)).forEach(o => valOrc += o.valor);
+                        transacoes.filter(t => t.mes === mes && contasDespesa.includes(o.categoria)).forEach(t => valReal += t.valor);
+                    } else if(tipoCalculo === 'sobra_bruta') {
+                        let recOrc = 0, despOrc = 0, recReal = 0, despReal = 0;
+                        orcamentos.filter(o => o.mes === mes && contasReceita.includes(o.categoria)).forEach(o => recOrc += o.valor);
+                        orcamentos.filter(o => o.mes === mes && contasDespesa.includes(o.categoria)).forEach(o => despOrc += o.valor);
+                        transacoes.filter(t => t.mes === mes && contasReceita.includes(t.categoria)).forEach(t => recReal += t.valor);
+                        transacoes.filter(t => t.mes === mes && contasDespesa.includes(t.categoria)).forEach(t => despReal += t.valor);
+                        valOrc = recOrc - despOrc;
+                        valReal = recReal - despReal;
+                    } else if(tipoCalculo === 'total_semanal') {
+                        orcamentos.filter(o => o.mes === mes && contasSemanais.includes(o.categoria)).forEach(o => valOrc += o.valor);
+                        transacoes.filter(t => t.mes === mes && contasSemanais.includes(t.categoria)).forEach(t => valReal += t.valor);
+                    } else if(tipoCalculo === 'sobra_liquida') {
+                        let recOrc = 0, despOrc = 0, semOrc = 0, recReal = 0, despReal = 0, semReal = 0;
+                        orcamentos.filter(o => o.mes === mes && contasReceita.includes(o.categoria)).forEach(o => recOrc += o.valor);
+                        orcamentos.filter(o => o.mes === mes && contasDespesa.includes(o.categoria)).forEach(o => despOrc += o.valor);
+                        orcamentos.filter(o => o.mes === mes && contasSemanais.includes(o.categoria)).forEach(o => semOrc += o.valor);
+                        
+                        transacoes.filter(t => t.mes === mes && contasReceita.includes(t.categoria)).forEach(t => recReal += t.valor);
+                        transacoes.filter(t => t.mes === mes && contasDespesa.includes(t.categoria)).forEach(t => despReal += t.valor);
+                        transacoes.filter(t => t.mes === mes && contasSemanais.includes(t.categoria)).forEach(t => semReal += t.valor);
+
+                        valOrc = (recOrc - despOrc) - semOrc;
+                        valReal = (recReal - despReal) - semReal;
                     }
 
-                    let corEstilo = '';
-                    if(tipoValor.includes('sobra') || tipoValor.includes('total')) {
-                        corEstilo = `style="font-weight: bold; color: ${totalVal >= 0 ? '#16a34a' : '#ef4444'};"`;
-                    }
-                    html += `<td ${corEstilo}>R$ ${totalVal.toFixed(2)}</td>`;
+                    let estiloOrc = tipoCalculo.includes('sobra') || tipoCalculo.includes('total') ? `style="font-weight: bold; color: ${valOrc >= 0 ? '#16a34a' : '#ef4444'};"` : '';
+                    let estiloReal = tipoCalculo.includes('sobra') || tipoCalculo.includes('total') ? `style="font-weight: bold; color: ${valReal >= 0 ? '#16a34a' : '#ef4444'};"` : '';
+
+                    html += `<td ${estiloOrc}>R$ ${valOrc.toFixed(2)}</td>`;
+                    html += `<td ${estiloReal}>R$ ${valReal.toFixed(2)}</td>`;
                 });
 
                 tr.innerHTML = html;
@@ -603,39 +624,31 @@
             }
 
             // 1. RECEITA
-            criarLinhaAnalitica("RECEITA:", "", "", true);
-            criarLinhaAnalitica("1 Receita bruta (Orçado)", "1 Receita bruta", "orcado", false, "row-sub");
-            criarLinhaAnalitica("1 Receita bruta (Realizado)", "1 Receita bruta", "realizado", false, "row-sub");
-            criarLinhaAnalitica("2 outras receitas (Orçado)", "2 outras receitas", "orcado", false, "row-sub");
-            criarLinhaAnalitica("2 outras receitas (Realizado)", "2 outras receitas", "realizado", false, "row-sub");
-            criarLinhaAnalitica("Total Receitas (Orçado)", "", "total_rec_orc", true, "text-green");
-            criarLinhaAnalitica("Total Receitas (Realizado)", "", "total_rec_real", true, "text-green");
+            criarLinhaHorizontal("RECEITA:", "", "", true);
+            contasReceita.forEach(cat => {
+                criarLinhaHorizontal(cat, cat, "categoria", false, "row-sub");
+            });
+            criarLinhaHorizontal("Total Receitas", "", "total_receitas", true, "text-green");
 
             // 2. DESPESAS
-            criarLinhaAnalitica("DESPESAS:", "", "", true);
+            criarLinhaHorizontal("DESPESAS:", "", "", true);
             contasDespesa.forEach(cat => {
-                criarLinhaAnalitica(`${cat} (Orçado)`, cat, "orcado", false, "row-sub");
-                criarLinhaAnalitica(`${cat} (Realizado)`, cat, "realizado", false, "row-sub");
+                criarLinhaHorizontal(cat, cat, "categoria", false, "row-sub");
             });
-            criarLinhaAnalitica("Total Despesas (Orçado)", "", "total_desp_orc", true, "text-red");
-            criarLinhaAnalitica("Total Despesas (Realizado)", "", "total_desp_real", true, "text-red");
+            criarLinhaHorizontal("Total Despesas", "", "total_despesas", true, "text-red");
 
             // = SOBRA BRUTA
-            criarLinhaAnalitica("= SOBRA BRUTA (Orçado)", "", "sobra_bruta_orc", true);
-            criarLinhaAnalitica("= SOBRA BRUTA (Realizado)", "", "sobra_bruta_real", true);
+            criarLinhaHorizontal("= SOBRA BRUTA", "", "sobra_bruta", true);
 
             // 3. DETALHAMENTO SEMANAL
-            criarLinhaAnalitica("DETALHAMENTO SEMANAL:", "", "", true);
+            criarLinhaHorizontal("DETALHAMENTO SEMANAL:", "", "", true);
             contasSemanais.forEach(cat => {
-                criarLinhaAnalitica(`${cat} (Orçado)`, cat, "orcado", false, "row-sub");
-                criarLinhaAnalitica(`${cat} (Realizado)`, cat, "realizado", false, "row-sub");
+                criarLinhaHorizontal(cat, cat, "categoria", false, "row-sub");
             });
-            criarLinhaAnalitica("Total Gastos Semanais (Orçado)", "", "total_semanal_orc", true);
-            criarLinhaAnalitica("Total Gastos Semanais (Realizado)", "", "total_semanal_real", true);
+            criarLinhaHorizontal("Total Gastos Semanais", "", "total_semanal", true);
 
             // = SOBRA LIQUIDA (GUARDAR)
-            criarLinhaAnalitica("= SOBRA LIQUIDA( Guardar ) (Orçado)", "", "sobra_liq_orc", true);
-            criarLinhaAnalitica("= SOBRA LIQUIDA( Guardar ) (Realizado)", "", "sobra_liq_real", true);
+            criarLinhaHorizontal("= SOBRA LIQUIDA( Guardar )", "", "sobra_liquida", true);
         }
 
         renderizar();

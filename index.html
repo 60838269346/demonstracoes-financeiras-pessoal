@@ -23,7 +23,7 @@
             padding: 20px;
         }
         .container {
-            max-width: 1600px;
+            max-width: 1700px;
             margin: 0 auto;
         }
         header {
@@ -112,11 +112,12 @@
             font-size: 0.82rem;
         }
         th, td {
-            padding: 10px 10px;
+            padding: 10px 12px;
             text-align: right;
             border-bottom: 1px solid var(--border);
             border-right: 1px solid #f1f5f9;
-            height: 25px;
+            min-width: 95px; /* Garante espaço proporcional para caber valores e o título Orç. / Real. */
+            white-space: nowrap;
         }
         th:first-child, td:first-child {
             text-align: left;

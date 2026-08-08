@@ -13,6 +13,7 @@
             --border: #e2e8f0;
             --danger: #ef4444;
             --success: #16a34a;
+            --warning: #f59e0b;
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -70,6 +71,10 @@
             width: 100%;
         }
         button:hover { background-color: #1d4ed8; }
+        .btn-danger { background-color: var(--danger) !important; padding: 5px 10px; width: auto; font-size: 0.85rem; }
+        .btn-danger:hover { background-color: #dc2626 !important; }
+        .btn-warning { background-color: var(--warning) !important; padding: 5px 10px; width: auto; font-size: 0.85rem; color: white; }
+        .btn-warning:hover { background-color: #d97706 !important; }
         table {
             width: 100%;
             border-collapse: collapse;
@@ -139,8 +144,9 @@
         <div class="grid">
             <!-- BLOCO 1: Planejamento Orçamentário -->
             <div class="card">
-                <h2>1. Definir Orçamento Mensal (Meta)</h2>
+                <h2 id="tituloFormOrc">1. Definir Orçamento Mensal (Meta)</h2>
                 <form id="orcamentoForm">
+                    <input type="hidden" id="editOrcId">
                     <div class="form-group">
                         <label>Mês de Referência</label>
                         <select id="orcMes">
@@ -186,14 +192,15 @@
                         <label>Valor Orçado (R$)</label>
                         <input type="number" step="0.01" id="orcValor" placeholder="0.00" required>
                     </div>
-                    <button type="submit">Salvar Orçamento</button>
+                    <button type="submit" id="btnSalvarOrc">Salvar Orçamento</button>
                 </form>
             </div>
 
             <!-- BLOCO 2: Lançamentos Reais (Fluxo de Caixa) -->
             <div class="card">
-                <h2>2. Lançamento Real (Entradas e Saídas)</h2>
+                <h2 id="tituloFormTrans">2. Lançamento Real (Entradas e Saídas)</h2>
                 <form id="transacaoForm">
+                    <input type="hidden" id="editTransId">
                     <div class="form-group">
                         <label>Mês de Referência</label>
                         <select id="transMes">
@@ -239,7 +246,7 @@
                         <label>Valor Real (R$)</label>
                         <input type="number" step="0.01" id="transValor" placeholder="0.00" required>
                     </div>
-                    <button type="submit">Adicionar Lançamento Real</button>
+                    <button type="submit" id="btnSalvarTrans">Adicionar Lançamento Real</button>
                 </form>
             </div>
         </div>
@@ -254,6 +261,7 @@
                         <th>Orçado</th>
                         <th>Realizado</th>
                         <th>Diferença</th>
+                        <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody id="tabelaDRE"></tbody>
@@ -271,7 +279,7 @@
                         <th>Categoria</th>
                         <th>Observação</th>
                         <th>Valor</th>
-                        <th>Ação</th>
+                        <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody id="tabelaCaixa"></tbody>
@@ -294,15 +302,25 @@
 
         orcamentoForm.addEventListener('submit', function(e) {
             e.preventDefault();
+            const editId = document.getElementById('editOrcId').value;
             const novoOrc = {
-                id: Date.now(),
+                id: editId ? Number(editId) : Date.now(),
                 mes: document.getElementById('orcMes').value,
                 tipo: document.getElementById('orcTipo').value,
                 categoria: document.getElementById('orcCategoria').value,
                 descricao: document.getElementById('orcDescricao').value,
                 valor: parseFloat(document.getElementById('orcValor').value)
             };
-            orcamentos.push(novoOrc);
+
+            if(editId) {
+                orcamentos = orcamentos.map(o => o.id === Number(editId) ? novoOrc : o);
+                document.getElementById('editOrcId').value = '';
+                document.getElementById('btnSalvarOrc').innerText = 'Salvar Orçamento';
+                document.getElementById('tituloFormOrc').innerText = '1. Definir Orçamento Mensal (Meta)';
+            } else {
+                orcamentos.push(novoOrc);
+            }
+
             localStorage.setItem('orcamentos', JSON.stringify(orcamentos));
             renderizar();
             orcamentoForm.reset();
@@ -310,21 +328,87 @@
 
         transacaoForm.addEventListener('submit', function(e) {
             e.preventDefault();
+            const editId = document.getElementById('editTransId').value;
             const novaTrans = {
-                id: Date.now(),
+                id: editId ? Number(editId) : Date.now(),
                 mes: document.getElementById('transMes').value,
                 tipo: document.getElementById('transTipo').value,
                 categoria: document.getElementById('transCategoria').value,
                 descricao: document.getElementById('transDescricao').value,
                 valor: parseFloat(document.getElementById('transValor').value)
             };
-            transacoes.push(novaTrans);
+
+            if(editId) {
+                transacoes = transacoes.map(t => t.id === Number(editId) ? novaTrans : t);
+                document.getElementById('editTransId').value = '';
+                document.getElementById('btnSalvarTrans').innerText = 'Adicionar Lançamento Real';
+                document.getElementById('tituloFormTrans').innerText = '2. Lançamento Real (Entradas e Saídas)';
+            } else {
+                transacoes.push(novaTrans);
+            }
+
             localStorage.setItem('transacoes', JSON.stringify(transacoes));
             renderizar();
             transacaoForm.reset();
         });
 
+        function editarOrcamento(id) {
+            const senha = prompt("Digite a senha para EDITAR:");
+            if(senha !== "0") {
+                if(senha !== null) alert("Senha incorreta!");
+                return;
+            }
+            const o = orcamentos.find(item => item.id === id);
+            if(o) {
+                document.getElementById('editOrcId').value = o.id;
+                document.getElementById('orcMes').value = o.mes;
+                document.getElementById('orcTipo').value = o.tipo;
+                document.getElementById('orcCategoria').value = o.categoria;
+                document.getElementById('orcDescricao').value = o.descricao || '';
+                document.getElementById('orcValor').value = o.valor;
+                document.getElementById('btnSalvarOrc').innerText = 'Atualizar Orçamento';
+                document.getElementById('tituloFormOrc').innerText = '1. Editando Orçamento';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function deletarOrcamento(id) {
+            const senha = prompt("Digite a senha para EXCLUIR:");
+            if(senha !== "0") {
+                if(senha !== null) alert("Senha incorreta!");
+                return;
+            }
+            orcamentos = orcamentos.filter(o => o.id !== id);
+            localStorage.setItem('orcamentos', JSON.stringify(orcamentos));
+            renderizar();
+        }
+
+        function editarTransacao(id) {
+            const senha = prompt("Digite a senha para EDITAR:");
+            if(senha !== "0") {
+                if(senha !== null) alert("Senha incorreta!");
+                return;
+            }
+            const t = transacoes.find(item => item.id === id);
+            if(t) {
+                document.getElementById('editTransId').value = t.id;
+                document.getElementById('transMes').value = t.mes;
+                document.getElementById('transTipo').value = t.tipo;
+                document.getElementById('transCategoria').value = t.categoria;
+                document.getElementById('transDescricao').value = t.descricao;
+                document.getElementById('transValor').value = t.valor;
+                document.getElementById('btnSalvarTrans').innerText = 'Atualizar Lançamento Real';
+                document.getElementById('tituloFormTrans').innerText = '2. Editando Lançamento Real';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
         function deletarTransacao(id) {
+            const senha = prompt("Digite a senha para EXCLUIR:");
+            if(senha !== "0") {
+                if(senha !== null) alert("Senha incorreta!");
+                return;
+            }
             transacoes = transacoes.filter(t => t.id !== id);
             localStorage.setItem('transacoes', JSON.stringify(transacoes));
             renderizar();
@@ -345,7 +429,10 @@
                     <td>${t.categoria}</td>
                     <td>${t.descricao}</td>
                     <td class="${corTipo}">R$ ${t.valor.toFixed(2)}</td>
-                    <td><button onclick="deletarTransacao(${t.id})" style="background: #ef4444; padding: 5px 10px; width:auto;">X</button></td>
+                    <td>
+                        <button class="btn-warning" onclick="editarTransacao(${t.id})">Editar</button>
+                        <button class="btn-danger" onclick="deletarTransacao(${t.id})">Excluir</button>
+                    </td>
                 `;
                 tabelaCaixa.appendChild(tr);
 
@@ -365,7 +452,7 @@
 
             orcamentos.filter(o => o.mes === mesAtual).forEach(o => {
                 let chave = o.tipo + '|' + o.categoria;
-                if(!itensDRE[chave]) itensDRE[chave] = { tipo: o.tipo, categoria: o.categoria, orcado: o.valor, realizado: 0 };
+                if(!itensDRE[chave]) itensDRE[chave] = { id: o.id, tipo: o.tipo, categoria: o.categoria, orcado: o.valor, realizado: 0 };
                 else itensDRE[chave].orcado += o.valor;
             });
 
@@ -386,6 +473,9 @@
                     <td>R$ ${item.orcado.toFixed(2)}</td>
                     <td>R$ ${item.realizado.toFixed(2)}</td>
                     <td class="${diff >= 0 ? 'text-green' : 'text-red'}">R$ ${diff.toFixed(2)}</td>
+                    <td>
+                        ${item.id ? `<button class="btn-warning" onclick="editarOrcamento(${item.id})">Editar</button> <button class="btn-danger" onclick="deletarOrcamento(${item.id})">Excluir</button>` : '-'}
+                    </td>
                 `;
                 tabelaDRE.appendChild(trDRE);
             }

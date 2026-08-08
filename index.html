@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+
+   <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -116,29 +117,42 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Descrição</label>
-                        <input type="text" id="descricao" placeholder="Ex: Salário, Supermercado..." required>
+                        <label>Categoria (Para DRE e Orçamento)</label>
+                        <select id="categoria">
+                            <option value="Alimentação">Alimentação</option>
+                            <option value="Moradia">Moradia</option>
+                            <option value="Transporte">Transporte</option>
+                            <option value="Lazer">Lazer</option>
+                            <option value="Saúde">Saúde</option>
+                            <option value="Educação">Educação</option>
+                            <option value="Salário/Renda">Salário/Renda</option>
+                            <option value="Outros">Outros</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Descrição Detalhada</label>
+                        <input type="text" id="descricao" placeholder="Ex: Supermercado Extra, Aluguel..." required>
                     </div>
                     <div class="form-group">
                         <label>Valor (R$)</label>
                         <input type="number" step="0.01" id="valor" placeholder="0.00" required>
                     </div>
                     <div class="form-group">
-                        <label>Natureza (Fixo ou Variável)</label>
+                        <label>Natureza</label>
                         <select id="natureza">
                             <option value="Fixo">Fixo</option>
                             <option value="Variável">Variável</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Urgência (Urgente ou Não Urgente)</label>
+                        <label>Urgência</label>
                         <select id="urgencia">
                             <option value="Urgente">Urgente (Essencial)</option>
                             <option value="Não Urgente">Não Urgente (Supérfluo)</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Orçamento Planejado (Meta) para o item</label>
+                        <label>Orçamento Planejado (Meta) para a Categoria</label>
                         <input type="number" step="0.01" id="orcamento" placeholder="0.00">
                     </div>
                     <button type="submit">Adicionar Lançamento</button>
@@ -151,7 +165,7 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>Categoria / Item</th>
+                            <th>Categoria</th>
                             <th>Orçado</th>
                             <th>Realizado</th>
                             <th>Diferença</th>
@@ -169,6 +183,7 @@
                 <thead>
                     <tr>
                         <th>Tipo</th>
+                        <th>Categoria</th>
                         <th>Descrição</th>
                         <th>Natureza</th>
                         <th>Urgência</th>
@@ -195,6 +210,7 @@
             const novaTransacao = {
                 id: Date.now(),
                 tipo: document.getElementById('tipo').value,
+                categoria: document.getElementById('categoria').value,
                 descricao: document.getElementById('descricao').value,
                 valor: parseFloat(document.getElementById('valor').value),
                 natureza: document.getElementById('natureza').value,
@@ -226,6 +242,7 @@
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td style="color: ${t.tipo === 'Receita' ? 'green' : 'red'}; font-weight:bold;">${t.tipo}</td>
+                    <td>${t.categoria}</td>
                     <td>${t.descricao}</td>
                     <td>${t.natureza}</td>
                     <td>${t.urgencia}</td>
@@ -237,11 +254,12 @@
                 if(t.tipo === 'Receita') rTotal += t.valor;
                 if(t.tipo === 'Despesa') {
                     dTotal += t.valor;
-                    if(!resumoDRE[t.descricao]) {
-                        resumoDRE[t.descricao] = { orcado: t.orcamento, realizado: t.valor };
+                    if(!resumoDRE[t.categoria]) {
+                        resumoDRE[t.categoria] = { orcado: t.orcamento, realizado: t.valor };
                     } else {
-                        resumoDRE[t.descricao].realizado += t.valor;
-                        resumoDRE[t.descricao].orcado += t.orcamento;
+                        resumoDRE[t.categoria].realizado += t.valor;
+                        // Soma o orçamento se preenchido
+                        resumoDRE[t.categoria].orcado = Math.max(resumoDRE[t.categoria].orcado, t.orcamento);
                     }
                 }
             });
@@ -252,12 +270,12 @@
             totSaldo.innerText = saldo.toFixed(2);
             totSaldo.style.color = saldo >= 0 ? 'green' : 'red';
 
-            for(let desc in resumoDRE) {
-                let item = resumoDRE[desc];
+            for(let cat in resumoDRE) {
+                let item = resumoDRE[cat];
                 let diff = item.orcado - item.realizado;
                 const trDRE = document.createElement('tr');
                 trDRE.innerHTML = `
-                    <td>${desc}</td>
+                    <td>${cat}</td>
                     <td>R$ ${item.orcado.toFixed(2)}</td>
                     <td>R$ ${item.realizado.toFixed(2)}</td>
                     <td style="color: ${diff >= 0 ? 'green' : 'red'}; font-weight:bold;">R$ ${diff.toFixed(2)}</td>

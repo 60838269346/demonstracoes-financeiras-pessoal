@@ -132,19 +132,25 @@
             text-align: left;
             position: sticky;
             left: 0;
-            z-index: 3;
+            z-index: 5;
             min-width: 240px;
             border-right: 2px solid var(--border);
+            background: #ffffff;
         }
         th {
             background-color: #f1f5f9;
             font-weight: 700;
             position: sticky;
             top: 0;
-            z-index: 2;
+            z-index: 3;
+        }
+        /* Cabeçalho da segunda linha precisa ter topo ajustado e z-index alto */
+        thead tr:nth-child(2) th {
+            top: 37px;
+            z-index: 3;
         }
         th:first-child {
-            z-index: 4;
+            z-index: 6;
         }
         .text-red {
             color: var(--danger);
@@ -161,8 +167,14 @@
         .row-group th {
             background-color: #f8fafc;
         }
+        .row-group td:first-child {
+            background-color: #f8fafc;
+        }
         .row-sub td {
             padding-left: 20px !important;
+        }
+        .row-sub td:first-child {
+            background-color: #ffffff;
         }
         .col-analise {
             background-color: #f8fafc;
@@ -597,34 +609,36 @@
                     let valReal = 0;
 
                     if(tipoCalculo === 'categoria') {
-                        orcamentos.filter(o => o.mes === mes && o.categoria === categoria).forEach(o => valOrc += o.valor);
-                        transacoes.filter(t => t.mes === mes && t.categoria === categoria).forEach(t => valReal += t.valor);
+                        // Comparação exata ou normalizada para evitar problemas com acentuação ou case
+                        const catLower = categoria.trim().toLowerCase();
+                        orcamentos.filter(o => o.mes === mes && o.categoria.trim().toLowerCase() === catLower).forEach(o => valOrc += o.valor);
+                        transacoes.filter(t => t.mes === mes && t.categoria.trim().toLowerCase() === catLower).forEach(t => valReal += t.valor);
                     } else if(tipoCalculo === 'total_receitas') {
-                        orcamentos.filter(o => o.mes === mes && contasReceita.includes(o.categoria)).forEach(o => valOrc += o.valor);
-                        transacoes.filter(t => t.mes === mes && contasReceita.includes(t.categoria)).forEach(t => valReal += t.valor);
+                        orcamentos.filter(o => o.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => valOrc += o.valor);
+                        transacoes.filter(t => t.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => valReal += t.valor);
                     } else if(tipoCalculo === 'total_despesas') {
-                        orcamentos.filter(o => o.mes === mes && contasDespesa.includes(o.categoria)).forEach(o => valOrc += o.valor);
-                        transacoes.filter(t => t.mes === mes && contasDespesa.includes(o.categoria)).forEach(t => valReal += t.valor);
+                        orcamentos.filter(o => o.mes === mes && contasDespesa.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => valOrc += o.valor);
+                        transacoes.filter(t => t.mes === mes && contasDespesa.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => valReal += t.valor);
                     } else if(tipoCalculo === 'sobra_bruta') {
                         let recOrc = 0, despOrc = 0, recReal = 0, despReal = 0;
-                        orcamentos.filter(o => o.mes === mes && contasReceita.includes(o.categoria)).forEach(o => recOrc += o.valor);
-                        orcamentos.filter(o => o.mes === mes && contasDespesa.includes(o.categoria)).forEach(o => despOrc += o.valor);
-                        transacoes.filter(t => t.mes === mes && contasReceita.includes(o.categoria)).forEach(t => recReal += t.valor);
-                        transacoes.filter(t => t.mes === mes && contasDespesa.includes(o.categoria)).forEach(t => despReal += t.valor);
+                        orcamentos.filter(o => o.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => recOrc += o.valor);
+                        orcamentos.filter(o => o.mes === mes && contasDespesa.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => despOrc += o.valor);
+                        transacoes.filter(t => t.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => recReal += t.valor);
+                        transacoes.filter(t => t.mes === mes && contasDespesa.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => despReal += t.valor);
                         valOrc = recOrc - despOrc;
                         valReal = recReal - despReal;
                     } else if(tipoCalculo === 'total_semanal') {
-                        orcamentos.filter(o => o.mes === mes && contasSemanais.includes(o.categoria)).forEach(o => valOrc += o.valor);
-                        transacoes.filter(t => t.mes === mes && contasSemanais.includes(o.categoria)).forEach(t => valReal += t.valor);
+                        orcamentos.filter(o => o.mes === mes && contasSemanais.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => valOrc += o.valor);
+                        transacoes.filter(t => t.mes === mes && contasSemanais.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => valReal += t.valor);
                     } else if(tipoCalculo === 'sobra_liquida') {
                         let recOrc = 0, despOrc = 0, semOrc = 0, recReal = 0, despReal = 0, semReal = 0;
-                        orcamentos.filter(o => o.mes === mes && contasReceita.includes(o.categoria)).forEach(o => recOrc += o.valor);
-                        orcamentos.filter(o => o.mes === mes && contasDespesa.includes(o.categoria)).forEach(o => despOrc += o.valor);
-                        orcamentos.filter(o => o.mes === mes && contasSemanais.includes(o.categoria)).forEach(o => semOrc += o.valor);
+                        orcamentos.filter(o => o.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => recOrc += o.valor);
+                        orcamentos.filter(o => o.mes === mes && contasDespesa.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => despOrc += o.valor);
+                        orcamentos.filter(o => o.mes === mes && contasSemanais.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => semOrc += o.valor);
                         
-                        transacoes.filter(t => t.mes === mes && contasReceita.includes(t.categoria)).forEach(t => recReal += t.valor);
-                        transacoes.filter(t => t.mes === mes && contasDespesa.includes(t.categoria)).forEach(t => despReal += t.valor);
-                        transacoes.filter(t => t.mes === mes && contasSemanais.includes(t.categoria)).forEach(t => semReal += t.valor);
+                        transacoes.filter(t => t.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => recReal += t.valor);
+                        transacoes.filter(t => t.mes === mes && contasDespesa.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => despReal += t.valor);
+                        transacoes.filter(t => t.mes === mes && contasSemanais.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => semReal += t.valor);
 
                         valOrc = (recOrc - despOrc) - semOrc;
                         valReal = (recReal - despReal) - semReal;

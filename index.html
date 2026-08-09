@@ -105,10 +105,18 @@
         .btn-warning:hover {
             background-color: #d97706 !important;
         }
+        .table-container {
+            max-height: 600px;
+            overflow-y: auto;
+            overflow-x: auto;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+        }
         table {
             width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 0;
             font-size: 0.82rem;
         }
         th, td {
@@ -118,19 +126,25 @@
             border-right: 1px solid #f1f5f9;
             min-width: 95px;
             white-space: nowrap;
+            background: #ffffff;
         }
         th:first-child, td:first-child {
             text-align: left;
             position: sticky;
             left: 0;
-            background: #ffffff;
-            z-index: 2;
+            z-index: 3;
             min-width: 240px;
             border-right: 2px solid var(--border);
         }
         th {
             background-color: #f1f5f9;
             font-weight: 700;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+        }
+        th:first-child {
+            z-index: 4;
         }
         .text-red {
             color: var(--danger);
@@ -140,14 +154,14 @@
             color: var(--success);
             font-weight: bold;
         }
-        .table-container {
-            overflow-x: auto;
-        }
-        .row-group {
+        .row-group td {
             background-color: #f8fafc;
             font-weight: bold;
         }
-        .row-sub {
+        .row-group th {
+            background-color: #f8fafc;
+        }
+        .row-sub td {
             padding-left: 20px !important;
         }
         .col-analise {
@@ -590,18 +604,18 @@
                         transacoes.filter(t => t.mes === mes && contasReceita.includes(t.categoria)).forEach(t => valReal += t.valor);
                     } else if(tipoCalculo === 'total_despesas') {
                         orcamentos.filter(o => o.mes === mes && contasDespesa.includes(o.categoria)).forEach(o => valOrc += o.valor);
-                        transacoes.filter(t => t.mes === mes && contasDespesa.includes(t.categoria)).forEach(t => valReal += t.valor);
+                        transacoes.filter(t => t.mes === mes && contasDespesa.includes(o.categoria)).forEach(t => valReal += t.valor);
                     } else if(tipoCalculo === 'sobra_bruta') {
                         let recOrc = 0, despOrc = 0, recReal = 0, despReal = 0;
                         orcamentos.filter(o => o.mes === mes && contasReceita.includes(o.categoria)).forEach(o => recOrc += o.valor);
                         orcamentos.filter(o => o.mes === mes && contasDespesa.includes(o.categoria)).forEach(o => despOrc += o.valor);
-                        transacoes.filter(t => t.mes === mes && contasReceita.includes(t.categoria)).forEach(t => recReal += t.valor);
-                        transacoes.filter(t => t.mes === mes && contasDespesa.includes(t.categoria)).forEach(t => despReal += t.valor);
+                        transacoes.filter(t => t.mes === mes && contasReceita.includes(o.categoria)).forEach(t => recReal += t.valor);
+                        transacoes.filter(t => t.mes === mes && contasDespesa.includes(o.categoria)).forEach(t => despReal += t.valor);
                         valOrc = recOrc - despOrc;
                         valReal = recReal - despReal;
                     } else if(tipoCalculo === 'total_semanal') {
                         orcamentos.filter(o => o.mes === mes && contasSemanais.includes(o.categoria)).forEach(o => valOrc += o.valor);
-                        transacoes.filter(t => t.mes === mes && contasSemanais.includes(t.categoria)).forEach(t => valReal += t.valor);
+                        transacoes.filter(t => t.mes === mes && contasSemanais.includes(o.categoria)).forEach(t => valReal += t.valor);
                     } else if(tipoCalculo === 'sobra_liquida') {
                         let recOrc = 0, despOrc = 0, semOrc = 0, recReal = 0, despReal = 0, semReal = 0;
                         orcamentos.filter(o => o.mes === mes && contasReceita.includes(o.categoria)).forEach(o => recOrc += o.valor);

@@ -166,7 +166,7 @@
         <div class="grid">
             <!-- BLOCO 1: Planejamento Orçamentário -->
             <div class="card">
-                <h2 id="tituloFormOrc">1. Definir Orçamento Mensal (Meta)</h2>
+                <h2 id="tituloFormOrc">Definir Orçamento Mensal (Meta)</h2>
                 <form id="orcamentoForm">
                     <input type="hidden" id="editOrcId">
                     <div class="form-group">
@@ -231,7 +231,7 @@
 
             <!-- BLOCO 2: Lançamentos Reais (Fluxo de Caixa) -->
             <div class="card">
-                <h2 id="tituloFormTrans">2. Lançamento Real (Entradas e Saídas)</h2>
+                <h2 id="tituloFormTrans">Lançamento Real (Entradas e Saídas)</h2>
                 <form id="transacaoForm">
                     <input type="hidden" id="editTransId">
                     <div class="form-group">
@@ -429,7 +429,7 @@
                 orcamentos = orcamentos.map(o => o.id === Number(editId) ? novoOrc : o);
                 document.getElementById('editOrcId').value = '';
                 document.getElementById('btnSalvarOrc').innerText = 'Salvar Orçamento';
-                document.getElementById('tituloFormOrc').innerText = '1. Definir Orçamento Mensal (Meta)';
+                document.getElementById('tituloFormOrc').innerText = 'Definir Orçamento Mensal (Meta)';
             } else {
                 orcamentos.push(novoOrc);
             }
@@ -458,7 +458,7 @@
                 transacoes = transacoes.map(t => t.id === Number(editId) ? novaTrans : t);
                 document.getElementById('editTransId').value = '';
                 document.getElementById('btnSalvarTrans').innerText = 'Adicionar Lançamento Real';
-                document.getElementById('tituloFormTrans').innerText = '2. Lançamento Real (Entradas e Saídas)';
+                document.getElementById('tituloFormTrans').innerText = 'Lançamento Real (Entradas e Saídas)';
             } else {
                 transacoes.push(novaTrans);
             }
@@ -484,7 +484,7 @@
                 document.getElementById('orcDescricao').value = o.descricao || '';
                 document.getElementById('orcValor').value = o.valor;
                 document.getElementById('btnSalvarOrc').innerText = 'Atualizar Orçamento';
-                document.getElementById('tituloFormOrc').innerText = '1. Editando Orçamento';
+                document.getElementById('tituloFormOrc').innerText = 'Editando Orçamento';
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
         }
@@ -515,7 +515,7 @@
                 document.getElementById('transDescricao').value = t.descricao;
                 document.getElementById('transValor').value = t.valor;
                 document.getElementById('btnSalvarTrans').innerText = 'Atualizar Lançamento Real';
-                document.getElementById('tituloFormTrans').innerText = '2. Editando Lançamento Real';
+                document.getElementById('tituloFormTrans').innerText = 'Editando Lançamento Real';
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
         }
@@ -576,7 +576,6 @@
                 if(classeExtra) tr.className += ' ' + classeExtra;
 
                 let html = `<td>${titulo}</td>`;
-
                 let valorMesAnteriorReal = null;
 
                 mesesAno.forEach((mes, index) => {
@@ -669,7 +668,7 @@
             criarLinhaHorizontal("Total Gastos Semanais", "", "total_semanal", true);
 
             // = SOBRA LIQUIDA (GUARDAR)
-            criarLinhaHorizontal("= SOBRA LIQUIDA( Guardar )", "", "sobra_liquida", true);
+            criarLinhaHorizontal("= SOBRA LIQUIDA (Guardar)", "", "sobra_liquida", true);
         }
 
         renderizar();

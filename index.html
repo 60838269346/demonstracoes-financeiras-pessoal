@@ -144,7 +144,6 @@
             top: 0;
             z-index: 3;
         }
-        /* Cabeçalho da segunda linha precisa ter topo ajustado e z-index alto */
         thead tr:nth-child(2) th {
             top: 37px;
             z-index: 3;
@@ -233,7 +232,7 @@
                                 <option value="Cartão Magalu">Cartão Magalu</option>
                                 <option value="Supermercado">Supermercado</option>
                                 <option value="Despesas fixas">Despesas fixas</option>
-                                <option value="Despesas Variaveis">Despesas Variaveis</option>
+                                <option value="Despesas Variáveis">Despesas Variáveis</option>
                             </optgroup>
                             <optgroup label="DETALHAMENTO SEMANAL">
                                 <option value="Gasto semana 1">Gasto semana 1</option>
@@ -298,7 +297,7 @@
                                 <option value="Cartão Magalu">Cartão Magalu</option>
                                 <option value="Supermercado">Supermercado</option>
                                 <option value="Despesas fixas">Despesas fixas</option>
-                                <option value="Despesas Variaveis">Despesas Variaveis</option>
+                                <option value="Despesas Variáveis">Despesas Variáveis</option>
                             </optgroup>
                             <optgroup label="DETALHAMENTO SEMANAL">
                                 <option value="Gasto semana 1">Gasto semana 1</option>
@@ -420,7 +419,7 @@
             "Cartão Magalu", 
             "Supermercado", 
             "Despesas fixas", 
-            "Despesas Variaveis"
+            "Despesas Variáveis"
         ];
         const contasSemanais = [
             "Gasto semana 1", 
@@ -609,7 +608,6 @@
                     let valReal = 0;
 
                     if(tipoCalculo === 'categoria') {
-                        // Comparação exata ou normalizada para evitar problemas com acentuação ou case
                         const catLower = categoria.trim().toLowerCase();
                         orcamentos.filter(o => o.mes === mes && o.categoria.trim().toLowerCase() === catLower).forEach(o => valOrc += o.valor);
                         transacoes.filter(t => t.mes === mes && t.categoria.trim().toLowerCase() === catLower).forEach(t => valReal += t.valor);

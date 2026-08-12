@@ -56,6 +56,14 @@
             box-shadow: var(--shadow);
             overflow-x: auto;
         }
+        /* Contêiner com rolagem para congelar cabeçalho e coluna */
+        .table-responsive {
+            max-height: 550px;
+            overflow: auto;
+            position: relative;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+        }
         .form-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -135,22 +143,41 @@
             border-bottom: 1px solid #e2e8f0;
             white-space: nowrap;
         }
+        /* Congelar o cabeçalho ao descer */
         th {
             background-color: #f8fafc;
             font-weight: 700;
             color: var(--text-muted);
             border-top: 1px solid #e2e8f0;
             border-bottom: 2px solid #cbd5e1;
+            position: sticky;
+            top: 0;
+            z-index: 3;
+        }
+        /* Congelar a primeira coluna (plano de contas) ao ir para a lateral */
+        td:first-child, th:first-child {
+            position: sticky;
+            left: 0;
+            background-color: #ffffff;
+            z-index: 2;
+            border-right: 2px solid #e2e8f0;
+        }
+        /* Ajuste do fundo da primeira coluna em cabeçalhos e grupos */
+        th:first-child {
+            background-color: #f8fafc !important;
+            z-index: 4;
+        }
+        .row-group td {
+            background-color: #f1f5f9 !important;
+            font-weight: bold;
+            color: #0f172a;
         }
         tr:hover td {
             background-color: #fcfcfc;
         }
-        .row-group {
+        /* Manter a cor correta da primeira coluna nas linhas de grupo ao passar o mouse ou fixar */
+        .row-group td:first-child {
             background-color: #f1f5f9 !important;
-            font-weight: bold;
-        }
-        .row-group td {
-            color: #0f172a;
         }
         .col-horizontal {
             background-color: #f8fafc;
@@ -251,16 +278,18 @@
         <!-- Visão Analítica -->
         <div class="card">
             <h2>Visão Analítica Anual (Orçado x Realizado & Análise Horizontal)</h2>
-            <table>
-                <thead>
-                    <tr id="cabecalhoTabela">
-                        <th>Categoria / Indicador</th>
-                    </tr>
-                </thead>
-                <tbody id="tabelaAnaliticaAno">
-                    <!-- Preenchido via JavaScript -->
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr id="cabecalhoTabela">
+                            <th>Categoria / Indicador</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaAnaliticaAno">
+                        <!-- Preenchido via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
         </div>
 
         <!-- Histórico de Lançamentos Compacto com Filtro de Ano e Mês -->

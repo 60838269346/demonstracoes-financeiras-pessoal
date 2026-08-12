@@ -1,71 +1,164 @@
-function criarLinhaHorizontal(titulo, categoria, tipoCalculo, isGrupo = false, classeExtra = '') {
-    const tr = document.createElement('tr');
-    if(isGrupo) tr.className = 'row-group';
-    if(classeExtra) tr.className += ' ' + classeExtra;
-    
-    let html = `<td>${titulo}</td>`;
-    let valorMesAnteriorReal = null;
-
-    mesesAno.forEach((mes, index) => {
-        let valOrc = 0;
-        let valReal = 0;
-
-        if(tipoCalculo === 'categoria') {
-            const catLower = categoria.trim().toLowerCase();
-            orcamentos.filter(o => o.mes === mes && o.categoria.trim().toLowerCase() === catLower).forEach(o => valOrc += o.valor);
-            transacoes.filter(t => t.mes === mes && t.categoria.trim().toLowerCase() === catLower).forEach(t => valReal += t.valor);
-        } else if(tipoCalculo === 'total_receitas') {
-            orcamentos.filter(o => o.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => valOrc += o.valor);
-            transacoes.filter(t => t.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => valReal += t.valor);
-        } else if(tipoCalculo === 'total_despesas') {
-            orcamentos.filter(o => o.mes === mes && contasDespesa.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => valOrc += o.valor);
-            transacoes.filter(t => t.mes === mes && contasDespesa.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => valReal += t.valor);
-        } else if(tipoCalculo === 'sobra_bruta') {
-            let recOrc = 0, despOrc = 0, recReal = 0, despReal = 0;
-            orcamentos.filter(o => o.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => recOrc += o.valor);
-            orcamentos.filter(o => o.mes === mes && contasDespesa.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => despOrc += o.valor);
-            transacoes.filter(t => t.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => recReal += t.valor);
-            transacoes.filter(t => t.mes === mes && contasDespesa.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => despReal += t.valor);
-            valOrc = recOrc - despOrc;
-            valReal = recReal - despReal;
-        } else if(tipoCalculo === 'total_semanal') {
-            orcamentos.filter(o => o.mes === mes && contasSemanais.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => valOrc += o.valor);
-            transacoes.filter(t => t.mes === mes && contasSemanais.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => valReal += t.valor);
-        } else if(tipoCalculo === 'sobra_liquida') {
-            let recOrc = 0, despOrc = 0, semOrc = 0, recReal = 0, despReal = 0, semReal = 0;
-            orcamentos.filter(o => o.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => recOrc += o.valor);
-            orcamentos.filter(o => o.mes === mes && contasDespesa.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => despOrc += o.valor);
-            orcamentos.filter(o => o.mes === mes && contasSemanais.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => semOrc += o.valor);
-            transacoes.filter(t => t.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => recReal += t.valor);
-            transacoes.filter(t => t.mes === mes && contasDespesa.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => despReal += t.valor);
-            transacoes.filter(t => t.mes === mes && contasSemanais.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => semReal += t.valor);
-            valOrc = (recOrc - despOrc) - semOrc;
-            valReal = (recReal - despReal) - semReal;
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demonstrações Financeiras Pessoais</title>
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --primary: #2563eb;
+            --border: #e2e8f0;
         }
-
-        let variacaoPerc = 0;
-        let temVariacao = false;
-        if (index > 0 && valorMesAnteriorReal !== null && valorMesAnteriorReal !== 0) {
-            variacaoPerc = ((valReal - valorMesAnteriorReal) / Math.abs(valorMesAnteriorReal)) * 100;
-            temVariacao = true;
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
         }
-        valorMesAnteriorReal = valReal;
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+        th, td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+        th {
+            background-color: #f1f5f9;
+            font-weight: 600;
+        }
+        .row-group {
+            background-color: #f8fafc;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Demonstrações Financeiras</h1>
+        <div class="card">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Categoria / Indicador</th>
+                        <!-- Cabeçalhos gerados dinamicamente ou fixos podem ser inseridos aqui -->
+                    </tr>
+                </thead>
+                <tbody id="tabelaAnaliticaAno">
+                    <!-- Linhas injetadas via JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-        let estiloOrc = tipoCalculo.includes('sobra') || tipoCalculo.includes('total') ? `style="font-weight: bold; color: ${valOrc >= 0 ? '#16a34a' : '#ef4444'};"` : '';
-        let estiloReal = tipoCalculo.includes('sobra') || tipoCalculo.includes('total') ? `style="font-weight: bold; color: ${valReal >= 0 ? '#16a34a' : '#ef4444'};"` : '';
+    <script>
+        const mesesAno = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+        const contasReceita = ['Salário', 'Investimentos'];
+        const contasDespesa = ['Aluguel', 'Supermercado'];
+        const contasSemanais = ['Lazer'];
         
-        let textoDelta = "-";
-        let corDelta = "";
-        if (temVariacao) {
-            textoDelta = (variacaoPerc > 0 ? "+" : "") + variacaoPerc.toFixed(1) + "%";
-            corDelta = variacaoPerc >= 0 ? "color: #16a34a;" : "color: #ef4444;";
+        let orcamentos = [];
+        let transacoes = [];
+        const tabelaAnaliticaAno = document.getElementById('tabelaAnaliticaAno');
+
+        function criarLinhaHorizontal(titulo, categoria, tipoCalculo, isGrupo = false, classeExtra = '') {
+            const tr = document.createElement('tr');
+            if(isGrupo) tr.className = 'row-group';
+            if(classeExtra) tr.className += ' ' + classeExtra;
+            
+            let html = `<td>${titulo}</td>`;
+            let valorMesAnteriorReal = null;
+
+            mesesAno.forEach((mes, index) => {
+                let valOrc = 0;
+                let valReal = 0;
+
+                if(tipoCalculo === 'categoria') {
+                    const catLower = categoria.trim().toLowerCase();
+                    orcamentos.filter(o => o.mes === mes && o.categoria.trim().toLowerCase() === catLower).forEach(o => valOrc += o.valor);
+                    transacoes.filter(t => t.mes === mes && t.categoria.trim().toLowerCase() === catLower).forEach(t => valReal += t.valor);
+                } else if(tipoCalculo === 'total_receitas') {
+                    orcamentos.filter(o => o.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => valOrc += o.valor);
+                    transacoes.filter(t => t.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => valReal += t.valor);
+                } else if(tipoCalculo === 'total_despesas') {
+                    orcamentos.filter(o => o.mes === mes && contasDespesa.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => valOrc += o.valor);
+                    transacoes.filter(t => t.mes === mes && contasDespesa.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => valReal += t.valor);
+                } else if(tipoCalculo === 'sobra_bruta') {
+                    let recOrc = 0, despOrc = 0, recReal = 0, despReal = 0;
+                    orcamentos.filter(o => o.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => recOrc += o.valor);
+                    orcamentos.filter(o => o.mes === mes && contasDespesa.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => despOrc += o.valor);
+                    transacoes.filter(t => t.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => recReal += t.valor);
+                    transacoes.filter(t => t.mes === mes && contasDespesa.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => despReal += t.valor);
+                    valOrc = recOrc - despOrc;
+                    valReal = recReal - despReal;
+                } else if(tipoCalculo === 'total_semanal') {
+                    orcamentos.filter(o => o.mes === mes && contasSemanais.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => valOrc += o.valor);
+                    transacoes.filter(t => t.mes === mes && contasSemanais.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => valReal += t.valor);
+                } else if(tipoCalculo === 'sobra_liquida') {
+                    let recOrc = 0, despOrc = 0, semOrc = 0, recReal = 0, despReal = 0, semReal = 0;
+                    orcamentos.filter(o => o.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => recOrc += o.valor);
+                    orcamentos.filter(o => o.mes === mes && contasDespesa.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => despOrc += o.valor);
+                    orcamentos.filter(o => o.mes === mes && contasSemanais.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => semOrc += o.valor);
+                    transacoes.filter(t => t.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => recReal += t.valor);
+                    transacoes.filter(t => t.mes === mes && contasDespesa.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => despReal += t.valor);
+                    transacoes.filter(t => t.mes === mes && contasSemanais.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => semReal += t.valor);
+                    valOrc = (recOrc - despOrc) - semOrc;
+                    valReal = (recReal - despReal) - semReal;
+                }
+
+                let variacaoPerc = 0;
+                let temVariacao = false;
+                if (index > 0 && valorMesAnteriorReal !== null && valorMesAnteriorReal !== 0) {
+                    variacaoPerc = ((valReal - valorMesAnteriorReal) / Math.abs(valorMesAnteriorReal)) * 100;
+                    temVariacao = true;
+                }
+                valorMesAnteriorReal = valReal;
+
+                let estiloOrc = tipoCalculo.includes('sobra') || tipoCalculo.includes('total') ? `style="font-weight: bold; color: ${valOrc >= 0 ? '#16a34a' : '#ef4444'};"` : '';
+                let estiloReal = tipoCalculo.includes('sobra') || tipoCalculo.includes('total') ? `style="font-weight: bold; color: ${valReal >= 0 ? '#16a34a' : '#ef4444'};"` : '';
+                
+                let textoDelta = "-";
+                let corDelta = "";
+                if (temVariacao) {
+                    textoDelta = (variacaoPerc > 0 ? "+" : "") + variacaoPerc.toFixed(1) + "%";
+                    corDelta = variacaoPerc >= 0 ? "color: #16a34a;" : "color: #ef4444;";
+                }
+
+                html += `<td ${estiloOrc}>R$ ${valOrc.toFixed(2)}</td>`;
+                html += `<td ${estiloReal}>R$ ${valReal.toFixed(2)}</td>`;
+                html += `<td class="col-analise" style="font-weight: 600; ${corDelta}">${textoDelta}</td>`;
+            });
+
+            tr.innerHTML = html;
+            tabelaAnaliticaAno.appendChild(tr);
         }
 
-        html += `<td ${estiloOrc}>R$ ${valOrc.toFixed(2)}</td>`;
-        html += `<td ${estiloReal}>R$ ${valReal.toFixed(2)}</td>`;
-        html += `<td class="col-analise" style="font-weight: 600; ${corDelta}">${textoDelta}</td>`;
-    });
-
-    tr.innerHTML = html;
-    tabelaAnaliticaAno.appendChild(tr);
-}
+        // Exemplo de chamada inicial para teste do componente
+        criarLinhaHorizontal('Total de Receitas', '', 'total_receitas', true);
+    </script>
+</body>
+</html>

@@ -6,43 +6,60 @@
     <title>Demonstrações Financeiras Pessoais</title>
     <style>
         :root {
-            --bg-color: #f8fafc;
+            --bg-color: #f1f5f9;
             --card-bg: #ffffff;
-            --text-main: #1e293b;
-            --text-muted: #64748b;
-            --primary: #2563eb;
-            --success: #16a34a;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --success: #10b981;
             --danger: #ef4444;
-            --warning: #d97706;
-            --border: #e2e8f0;
+            --warning: #f59e0b;
+            --border: #cbd5e1;
+            --radius: 10px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
         }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
             margin: 0;
-            padding: 20px;
+            padding: 30px;
+            -webkit-font-smoothing: antialiased;
         }
         .container {
-            max-width: 1400px;
+            max-width: 1450px;
             margin: 0 auto;
         }
-        h1, h2 {
+        h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 25px;
             color: var(--text-main);
+            letter-spacing: -0.025em;
+        }
+        h2 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-top: 0;
+            margin-bottom: 18px;
+            color: var(--text-main);
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 8px;
         }
         .card {
             background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
             overflow-x: auto;
         }
         .form-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
             align-items: end;
         }
         .form-group {
@@ -50,70 +67,104 @@
             flex-direction: column;
         }
         .form-group label {
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-bottom: 5px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 6px;
             color: var(--text-muted);
         }
         .form-group select, .form-group input {
-            padding: 8px 12px;
+            padding: 10px 14px;
             border: 1px solid var(--border);
-            border-radius: 6px;
+            border-radius: 8px;
             font-size: 0.9rem;
+            background-color: #f8fafc;
+            color: var(--text-main);
+            transition: all 0.2s ease;
+        }
+        .form-group select:focus, .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background-color: #ffffff;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
         }
         button {
             background-color: var(--primary);
             color: white;
             border: none;
-            padding: 9px 16px;
-            border-radius: 6px;
+            padding: 11px 20px;
+            border-radius: 8px;
             font-weight: 600;
+            font-size: 0.9rem;
             cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
         }
         button:hover {
-            opacity: 0.9;
+            background-color: var(--primary-hover);
+        }
+        button:active {
+            transform: scale(0.98);
         }
         .btn-edit {
             background-color: var(--warning);
-            padding: 5px 10px;
-            font-size: 0.75rem;
-            margin-right: 5px;
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            margin-right: 6px;
+        }
+        .btn-edit:hover {
+            background-color: #d97706;
         }
         .btn-delete {
             background-color: var(--danger);
-            padding: 5px 10px;
-            font-size: 0.75rem;
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+        .btn-delete:hover {
+            background-color: #dc2626;
         }
         table {
             width: 100%;
-            border-collapse: collapse;
+            border-collapse: separate;
+            border-spacing: 0;
             text-align: left;
-            font-size: 0.85rem;
+            font-size: 0.875rem;
         }
         th, td {
-            padding: 8px 10px;
-            border-bottom: 1px solid var(--border);
+            padding: 12px 14px;
+            border-bottom: 1px solid #e2e8f0;
             white-space: nowrap;
         }
         th {
-            background-color: #f1f5f9;
-            font-weight: 600;
+            background-color: #f8fafc;
+            font-weight: 700;
+            color: var(--text-muted);
+            border-top: 1px solid #e2e8f0;
+            border-bottom: 2px solid #cbd5e1;
+        }
+        tr:hover td {
+            background-color: #fcfcfc;
         }
         .row-group {
-            background-color: #f8fafc;
+            background-color: #f1f5f9 !important;
             font-weight: bold;
         }
+        .row-group td {
+            color: #0f172a;
+        }
         .col-horizontal {
-            background-color: #fafafa;
+            background-color: #f8fafc;
             color: var(--text-muted);
-            font-size: 0.8rem;
+            font-size: 0.825rem;
+            font-weight: 500;
         }
         .historico-container {
-            max-height: 350px;
+            max-height: 380px;
             overflow-y: auto;
-            border: 1px solid var(--border);
-            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
             margin-top: 15px;
+            background-color: #ffffff;
         }
     </style>
 </head>
@@ -248,19 +299,8 @@
         const contasReceita = ['Salário', 'Outras Receitas'];
         const contasDespesa = ['Aluguel', 'Contas Básicas', 'Supermercado', 'Lazer / Variados'];
 
-        let orcamentos = [
-            { ano: 2026, mes: 'Janeiro', categoria: 'Salário', valor: 5000 },
-            { ano: 2026, mes: 'Janeiro', categoria: 'Aluguel', valor: 1500 },
-            { ano: 2026, mes: 'Janeiro', categoria: 'Supermercado', valor: 800 },
-            { ano: 2026, mes: 'Janeiro', categoria: 'Lazer / Variados', valor: 400 }
-        ];
-
-        let transacoes = [
-            { ano: 2026, mes: 'Janeiro', categoria: 'Salário', valor: 5000 },
-            { ano: 2026, mes: 'Janeiro', categoria: 'Aluguel', valor: 1500 },
-            { ano: 2026, mes: 'Janeiro', categoria: 'Supermercado', valor: 850 },
-            { ano: 2026, mes: 'Janeiro', categoria: 'Lazer / Variados', valor: 350 }
-        ];
+        let orcamentos = [];
+        let transacoes = [];
 
         const tabelaAnaliticaAno = document.getElementById('tabelaAnaliticaAno');
         const cabecalhoTabela = document.getElementById('cabecalhoTabela');
@@ -331,12 +371,12 @@
 
                 let isDespesaCat = contasDespesa.some(c => c.trim().toLowerCase() === categoria.trim().toLowerCase()) || tipoCalculo === 'total_despesas' || tipoCalculo === 'total_semanal';
                 
-                let corOrc = valOrc < 0 || isDespesaCat ? '#ef4444' : '#1e293b';
-                let corReal = valReal < 0 || isDespesaCat ? '#ef4444' : '#1e293b';
+                let corOrc = valOrc < 0 || isDespesaCat ? '#ef4444' : '#0f172a';
+                let corReal = valReal < 0 || isDespesaCat ? '#ef4444' : '#0f172a';
                 
                 if (tipoCalculo.includes('sobra') || tipoCalculo === 'total_receitas') {
-                    corOrc = valOrc >= 0 ? '#16a34a' : '#ef4444';
-                    corReal = valReal >= 0 ? '#16a34a' : '#ef4444';
+                    corOrc = valOrc >= 0 ? '#10b981' : '#ef4444';
+                    corReal = valReal >= 0 ? '#10b981' : '#ef4444';
                 }
 
                 let estiloOrc = `style="color: ${corOrc}; font-weight: ${isGrupo ? 'bold' : 'normal'};"`;

@@ -91,9 +91,6 @@
             background-color: #f8fafc;
             font-weight: bold;
         }
-        .col-analise {
-            background-color: #fafafa;
-        }
     </style>
 </head>
 <body>
@@ -157,7 +154,7 @@
 
         <!-- Visão Analítica -->
         <div class="card">
-            <h2>Visão Analítica Anual (Orçado x Realizado & Análise Horizontal)</h2>
+            <h2>Visão Analítica Anual (Orçado x Realizado)</h2>
             <table>
                 <thead>
                     <tr id="cabecalhoTabela">
@@ -198,7 +195,7 @@
         function montarCabecalho() {
             let htmlTh = '<th>Categoria / Indicador</th>';
             mesesAno.forEach(mes => {
-                htmlTh += `<th>${mes} (Orç)</th><th>${mes} (Real)</th><th class="col-analise">Delta</th>`;
+                htmlTh += `<th>${mes} (Orç)</th><th>${mes} (Real)</th>`;
             });
             cabecalhoTabela.innerHTML = htmlTh;
         }
@@ -209,9 +206,8 @@
             if (classeExtra) tr.className += ' ' + classeExtra;
 
             let html = `<td>${titulo}</td>`;
-            let valorMesAnteriorReal = null;
 
-            mesesAno.forEach((mes, index) => {
+            mesesAno.forEach(mes => {
                 let valOrc = 0;
                 let valReal = 0;
 
@@ -248,28 +244,11 @@
                     valReal = (recReal - despReal) - semReal;
                 }
 
-                let variacaoPerc = 0;
-                let temVariacao = false;
-                if (index > 0 && valorMesAnteriorReal !== null && valorMesAnteriorReal !== 0) {
-                    variacaoPerc = ((valReal - valorMesAnteriorReal) / Math.abs(valorMesAnteriorReal)) * 100;
-                    temVariacao = true;
-                }
-                valorMesAnteriorReal = valReal;
-
-                // Cores dinâmicas para valores negativos (vermelho) e positivos (verde ou cor padrão)
                 let estiloOrc = `style="${valOrc < 0 ? 'color: #ef4444; font-weight: bold;' : (tipoCalculo.includes('sobra') || tipoCalculo.includes('total') ? 'color: #16a34a; font-weight: bold;' : '')}"`;
                 let estiloReal = `style="${valReal < 0 ? 'color: #ef4444; font-weight: bold;' : (tipoCalculo.includes('sobra') || tipoCalculo.includes('total') ? 'color: #16a34a; font-weight: bold;' : '')}"`;
 
-                let textoDelta = "-";
-                let corDelta = "";
-                if (temVariacao) {
-                    textoDelta = (variacaoPerc > 0 ? "+" : "") + variacaoPerc.toFixed(1) + "%";
-                    corDelta = variacaoPerc >= 0 ? "color: #16a34a;" : "color: #ef4444;";
-                }
-
                 html += `<td ${estiloOrc}>R$ ${valOrc.toFixed(2)}</td>`;
                 html += `<td ${estiloReal}>R$ ${valReal.toFixed(2)}</td>`;
-                html += `<td class="col-analise" style="font-weight: 600; ${corDelta}">${textoDelta}</td>`;
             });
 
             tr.innerHTML = html;

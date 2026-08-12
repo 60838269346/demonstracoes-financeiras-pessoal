@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -16,15 +16,15 @@
             --danger: #ef4444;
             --warning: #f59e0b;
             --border: #cbd5e1;
-            --radius: 10px;
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --radius: 8px;
+            --shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.03);
         }
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
             margin: 0;
-            padding: 30px;
+            padding: 15px;
             -webkit-font-smoothing: antialiased;
         }
         .container {
@@ -32,42 +32,42 @@
             margin: 0 auto;
         }
         h1 {
-            font-size: 1.75rem;
+            font-size: 1.35rem;
             font-weight: 700;
-            margin-bottom: 25px;
+            margin-bottom: 15px;
             color: var(--text-main);
             letter-spacing: -0.025em;
         }
         h2 {
-            font-size: 1.15rem;
+            font-size: 1.0rem;
             font-weight: 600;
             margin-top: 0;
-            margin-bottom: 18px;
+            margin-bottom: 12px;
             color: var(--text-main);
             border-bottom: 2px solid #f1f5f9;
-            padding-bottom: 8px;
+            padding-bottom: 6px;
         }
         .card {
             background: var(--card-bg);
             border: 1px solid #e2e8f0;
             border-radius: var(--radius);
-            padding: 24px;
-            margin-bottom: 24px;
+            padding: 16px;
+            margin-bottom: 16px;
             box-shadow: var(--shadow);
             overflow-x: auto;
         }
-        /* Contêiner com rolagem para congelar cabeçalho e coluna (altura reduzida para visualizar melhor) */
+        /* Contêiner com rolagem compacto */
         .table-responsive {
-            max-height: 400px;
+            max-height: 320px;
             overflow: auto;
             position: relative;
             border: 1px solid #e2e8f0;
-            border-radius: 8px;
+            border-radius: 6px;
         }
         .form-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 16px;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 10px;
             align-items: end;
         }
         .form-group {
@@ -75,18 +75,18 @@
             flex-direction: column;
         }
         .form-group label {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             color: var(--text-muted);
         }
         .form-group select, .form-group input {
-            padding: 10px 14px;
+            padding: 7px 10px;
             border: 1px solid var(--border);
-            border-radius: 8px;
-            font-size: 0.9rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
             background-color: #f8fafc;
             color: var(--text-main);
             transition: all 0.2s ease;
@@ -101,10 +101,10 @@
             background-color: var(--primary);
             color: white;
             border: none;
-            padding: 11px 20px;
-            border-radius: 8px;
+            padding: 8px 16px;
+            border-radius: 6px;
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             cursor: pointer;
             transition: background-color 0.2s, transform 0.1s;
         }
@@ -116,17 +116,17 @@
         }
         .btn-edit {
             background-color: var(--warning);
-            padding: 6px 12px;
-            font-size: 0.8rem;
-            margin-right: 6px;
+            padding: 4px 8px;
+            font-size: 0.75rem;
+            margin-right: 4px;
         }
         .btn-edit:hover {
             background-color: #d97706;
         }
         .btn-delete {
             background-color: var(--danger);
-            padding: 6px 12px;
-            font-size: 0.8rem;
+            padding: 4px 8px;
+            font-size: 0.75rem;
         }
         .btn-delete:hover {
             background-color: #dc2626;
@@ -136,10 +136,10 @@
             border-collapse: separate;
             border-spacing: 0;
             text-align: left;
-            font-size: 0.875rem;
+            font-size: 0.82rem;
         }
         th, td {
-            padding: 12px 14px;
+            padding: 8px 10px;
             border-bottom: 1px solid #e2e8f0;
             white-space: nowrap;
         }
@@ -162,7 +162,6 @@
             z-index: 2;
             border-right: 2px solid #e2e8f0;
         }
-        /* Ajuste do fundo da primeira coluna em cabeçalhos e grupos */
         th:first-child {
             background-color: #f8fafc !important;
             z-index: 4;
@@ -181,7 +180,7 @@
         .col-horizontal {
             background-color: #f8fafc;
             color: var(--text-muted);
-            font-size: 0.825rem;
+            font-size: 0.78rem;
             font-weight: 500;
         }
         .col-trimestre {
@@ -195,11 +194,11 @@
             color: #1e40af;
         }
         .historico-container {
-            max-height: 380px;
+            max-height: 250px;
             overflow-y: auto;
             border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            margin-top: 15px;
+            border-radius: 6px;
+            margin-top: 10px;
             background-color: #ffffff;
         }
     </style>
@@ -272,14 +271,14 @@
                 </div>
                 <div class="form-group">
                     <label for="descricaoLancamento">Descrição</label>
-                    <input type="text" id="descricaoLancamento" placeholder="Ex: Conta de luz, Compra X...">
+                    <input type="text" id="descricaoLancamento" placeholder="Ex: Conta de luz...">
                 </div>
                 <div class="form-group">
                     <label for="valorLancamento">Valor (R$)</label>
                     <input type="number" id="valorLancamento" step="0.01" placeholder="0.00" required>
                 </div>
                 <div class="form-group">
-                    <button type="submit" id="btnSalvar">Adicionar Lançamento</button>
+                    <button type="submit" id="btnSalvar">Adicionar</button>
                 </div>
             </form>
         </div>
@@ -301,10 +300,10 @@
             </div>
         </div>
 
-        <!-- Histórico de Lançamentos Compacto com Filtro de Ano e Mês -->
+        <!-- Histórico de Lançamentos -->
         <div class="card">
             <h2>Histórico de Lançamentos</h2>
-            <div class="form-grid" style="margin-bottom: 15px;">
+            <div class="form-grid" style="margin-bottom: 10px;">
                 <div class="form-group">
                     <label for="filtroAno">Filtrar por Ano</label>
                     <input type="number" id="filtroAno" value="2026">
@@ -383,12 +382,20 @@
 
         function montarCabecalho() {
             let htmlTh = '<th>Categoria / Indicador</th>';
-            mesesAno.forEach(mes => {
-                htmlTh += `<th>${mes} (Orç)</th><th>${mes} (Real)</th><th class="col-horizontal">% AH</th>`;
-            });
-            trimestres.forEach(trim => {
-                htmlTh += `<th class="col-trimestre">${trim.nome} (Orç)</th><th class="col-trimestre">${trim.nome} (Real)</th><th class="col-trimestre">% AH</th>`;
-            });
+            
+            // Ordem intercalada: Meses 1 a 3 -> 1º Trimestre -> Meses 4 a 6 -> 2º Trimestre -> etc.
+            for (let i = 0; i < 12; i++) {
+                htmlTh += `<th>${mesesAno[i]} (Orç)</th><th>${mesesAno[i]} (Real)</th><th class="col-horizontal">% AH</th>`;
+                
+                // Inserir o trimestre após cada bloco de 3 meses (índices 2, 5, 8, 11)
+                if ((i + 1) % 3 === 0) {
+                    const trimIdx = Math.floor(i / 3);
+                    const trim = trimestres[trimIdx];
+                    htmlTh += `<th class="col-trimestre">${trim.nome} (Orç)</th><th class="col-trimestre">${trim.nome} (Real)</th><th class="col-trimestre">% AH</th>`;
+                }
+            }
+
+            // Total Anual no final
             htmlTh += `<th class="col-anual">Total Anual (Orç)</th><th class="col-anual">Total Anual (Real)</th><th class="col-anual">% AH</th>`;
             cabecalhoTabela.innerHTML = htmlTh;
         }
@@ -407,13 +414,13 @@
                     transacoes.filter(t => t.ano === anoFiltro && t.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => valReal += t.valor);
                 } else if (tipoCalculo === 'total_despesas') {
                     orcamentos.filter(o => o.ano === anoFiltro && o.mes === mes && despesasFixasBase.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => valOrc += o.valor);
-                    transacoes.filter(t => t.ano === anoFiltro && o.mes === mes && despesasFixasBase.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => valReal += t.valor);
+                    transacoes.filter(t => t.ano === anoFiltro && t.mes === mes && despesasFixasBase.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => valReal += t.valor);
                 } else if (tipoCalculo === 'sobra_bruta') {
                     let recOrc = 0, despOrc = 0, recReal = 0, despReal = 0;
                     orcamentos.filter(o => o.ano === anoFiltro && o.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => recOrc += o.valor);
                     orcamentos.filter(o => o.ano === anoFiltro && o.mes === mes && despesasFixasBase.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => despOrc += o.valor);
-                    transacoes.filter(t => t.ano === anoFiltro && o.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => recReal += t.valor);
-                    transacoes.filter(t => t.ano === anoFiltro && o.mes === mes && despesasFixasBase.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => despReal += t.valor);
+                    transacoes.filter(t => t.ano === anoFiltro && t.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => recReal += t.valor);
+                    transacoes.filter(t => t.ano === anoFiltro && t.mes === mes && despesasFixasBase.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => despReal += t.valor);
                     valOrc += (recOrc - despOrc);
                     valReal += (recReal - despReal);
                 } else if (tipoCalculo === 'total_semanal') {
@@ -447,8 +454,9 @@
             let html = `<td>${titulo}</td>`;
             const anoAtualFiltro = parseInt(filtroAno.value) || 2026;
 
-            // Meses Individuais
-            mesesAno.forEach(mes => {
+            // Inserir colunas na mesma ordem intercalada do cabeçalho
+            for (let i = 0; i < 12; i++) {
+                const mes = mesesAno[i];
                 const res = calcularValorPeriodo(anoAtualFiltro, [mes], tipoCalculo, categoria);
                 const valOrc = res.valOrc;
                 const valReal = res.valReal;
@@ -477,37 +485,38 @@
                 html += `<td ${estiloOrc}>R$ ${valOrc.toFixed(2)}</td>`;
                 html += `<td ${estiloReal}>R$ ${valReal.toFixed(2)}</td>`;
                 html += `<td class="col-horizontal">${textoAH}</td>`;
-            });
 
-            // Trimestres
-            trimestres.forEach(trim => {
-                const res = calcularValorPeriodo(anoAtualFiltro, trim.meses, tipoCalculo, categoria);
-                const valOrc = res.valOrc;
-                const valReal = res.valReal;
+                // Inserir o trimestre correspondente após cada bloco de 3 meses
+                if ((i + 1) % 3 === 0) {
+                    const trimIdx = Math.floor(i / 3);
+                    const trim = trimestres[trimIdx];
+                    const resTrim = calcularValorPeriodo(anoAtualFiltro, trim.meses, tipoCalculo, categoria);
+                    const valOrcTrim = resTrim.valOrc;
+                    const valRealTrim = resTrim.valReal;
 
-                let isDespesaCat = contasDespesa.some(c => c.trim().toLowerCase() === categoria.trim().toLowerCase());
-                let corOrc = valOrc < 0 || isDespesaCat ? '#ef4444' : '#0f172a';
-                let corReal = valReal < 0 || isDespesaCat ? '#ef4444' : '#0f172a';
-                if (tipoCalculo.includes('sobra') || tipoCalculo === 'total_receitas') {
-                    corOrc = valOrc >= 0 ? '#10b981' : '#ef4444';
-                    corReal = valReal >= 0 ? '#10b981' : '#ef4444';
+                    let corOrcTrim = valOrcTrim < 0 || isDespesaCat ? '#ef4444' : '#0369a1';
+                    let corRealTrim = valRealTrim < 0 || isDespesaCat ? '#ef4444' : '#0369a1';
+                    if (tipoCalculo.includes('sobra') || tipoCalculo === 'total_receitas') {
+                        corOrcTrim = valOrcTrim >= 0 ? '#10b981' : '#ef4444';
+                        corRealTrim = valRealTrim >= 0 ? '#10b981' : '#ef4444';
+                    }
+
+                    let estiloOrcTrim = `style="color: ${corOrcTrim}; font-weight: bold;"`;
+                    let estiloRealTrim = `style="color: ${corRealTrim}; font-weight: bold;"`;
+
+                    let percentualAHTrim = 0;
+                    let temAHTrim = false;
+                    if (valOrcTrim !== 0) {
+                        percentualAHTrim = (valRealTrim / valOrcTrim) * 100;
+                        temAHTrim = true;
+                    }
+                    let textoAHTrim = temAHTrim ? percentualAHTrim.toFixed(1) + '%' : '-';
+
+                    html += `<td class="col-trimestre" ${estiloOrcTrim}>R$ ${valOrcTrim.toFixed(2)}</td>`;
+                    html += `<td class="col-trimestre" ${estiloRealTrim}>R$ ${valRealTrim.toFixed(2)}</td>`;
+                    html += `<td class="col-trimestre">${textoAHTrim}</td>`;
                 }
-
-                let estiloOrc = `style="color: ${corOrc}; font-weight: ${isGrupo ? 'bold' : 'normal'};"`;
-                let estiloReal = `style="color: ${corReal}; font-weight: ${isGrupo ? 'bold' : 'normal'};"`;
-
-                let percentualAH = 0;
-                let temAH = false;
-                if (valOrc !== 0) {
-                    percentualAH = (valReal / valOrc) * 100;
-                    temAH = true;
-                }
-                let textoAH = temAH ? percentualAH.toFixed(1) + '%' : '-';
-
-                html += `<td class="col-trimestre" ${estiloOrc}>R$ ${valOrc.toFixed(2)}</td>`;
-                html += `<td class="col-trimestre" ${estiloReal}>R$ ${valReal.toFixed(2)}</td>`;
-                html += `<td class="col-trimestre">${textoAH}</td>`;
-            });
+            }
 
             // Total Anual
             const resAno = calcularValorPeriodo(anoAtualFiltro, mesesAno, tipoCalculo, categoria);
@@ -659,7 +668,7 @@
         formLancamento.addEventListener('submit', function(e) {
             e.preventDefault();
             const ano = parseInt(anoLancamentoInput.value) || 2026;
-            const tipo = document.getElementById('tipoLancamento').value;
+            const tipo = document.getElementById('tipoLancamento'].value;
             const mes = document.getElementById('mesLancamento').value;
             const categoria = document.getElementById('categoriaLancamento').value;
             const descricao = document.getElementById('descricaoLancamento').value.trim();
@@ -685,7 +694,7 @@
 
                 editIndexInput.value = '-1';
                 tituloFormulario.textContent = 'Novo Lançamento';
-                btnSalvar.textContent = 'Adicionar Lançamento';
+                btnSalvar.textContent = 'Adicionar';
             } else {
                 if (tipo === 'orcamento') {
                     orcamentos.push({ ano, mes, categoria, descricao, valor });

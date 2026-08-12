@@ -16,58 +16,58 @@
             --danger: #ef4444;
             --warning: #f59e0b;
             --border: #cbd5e1;
-            --radius: 10px;
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --radius: 8px;
+            --shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.03);
         }
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
             margin: 0;
-            padding: 30px;
+            padding: 16px;
             -webkit-font-smoothing: antialiased;
         }
         .container {
-            max-width: 1450px;
+            max-width: 1350px;
             margin: 0 auto;
         }
         h1 {
-            font-size: 1.75rem;
+            font-size: 1.35rem;
             font-weight: 700;
-            margin-bottom: 25px;
+            margin-bottom: 16px;
             color: var(--text-main);
             letter-spacing: -0.025em;
         }
         h2 {
-            font-size: 1.15rem;
+            font-size: 1rem;
             font-weight: 600;
             margin-top: 0;
-            margin-bottom: 18px;
+            margin-bottom: 12px;
             color: var(--text-main);
             border-bottom: 2px solid #f1f5f9;
-            padding-bottom: 8px;
+            padding-bottom: 6px;
         }
         .card {
             background: var(--card-bg);
             border: 1px solid #e2e8f0;
             border-radius: var(--radius);
-            padding: 24px;
-            margin-bottom: 24px;
+            padding: 16px;
+            margin-bottom: 16px;
             box-shadow: var(--shadow);
             overflow-x: auto;
         }
         /* Contêiner com rolagem para congelar cabeçalho e coluna */
         .table-responsive {
-            max-height: 550px;
+            max-height: 450px;
             overflow: auto;
             position: relative;
             border: 1px solid #e2e8f0;
-            border-radius: 8px;
+            border-radius: 6px;
         }
         .form-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 16px;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
             align-items: end;
         }
         .form-group {
@@ -75,18 +75,18 @@
             flex-direction: column;
         }
         .form-group label {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             color: var(--text-muted);
         }
         .form-group select, .form-group input {
-            padding: 10px 14px;
+            padding: 8px 10px;
             border: 1px solid var(--border);
-            border-radius: 8px;
-            font-size: 0.9rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
             background-color: #f8fafc;
             color: var(--text-main);
             transition: all 0.2s ease;
@@ -101,10 +101,10 @@
             background-color: var(--primary);
             color: white;
             border: none;
-            padding: 11px 20px;
-            border-radius: 8px;
+            padding: 8px 16px;
+            border-radius: 6px;
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             cursor: pointer;
             transition: background-color 0.2s, transform 0.1s;
         }
@@ -116,17 +116,17 @@
         }
         .btn-edit {
             background-color: var(--warning);
-            padding: 6px 12px;
-            font-size: 0.8rem;
-            margin-right: 6px;
+            padding: 4px 8px;
+            font-size: 0.75rem;
+            margin-right: 4px;
         }
         .btn-edit:hover {
             background-color: #d97706;
         }
         .btn-delete {
             background-color: var(--danger);
-            padding: 6px 12px;
-            font-size: 0.8rem;
+            padding: 4px 8px;
+            font-size: 0.75rem;
         }
         .btn-delete:hover {
             background-color: #dc2626;
@@ -136,10 +136,10 @@
             border-collapse: separate;
             border-spacing: 0;
             text-align: left;
-            font-size: 0.875rem;
+            font-size: 0.8rem;
         }
         th, td {
-            padding: 12px 14px;
+            padding: 8px 10px;
             border-bottom: 1px solid #e2e8f0;
             white-space: nowrap;
         }
@@ -182,15 +182,21 @@
         .col-horizontal {
             background-color: #f8fafc;
             color: var(--text-muted);
-            font-size: 0.825rem;
+            font-size: 0.775rem;
             font-weight: 500;
         }
+        .col-consolidado {
+            background-color: #e2e8f0 !important;
+            font-weight: bold;
+            border-left: 2px solid #94a3b8;
+            border-right: 2px solid #94a3b8;
+        }
         .historico-container {
-            max-height: 380px;
+            max-height: 280px;
             overflow-y: auto;
             border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            margin-top: 15px;
+            border-radius: 6px;
+            margin-top: 10px;
             background-color: #ffffff;
         }
     </style>
@@ -295,7 +301,7 @@
         <!-- Histórico de Lançamentos Compacto com Filtro de Ano e Mês -->
         <div class="card">
             <h2>Histórico de Lançamentos</h2>
-            <div class="form-grid" style="margin-bottom: 15px;">
+            <div class="form-grid" style="margin-bottom: 12px;">
                 <div class="form-group">
                     <label for="filtroAno">Filtrar por Ano</label>
                     <input type="number" id="filtroAno" value="2026">
@@ -370,6 +376,7 @@
             mesesAno.forEach(mes => {
                 htmlTh += `<th>${mes} (Orç)</th><th>${mes} (Real)</th><th class="col-horizontal">% AH (Real/Orç)</th>`;
             });
+            htmlTh += `<th class="col-consolidado">Consolidado Anual (Orç)</th><th class="col-consolidado">Consolidado Anual (Real)</th><th class="col-consolidado col-horizontal">% AH (Consolidado)</th>`;
             cabecalhoTabela.innerHTML = htmlTh;
         }
 
@@ -380,6 +387,9 @@
 
             let html = `<td>${titulo}</td>`;
             const anoAtualFiltro = parseInt(filtroAno.value) || 2026;
+
+            let totalAnoOrc = 0;
+            let totalAnoReal = 0;
 
             mesesAno.forEach(mes => {
                 let valOrc = 0;
@@ -422,6 +432,9 @@
                     valReal = (recReal - despReal) - semReal - guardarReal;
                 }
 
+                totalAnoOrc += valOrc;
+                totalAnoReal += valReal;
+
                 let isDespesaCat = contasDespesa.some(c => c.trim().toLowerCase() === categoria.trim().toLowerCase());
                 
                 let corOrc = valOrc < 0 || isDespesaCat ? '#ef4444' : '#0f172a';
@@ -447,6 +460,27 @@
                 html += `<td ${estiloReal}>R$ ${valReal.toFixed(2)}</td>`;
                 html += `<td class="col-horizontal">${textoAH}</td>`;
             });
+
+            // Colunas de Consolidado Anual no final
+            let isDespesaCatConsolidado = contasDespesa.some(c => c.trim().toLowerCase() === categoria.trim().toLowerCase());
+            let corConsOrc = totalAnoOrc < 0 || isDespesaCatConsolidado ? '#ef4444' : '#0f172a';
+            let corConsReal = totalAnoReal < 0 || isDespesaCatConsolidado ? '#ef4444' : '#0f172a';
+            if (tipoCalculo.includes('sobra') || tipoCalculo === 'total_receitas') {
+                corConsOrc = totalAnoOrc >= 0 ? '#10b981' : '#ef4444';
+                corConsReal = totalAnoReal >= 0 ? '#10b981' : '#ef4444';
+            }
+
+            let percentualConsAH = 0;
+            let temConsAH = false;
+            if (totalAnoOrc !== 0) {
+                percentualConsAH = (totalAnoReal / totalAnoOrc) * 100;
+                temConsAH = true;
+            }
+            let textoConsAH = temConsAH ? percentualConsAH.toFixed(1) + '%' : '-';
+
+            html += `<td class="col-consolidado" style="color: ${corConsOrc};">R$ ${totalAnoOrc.toFixed(2)}</td>`;
+            html += `<td class="col-consolidado" style="color: ${corConsReal};">R$ ${totalAnoReal.toFixed(2)}</td>`;
+            html += `<td class="col-consolidado col-horizontal">${textoConsAH}</td>`;
 
             tr.innerHTML = html;
             tabelaAnaliticaAno.appendChild(tr);

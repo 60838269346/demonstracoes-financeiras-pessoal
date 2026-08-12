@@ -435,7 +435,7 @@
                 totalAnoOrc += valOrc;
                 totalAnoReal += valReal;
 
-                let isDespesaCat = contasDespesa.some(c => c.trim().toLowerCase() === categoria.trim().toLowerCase());
+                let isDespesaCat = contasDespesa.some(c => c.trim().toLowerCase() === categoria.trim().toLowerCase()) || tipoCalculo === 'total_despesas' || tipoCalculo === 'total_semanal';
                 
                 let corOrc = valOrc < 0 || isDespesaCat ? '#ef4444' : '#0f172a';
                 let corReal = valReal < 0 || isDespesaCat ? '#ef4444' : '#0f172a';
@@ -462,7 +462,7 @@
             });
 
             // Colunas de Consolidado Anual no final
-            let isDespesaCatConsolidado = contasDespesa.some(c => c.trim().toLowerCase() === categoria.trim().toLowerCase());
+            let isDespesaCatConsolidado = contasDespesa.some(c => c.trim().toLowerCase() === categoria.trim().toLowerCase()) || tipoCalculo === 'total_despesas' || tipoCalculo === 'total_semanal';
             let corConsOrc = totalAnoOrc < 0 || isDespesaCatConsolidado ? '#ef4444' : '#0f172a';
             let corConsReal = totalAnoReal < 0 || isDespesaCatConsolidado ? '#ef4444' : '#0f172a';
             if (tipoCalculo.includes('sobra') || tipoCalculo === 'total_receitas') {
@@ -644,6 +644,10 @@
             formLancamento.reset();
             anoLancamentoInput.value = ano;
         });
+
+        function inicializarisasi() {
+            // function stub
+        }
 
         function inicializarSistema() {
             montarCabecalho();

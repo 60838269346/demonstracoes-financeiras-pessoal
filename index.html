@@ -56,7 +56,6 @@
             box-shadow: var(--shadow);
             overflow-x: auto;
         }
-        /* Contêiner com rolagem para congelar cabeçalho e coluna */
         .table-responsive {
             max-height: 450px;
             overflow: auto;
@@ -143,7 +142,6 @@
             border-bottom: 1px solid #e2e8f0;
             white-space: nowrap;
         }
-        /* Congelar o cabeçalho ao descer */
         th {
             background-color: #f8fafc;
             font-weight: 700;
@@ -154,7 +152,6 @@
             top: 0;
             z-index: 3;
         }
-        /* Congelar a primeira coluna (plano de contas) ao ir para a lateral */
         td:first-child, th:first-child {
             position: sticky;
             left: 0;
@@ -162,7 +159,6 @@
             z-index: 2;
             border-right: 2px solid #e2e8f0;
         }
-        /* Ajuste do fundo da primeira coluna em cabeçalhos e grupos */
         th:first-child {
             background-color: #f8fafc !important;
             z-index: 4;
@@ -175,7 +171,6 @@
         tr:hover td {
             background-color: #fcfcfc;
         }
-        /* Manter a cor correta da primeira coluna nas linhas de grupo ao passar o mouse ou fixar */
         .row-group td:first-child {
             background-color: #f1f5f9 !important;
         }
@@ -354,8 +349,9 @@
         const despesasFixasBase = ['Aluguel', 'Contas Básicas', 'Supermercado', 'Cartão Itau', 'Cartão Mercado pago', 'Cartão Inter', 'Cartão magalu'];
         const despesasSemanaisBase = ['Lazer / Variados', 'Semana 01', 'Semana 02', 'Semana 03', 'Semana 04'];
 
-        let orcamentos = [];
-        let transacoes = [];
+        // Carregar dados salvos do navegador (localStorage) se existirem
+        let orcamentos = JSON.parse(localStorage.getItem('fin_orcamentos')) || [];
+        let transacoes = JSON.parse(localStorage.getItem('fin_transacoes')) || [];
 
         const tabelaAnaliticaAno = document.getElementById('tabelaAnaliticaAno');
         const cabecalhoTabela = document.getElementById('cabecalhoTabela');
@@ -370,6 +366,11 @@
 
         filtroAno.addEventListener('input', atualizarTabela);
         filtroMes.addEventListener('change', atualizarTabela);
+
+        function salvarDadosLocal() {
+            localStorage.setItem('fin_orcamentos', JSON.stringify(orcamentos));
+            localStorage.setItem('fin_transacoes', JSON.stringify(transacoes));
+        }
 
         function montarCabecalho() {
             let htmlTh = '<th>Categoria / Indicador</th>';
@@ -461,7 +462,7 @@
                 html += `<td class="col-horizontal">${textoAH}</td>`;
             });
 
-            // Colunas de Consolidado Anual no final
+            // Consolidado Anual
             let isDespesaCatConsolidado = contasDespesa.some(c => c.trim().toLowerCase() === categoria.trim().toLowerCase()) || tipoCalculo === 'total_despesas' || tipoCalculo === 'total_semanal';
             let corConsOrc = totalAnoOrc < 0 || isDespesaCatConsolidado ? '#ef4444' : '#0f172a';
             let corConsReal = totalAnoReal < 0 || isDespesaCatConsolidado ? '#ef4444' : '#0f172a';
@@ -597,6 +598,7 @@
                 } else {
                     transacoes.splice(index, 1);
                 }
+                salvarDadosLocal();
                 atualizarTabela();
             }
         }
@@ -639,15 +641,12 @@
                 }
             }
 
+            salvarDadosLocal();
             filtroAno.value = ano;
             atualizarTabela();
             formLancamento.reset();
             anoLancamentoInput.value = ano;
         });
-
-        function inicializarisasi() {
-            // function stub
-        }
 
         function inicializarSistema() {
             montarCabecalho();

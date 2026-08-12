@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -24,22 +24,22 @@
             background-color: var(--bg-color);
             color: var(--text-main);
             margin: 0;
-            padding: 15px;
+            padding: 16px;
             -webkit-font-smoothing: antialiased;
         }
         .container {
-            max-width: 1450px;
+            max-width: 1200px;
             margin: 0 auto;
         }
         h1 {
-            font-size: 1.35rem;
+            font-size: 1.4rem;
             font-weight: 700;
-            margin-bottom: 15px;
+            margin-bottom: 16px;
             color: var(--text-main);
             letter-spacing: -0.025em;
         }
         h2 {
-            font-size: 1.0rem;
+            font-size: 1rem;
             font-weight: 600;
             margin-top: 0;
             margin-bottom: 12px;
@@ -56,18 +56,10 @@
             box-shadow: var(--shadow);
             overflow-x: auto;
         }
-        /* Contêiner com rolagem compacto */
-        .table-responsive {
-            max-height: 320px;
-            overflow: auto;
-            position: relative;
-            border: 1px solid #e2e8f0;
-            border-radius: 6px;
-        }
         .form-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 10px;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
             align-items: end;
         }
         .form-group {
@@ -83,7 +75,7 @@
             color: var(--text-muted);
         }
         .form-group select, .form-group input {
-            padding: 7px 10px;
+            padding: 8px 10px;
             border: 1px solid var(--border);
             border-radius: 6px;
             font-size: 0.85rem;
@@ -136,65 +128,46 @@
             border-collapse: separate;
             border-spacing: 0;
             text-align: left;
-            font-size: 0.82rem;
+            font-size: 0.8rem;
         }
         th, td {
             padding: 8px 10px;
             border-bottom: 1px solid #e2e8f0;
             white-space: nowrap;
         }
-        /* Congelar o cabeçalho ao descer */
         th {
             background-color: #f8fafc;
             font-weight: 700;
             color: var(--text-muted);
             border-top: 1px solid #e2e8f0;
             border-bottom: 2px solid #cbd5e1;
-            position: sticky;
-            top: 0;
-            z-index: 3;
-        }
-        /* Congelar a primeira coluna (plano de contas) ao ir para a lateral */
-        td:first-child, th:first-child {
-            position: sticky;
-            left: 0;
-            background-color: #ffffff;
-            z-index: 2;
-            border-right: 2px solid #e2e8f0;
-        }
-        th:first-child {
-            background-color: #f8fafc !important;
-            z-index: 4;
-        }
-        .row-group td {
-            background-color: #f1f5f9 !important;
-            font-weight: bold;
-            color: #0f172a;
         }
         tr:hover td {
             background-color: #fcfcfc;
         }
-        .row-group td:first-child {
+        .row-group {
             background-color: #f1f5f9 !important;
+            font-weight: bold;
+        }
+        .row-group td {
+            color: #0f172a;
         }
         .col-horizontal {
             background-color: #f8fafc;
             color: var(--text-muted);
-            font-size: 0.78rem;
+            font-size: 0.775rem;
             font-weight: 500;
         }
         .col-trimestre {
-            background-color: #e0f2fe;
-            font-weight: 600;
-            color: #0369a1;
-        }
-        .col-anual {
-            background-color: #dbeafe;
+            background-color: #edf2f7;
             font-weight: bold;
-            color: #1e40af;
+            color: #1e293b;
+            font-size: 0.8rem;
+            border-left: 2px solid #cbd5e1;
+            border-right: 2px solid #cbd5e1;
         }
         .historico-container {
-            max-height: 250px;
+            max-height: 280px;
             overflow-y: auto;
             border: 1px solid #e2e8f0;
             border-radius: 6px;
@@ -246,64 +219,46 @@
                         <optgroup label="Receitas">
                             <option value="Salário">Salário</option>
                             <option value="Outras Receitas">Outras Receitas</option>
-                            <option value="clientex externos">clientex externos</option>
                         </optgroup>
                         <optgroup label="Despesas">
                             <option value="Aluguel">Aluguel</option>
                             <option value="Contas Básicas">Contas Básicas</option>
                             <option value="Supermercado">Supermercado</option>
-                            <option value="Cartão Itau">Cartão Itau</option>
-                            <option value="Cartão Mercado pago">Cartão Mercado pago</option>
-                            <option value="Cartão Inter">Cartão Inter</option>
-                            <option value="Cartão magalu">Cartão magalu</option>
                         </optgroup>
                         <optgroup label="Despesas Semanais / Variáveis">
                             <option value="Lazer / Variados">Lazer / Variados</option>
-                            <option value="Semana 01">Semana 01</option>
-                            <option value="Semana 02">Semana 02</option>
-                            <option value="Semana 03">Semana 03</option>
-                            <option value="Semana 04">Semana 04</option>
-                        </optgroup>
-                        <optgroup label="Sobra Líquida / Destino">
-                            <option value="Guardar">Guardar</option>
                         </optgroup>
                     </select>
-                </div>
-                <div class="form-group">
-                    <label for="descricaoLancamento">Descrição</label>
-                    <input type="text" id="descricaoLancamento" placeholder="Ex: Conta de luz...">
                 </div>
                 <div class="form-group">
                     <label for="valorLancamento">Valor (R$)</label>
                     <input type="number" id="valorLancamento" step="0.01" placeholder="0.00" required>
                 </div>
                 <div class="form-group">
-                    <button type="submit" id="btnSalvar">Adicionar</button>
+                    <button type="submit" id="btnSalvar">Adicionar Lançamento</button>
                 </div>
             </form>
         </div>
 
         <!-- Visão Analítica -->
         <div class="card">
-            <h2>Visão Analítica Anual (Orçado x Realizado, Trimestres e Anual)</h2>
-            <div class="table-responsive">
-                <table>
-                    <thead>
-                        <tr id="cabecalhoTabela">
-                            <th>Categoria / Indicador</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabelaAnaliticaAno">
-                        <!-- Preenchido via JavaScript -->
-                    </tbody>
-                </table>
-            </div>
+            <h2>Visão Analítica Anual (Orçado x Realizado & Análise Horizontal)</h2>
+            <table>
+                <thead>
+                    <tr id="cabecalhoTabela">
+                        <th>Categoria / Indicador</th>
+                    </tr>
+                </thead>
+                <tbody id="tabelaAnaliticaAno">
+                    <!-- Preenchido via JavaScript -->
+                </tbody>
+            </table>
         </div>
 
-        <!-- Histórico de Lançamentos -->
+        <!-- Histórico de Lançamentos Compacto com Filtro de Ano e Mês -->
         <div class="card">
             <h2>Histórico de Lançamentos</h2>
-            <div class="form-grid" style="margin-bottom: 10px;">
+            <div class="form-grid" style="margin-bottom: 12px;">
                 <div class="form-group">
                     <label for="filtroAno">Filtrar por Ano</label>
                     <input type="number" id="filtroAno" value="2026">
@@ -335,7 +290,6 @@
                             <th>Tipo</th>
                             <th>Mês</th>
                             <th>Categoria</th>
-                            <th>Descrição</th>
                             <th>Valor (R$)</th>
                             <th>Ações</th>
                         </tr>
@@ -350,18 +304,8 @@
 
     <script>
         const mesesAno = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
-        const trimestres = [
-            { nome: '1º Trimestre', meses: ['Janeiro', 'Fevereiro', 'Março'] },
-            { nome: '2º Trimestre', meses: ['Abril', 'Maio', 'Junho'] },
-            { nome: '3º Trimestre', meses: ['Julho', 'Agosto', 'Setembro'] },
-            { nome: '4º Trimestre', meses: ['Outubro', 'Novembro', 'Dezembro'] }
-        ];
-
-        const contasReceita = ['Salário', 'Outras Receitas', 'clientex externos'];
-        const contasDespesa = ['Aluguel', 'Contas Básicas', 'Supermercado', 'Cartão Itau', 'Cartão Mercado pago', 'Cartão Inter', 'Cartão magalu', 'Lazer / Variados', 'Semana 01', 'Semana 02', 'Semana 03', 'Semana 04', 'Guardar'];
-        
-        const despesasFixasBase = ['Aluguel', 'Contas Básicas', 'Supermercado', 'Cartão Itau', 'Cartão Mercado pago', 'Cartão Inter', 'Cartão magalu'];
-        const despesasSemanaisBase = ['Lazer / Variados', 'Semana 01', 'Semana 02', 'Semana 03', 'Semana 04'];
+        const contasReceita = ['Salário', 'Outras Receitas'];
+        const contasDespesa = ['Aluguel', 'Contas Básicas', 'Supermercado', 'Lazer / Variados'];
 
         let orcamentos = [];
         let transacoes = [];
@@ -382,68 +326,70 @@
 
         function montarCabecalho() {
             let htmlTh = '<th>Categoria / Indicador</th>';
-            
-            // Ordem intercalada: Meses 1 a 3 -> 1º Trimestre -> Meses 4 a 6 -> 2º Trimestre -> etc.
-            for (let i = 0; i < 12; i++) {
-                htmlTh += `<th>${mesesAno[i]} (Orç)</th><th>${mesesAno[i]} (Real)</th><th class="col-horizontal">% AH</th>`;
-                
-                // Inserir o trimestre após cada bloco de 3 meses (índices 2, 5, 8, 11)
-                if ((i + 1) % 3 === 0) {
-                    const trimIdx = Math.floor(i / 3);
-                    const trim = trimestres[trimIdx];
-                    htmlTh += `<th class="col-trimestre">${trim.nome} (Orç)</th><th class="col-trimestre">${trim.nome} (Real)</th><th class="col-trimestre">% AH</th>`;
+            mesesAno.forEach((mes, idx) => {
+                htmlTh += `<th>${mes} (Orç)</th><th>${mes} (Real)</th><th class="col-horizontal">% AH (Real/Orç)</th>`;
+                if (idx === 2) {
+                    htmlTh += `<th class="col-trimestre">1º Trim (Orç / Real)</th>`;
+                } else if (idx === 5) {
+                    htmlTh += `<th class="col-trimestre">2º Trim (Orç / Real)</th>`;
+                } else if (idx === 8) {
+                    htmlTh += `<th class="col-trimestre">3º Trim (Orç / Real)</th>`;
+                } else if (idx === 11) {
+                    htmlTh += `<th class="col-trimestre">4º Trim (Orç / Real)</th>`;
                 }
-            }
-
-            // Total Anual no final
-            htmlTh += `<th class="col-anual">Total Anual (Orç)</th><th class="col-anual">Total Anual (Real)</th><th class="col-anual">% AH</th>`;
+            });
             cabecalhoTabela.innerHTML = htmlTh;
         }
 
-        function calcularValorPeriodo(anoFiltro, listaMeses, tipoCalculo, categoria) {
+        function calcularValorMes(tipoCalculo, categoria, mes, anoAtualFiltro) {
             let valOrc = 0;
             let valReal = 0;
 
-            listaMeses.forEach(mes => {
-                if (tipoCalculo === 'categoria') {
-                    const catLower = categoria.trim().toLowerCase();
-                    orcamentos.filter(o => o.ano === anoFiltro && o.mes === mes && o.categoria.trim().toLowerCase() === catLower).forEach(o => valOrc += o.valor);
-                    transacoes.filter(t => t.ano === anoFiltro && t.mes === mes && t.categoria.trim().toLowerCase() === catLower).forEach(t => valReal += t.valor);
-                } else if (tipoCalculo === 'total_receitas') {
-                    orcamentos.filter(o => o.ano === anoFiltro && o.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => valOrc += o.valor);
-                    transacoes.filter(t => t.ano === anoFiltro && t.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => valReal += t.valor);
-                } else if (tipoCalculo === 'total_despesas') {
-                    orcamentos.filter(o => o.ano === anoFiltro && o.mes === mes && despesasFixasBase.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => valOrc += o.valor);
-                    transacoes.filter(t => t.ano === anoFiltro && t.mes === mes && despesasFixasBase.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => valReal += t.valor);
-                } else if (tipoCalculo === 'sobra_bruta') {
-                    let recOrc = 0, despOrc = 0, recReal = 0, despReal = 0;
-                    orcamentos.filter(o => o.ano === anoFiltro && o.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => recOrc += o.valor);
-                    orcamentos.filter(o => o.ano === anoFiltro && o.mes === mes && despesasFixasBase.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => despOrc += o.valor);
-                    transacoes.filter(t => t.ano === anoFiltro && t.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => recReal += t.valor);
-                    transacoes.filter(t => t.ano === anoFiltro && t.mes === mes && despesasFixasBase.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => despReal += t.valor);
-                    valOrc += (recOrc - despOrc);
-                    valReal += (recReal - despReal);
-                } else if (tipoCalculo === 'total_semanal') {
-                    orcamentos.filter(o => o.ano === anoFiltro && o.mes === mes && despesasSemanaisBase.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => valOrc += o.valor);
-                    transacoes.filter(t => t.ano === anoFiltro && t.mes === mes && despesasSemanaisBase.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => valReal += t.valor);
-                } else if (tipoCalculo === 'sobra_liquida') {
-                    let recOrc = 0, despOrc = 0, semOrc = 0, guardarOrc = 0, recReal = 0, despReal = 0, semReal = 0, guardarReal = 0;
-                    orcamentos.filter(o => o.ano === anoFiltro && o.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => recOrc += o.valor);
-                    orcamentos.filter(o => o.ano === anoFiltro && o.mes === mes && despesasFixasBase.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => despOrc += o.valor);
-                    orcamentos.filter(o => o.ano === anoFiltro && o.mes === mes && despesasSemanaisBase.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => semOrc += o.valor);
-                    orcamentos.filter(o => o.ano === anoFiltro && o.mes === mes && o.categoria.trim().toLowerCase() === 'guardar').forEach(o => guardarOrc += o.valor);
-
-                    transacoes.filter(t => t.ano === anoFiltro && t.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => recReal += t.valor);
-                    transacoes.filter(t => t.ano === anoFiltro && t.mes === mes && despesasFixasBase.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => despReal += t.valor);
-                    transacoes.filter(t => t.ano === anoFiltro && t.mes === mes && despesasSemanaisBase.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => semReal += t.valor);
-                    transacoes.filter(t => t.ano === anoFiltro && t.mes === mes && t.categoria.trim().toLowerCase() === 'guardar').forEach(t => guardarReal += t.valor);
-
-                    valOrc += ((recOrc - despOrc) - semOrc - guardarOrc);
-                    valReal += ((recReal - despReal) - semReal - guardarReal);
-                }
-            });
+            if (tipoCalculo === 'categoria') {
+                const catLower = categoria.trim().toLowerCase();
+                orcamentos.filter(o => o.ano === anoAtualFiltro && o.mes === mes && o.categoria.trim().toLowerCase() === catLower).forEach(o => valOrc += o.valor);
+                transacoes.filter(t => t.ano === anoAtualFiltro && t.mes === mes && t.categoria.trim().toLowerCase() === catLower).forEach(t => valReal += t.valor);
+            } else if (tipoCalculo === 'total_receitas') {
+                orcamentos.filter(o => o.ano === anoAtualFiltro && o.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => valOrc += o.valor);
+                transacoes.filter(t => t.ano === anoAtualFiltro && t.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => valReal += t.valor);
+            } else if (tipoCalculo === 'total_despesas') {
+                orcamentos.filter(o => o.ano === anoAtualFiltro && o.mes === mes && contasDespesa.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase() && c !== 'Lazer / Variados')).forEach(o => valOrc += o.valor);
+                transacoes.filter(t => t.ano === anoAtualFiltro && t.mes === mes && contasDespesa.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase() && c !== 'Lazer / Variados')).forEach(t => valReal += t.valor);
+            } else if (tipoCalculo === 'sobra_bruta') {
+                let recOrc = 0, despOrc = 0, recReal = 0, despReal = 0;
+                orcamentos.filter(o => o.ano === anoAtualFiltro && o.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => recOrc += o.valor);
+                orcamentos.filter(o => o.ano === anoAtualFiltro && o.mes === mes && contasDespesa.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase() && c !== 'Lazer / Variados')).forEach(o => despOrc += o.valor);
+                transacoes.filter(t => t.ano === anoAtualFiltro && t.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => recReal += t.valor);
+                transacoes.filter(t => t.ano === anoAtualFiltro && t.mes === mes && contasDespesa.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase() && c !== 'Lazer / Variados')).forEach(t => despReal += t.valor);
+                valOrc = recOrc - despOrc;
+                valReal = recReal - despReal;
+            } else if (tipoCalculo === 'total_semanal') {
+                orcamentos.filter(o => o.ano === anoAtualFiltro && o.mes === mes && o.categoria.trim().toLowerCase() === 'lazer / variedos').forEach(o => valOrc += o.valor);
+                transacoes.filter(t => t.ano === anoAtualFiltro && t.mes === mes && t.categoria.trim().toLowerCase() === 'lazer / variedos').forEach(t => valReal += t.valor);
+            } else if (tipoCalculo === 'sobra_liquida') {
+                let recOrc = 0, despOrc = 0, semOrc = 0, recReal = 0, despReal = 0, semReal = 0;
+                orcamentos.filter(o => o.ano === anoAtualFiltro && o.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => recOrc += o.valor);
+                orcamentos.filter(o => o.ano === anoAtualFiltro && o.mes === mes && contasDespesa.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase() && c !== 'Lazer / Variados')).forEach(o => despOrc += o.valor);
+                orcamentos.filter(o => o.ano === anoAtualFiltro && o.mes === mes && o.categoria.trim().toLowerCase() === 'lazer / variedos').forEach(o => semOrc += o.valor);
+                transacoes.filter(t => t.ano === anoAtualFiltro && t.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => recReal += t.valor);
+                transacoes.filter(t => t.ano === anoAtualFiltro && t.mes === mes && contasDespesa.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase() && c !== 'Lazer / Variados')).forEach(t => despReal += t.valor);
+                transacoes.filter(t => t.ano === anoAtualFiltro && t.mes === mes && t.categoria.trim().toLowerCase() === 'lazer / variedos').forEach(t => semReal += t.valor);
+                valOrc = (recOrc - despOrc) - semOrc;
+                valReal = (recReal - despReal) - semReal;
+            }
 
             return { valOrc, valReal };
+        }
+
+        function calcularTrimestre(tipoCalculo, categoria, mesesDoTrimestre, anoAtualFiltro) {
+            let trimOrc = 0;
+            let trimReal = 0;
+            mesesDoTrimestre.forEach(mes => {
+                const res = calcularValorMes(tipoCalculo, categoria, mes, anoAtualFiltro);
+                trimOrc += res.valOrc;
+                trimReal += res.valReal;
+            });
+            return { trimOrc, trimReal };
         }
 
         function criarLinhaHorizontal(titulo, categoria, tipoCalculo, isGrupo = false, classeExtra = '') {
@@ -454,14 +400,10 @@
             let html = `<td>${titulo}</td>`;
             const anoAtualFiltro = parseInt(filtroAno.value) || 2026;
 
-            // Inserir colunas na mesma ordem intercalada do cabeçalho
-            for (let i = 0; i < 12; i++) {
-                const mes = mesesAno[i];
-                const res = calcularValorPeriodo(anoAtualFiltro, [mes], tipoCalculo, categoria);
-                const valOrc = res.valOrc;
-                const valReal = res.valReal;
+            mesesAno.forEach((mes, idx) => {
+                const { valOrc, valReal } = calcularValorMes(tipoCalculo, categoria, mes, anoAtualFiltro);
 
-                let isDespesaCat = contasDespesa.some(c => c.trim().toLowerCase() === categoria.trim().toLowerCase());
+                let isDespesaCat = contasDespesa.some(c => c.trim().toLowerCase() === categoria.trim().toLowerCase()) || tipoCalculo === 'total_despesas' || tipoCalculo === 'total_semanal';
                 
                 let corOrc = valOrc < 0 || isDespesaCat ? '#ef4444' : '#0f172a';
                 let corReal = valReal < 0 || isDespesaCat ? '#ef4444' : '#0f172a';
@@ -486,65 +428,34 @@
                 html += `<td ${estiloReal}>R$ ${valReal.toFixed(2)}</td>`;
                 html += `<td class="col-horizontal">${textoAH}</td>`;
 
-                // Inserir o trimestre correspondente após cada bloco de 3 meses
-                if ((i + 1) % 3 === 0) {
-                    const trimIdx = Math.floor(i / 3);
-                    const trim = trimestres[trimIdx];
-                    const resTrim = calcularValorPeriodo(anoAtualFiltro, trim.meses, tipoCalculo, categoria);
-                    const valOrcTrim = resTrim.valOrc;
-                    const valRealTrim = resTrim.valReal;
-
-                    let corOrcTrim = valOrcTrim < 0 || isDespesaCat ? '#ef4444' : '#0369a1';
-                    let corRealTrim = valRealTrim < 0 || isDespesaCat ? '#ef4444' : '#0369a1';
-                    if (tipoCalculo.includes('sobra') || tipoCalculo === 'total_receitas') {
-                        corOrcTrim = valOrcTrim >= 0 ? '#10b981' : '#ef4444';
-                        corRealTrim = valRealTrim >= 0 ? '#10b981' : '#ef4444';
-                    }
-
-                    let estiloOrcTrim = `style="color: ${corOrcTrim}; font-weight: bold;"`;
-                    let estiloRealTrim = `style="color: ${corRealTrim}; font-weight: bold;"`;
-
-                    let percentualAHTrim = 0;
-                    let temAHTrim = false;
-                    if (valOrcTrim !== 0) {
-                        percentualAHTrim = (valRealTrim / valOrcTrim) * 100;
-                        temAHTrim = true;
-                    }
-                    let textoAHTrim = temAHTrim ? percentualAHTrim.toFixed(1) + '%' : '-';
-
-                    html += `<td class="col-trimestre" ${estiloOrcTrim}>R$ ${valOrcTrim.toFixed(2)}</td>`;
-                    html += `<td class="col-trimestre" ${estiloRealTrim}>R$ ${valRealTrim.toFixed(2)}</td>`;
-                    html += `<td class="col-trimestre">${textoAHTrim}</td>`;
+                // Inserir colunas de trimestre nos meses corretos
+                let mesesTrim = [];
+                let trimLabel = '';
+                if (idx === 2) {
+                    mesesTrim = ['Janeiro', 'Fevereiro', 'Março'];
+                    trimLabel = '1º Trim';
+                } else if (idx === 5) {
+                    mesesTrim = ['Abril', 'Maio', 'Junho'];
+                    trimLabel = '2º Trim';
+                } else if (idx === 8) {
+                    mesesTrim = ['Julho', 'Agosto', 'Setembro'];
+                    trimLabel = '3º Trim';
+                } else if (idx === 11) {
+                    mesesTrim = ['Outubro', 'Novembro', 'Dezembro'];
+                    trimLabel = '4º Trim';
                 }
-            }
 
-            // Total Anual
-            const resAno = calcularValorPeriodo(anoAtualFiltro, mesesAno, tipoCalculo, categoria);
-            const valOrcAno = resAno.valOrc;
-            const valRealAno = resAno.valReal;
-
-            let isDespesaCat = contasDespesa.some(c => c.trim().toLowerCase() === categoria.trim().toLowerCase());
-            let corOrcAno = valOrcAno < 0 || isDespesaCat ? '#ef4444' : '#1e40af';
-            let corRealAno = valRealAno < 0 || isDespesaCat ? '#ef4444' : '#1e40af';
-            if (tipoCalculo.includes('sobra') || tipoCalculo === 'total_receitas') {
-                corOrcAno = valOrcAno >= 0 ? '#10b981' : '#ef4444';
-                corRealAno = valRealAno >= 0 ? '#10b981' : '#ef4444';
-            }
-
-            let estiloOrcAno = `style="color: ${corOrcAno};"`;
-            let estiloRealAno = `style="color: ${corRealAno};"`;
-
-            let percentualAHAno = 0;
-            let temAHAno = false;
-            if (valOrcAno !== 0) {
-                percentualAHAno = (valRealAno / valOrcAno) * 100;
-                temAHAno = true;
-            }
-            let textoAHAno = temAHAno ? percentualAHAno.toFixed(1) + '%' : '-';
-
-            html += `<td class="col-anual" ${estiloOrcAno}>R$ ${valOrcAno.toFixed(2)}</td>`;
-            html += `<td class="col-anual" ${estiloRealAno}>R$ ${valRealAno.toFixed(2)}</td>`;
-            html += `<td class="col-anual">${textoAHAno}</td>`;
+                if (mesesTrim.length > 0) {
+                    const { trimOrc, trimReal } = calcularTrimestre(tipoCalculo, categoria, mesesTrim, anoAtualFiltro);
+                    let corTrimOrc = trimOrc < 0 || isDespesaCat ? '#ef4444' : '#0f172a';
+                    let corTrimReal = trimReal < 0 || isDespesaCat ? '#ef4444' : '#0f172a';
+                    if (tipoCalculo.includes('sobra') || tipoCalculo === 'total_receitas') {
+                        corTrimOrc = trimOrc >= 0 ? '#10b981' : '#ef4444';
+                        corTrimReal = trimReal >= 0 ? '#10b981' : '#ef4444';
+                    }
+                    html += `<td class="col-trimestre" style="font-weight: ${isGrupo ? 'bold' : 'normal'};"><span style="color: ${corTrimOrc};">R$ ${trimOrc.toFixed(2)}</span> / <span style="color: ${corTrimReal};">R$ ${trimReal.toFixed(2)}</span></td>`;
+                }
+            });
 
             tr.innerHTML = html;
             tabelaAnaliticaAno.appendChild(tr);
@@ -555,29 +466,14 @@
             criarLinhaHorizontal('Total de Receitas', '', 'total_receitas', true);
             criarLinhaHorizontal('Salário', 'Salário', 'categoria');
             criarLinhaHorizontal('Outras Receitas', 'Outras Receitas', 'categoria');
-            criarLinhaHorizontal('clientex externos', 'clientex externos', 'categoria');
-            
             criarLinhaHorizontal('Total de Despesas', '', 'total_despesas', true);
             criarLinhaHorizontal('Aluguel', 'Aluguel', 'categoria');
             criarLinhaHorizontal('Contas Básicas', 'Contas Básicas', 'categoria');
             criarLinhaHorizontal('Supermercado', 'Supermercado', 'categoria');
-            criarLinhaHorizontal('Cartão Itau', 'Cartão Itau', 'categoria');
-            criarLinhaHorizontal('Cartão Mercado pago', 'Cartão Mercado pago', 'categoria');
-            criarLinhaHorizontal('Cartão Inter', 'Cartão Inter', 'categoria');
-            criarLinhaHorizontal('Cartão magalu', 'Cartão magalu', 'categoria');
-            
             criarLinhaHorizontal('Sobra Bruta', '', 'sobra_bruta', true);
-            
             criarLinhaHorizontal('Total Despesas Semanais / Variáveis', '', 'total_semanal', true);
             criarLinhaHorizontal('Lazer / Variados', 'Lazer / Variados', 'categoria');
-            criarLinhaHorizontal('Semana 01', 'Semana 01', 'categoria');
-            criarLinhaHorizontal('Semana 02', 'Semana 02', 'categoria');
-            criarLinhaHorizontal('Semana 03', 'Semana 03', 'categoria');
-            criarLinhaHorizontal('Semana 04', 'Semana 04', 'categoria');
-            
-            criarLinhaHorizontal('Guardar', 'Guardar', 'categoria');
             criarLinhaHorizontal('Sobra Líquida', '', 'sobra_liquida', true);
-            
             atualizarTabelaHistorico();
         }
 
@@ -596,7 +492,6 @@
                     <td>Orçado (Planejado)</td>
                     <td>${item.mes}</td>
                     <td>${item.categoria}</td>
-                    <td>${item.descricao || '-'}</td>
                     <td>R$ ${item.valor.toFixed(2)}</td>
                     <td>
                         <button class="btn-edit" onclick="prepararEdicao('orcamento', ${index})">Editar</button>
@@ -616,7 +511,6 @@
                     <td>Realizado (Efetivo)</td>
                     <td>${item.mes}</td>
                     <td>${item.categoria}</td>
-                    <td>${item.descricao || '-'}</td>
                     <td>R$ ${item.valor.toFixed(2)}</td>
                     <td>
                         <button class="btn-edit" onclick="prepararEdicao('transacao', ${index})">Editar</button>
@@ -639,7 +533,6 @@
             document.getElementById('tipoLancamento').value = tipo;
             document.getElementById('mesLancamento').value = item.mes;
             document.getElementById('categoriaLancamento').value = item.categoria;
-            document.getElementById('descricaoLancamento').value = item.descricao || '';
             document.getElementById('valorLancamento').value = item.valor;
             editIndexInput.value = `${tipo}_${index}`;
             
@@ -668,10 +561,11 @@
         formLancamento.addEventListener('submit', function(e) {
             e.preventDefault();
             const ano = parseInt(anoLancamentoInput.value) || 2026;
-            const tipo = document.getElementById('tipoLancamento'].value;
+            const tipo = document.getElementById('tipoLancamento'.value);
+            const tipoLancamentoEl = document.getElementById('tipoLancamento');
+            const tipoVal = tipoLancamentoEl.value;
             const mes = document.getElementById('mesLancamento').value;
             const categoria = document.getElementById('categoriaLancamento').value;
-            const descricao = document.getElementById('descricaoLancamento').value.trim();
             const valor = parseFloat(document.getElementById('valorLancamento').value);
             const editVal = editIndexInput.value;
 
@@ -681,25 +575,25 @@
                 const [tipoAntigo, indexAntigo] = editVal.split('_');
                 const idx = parseInt(indexAntigo);
                 
-                if (tipoAntigo === tipo) {
-                    if (tipo === 'orcamento') orcamentos[idx] = { ano, mes, categoria, descricao, valor };
-                    else transacoes[idx] = { ano, mes, categoria, descricao, valor };
+                if (tipoAntigo === tipoVal) {
+                    if (tipoVal === 'orcamento') orcamentos[idx] = { ano, mes, categoria, valor };
+                    else transacoes[idx] = { ano, mes, categoria, valor };
                 } else {
                     if (tipoAntigo === 'orcamento') orcamentos.splice(idx, 1);
                     else transacoes.splice(idx, 1);
 
-                    if (tipo === 'orcamento') orcamentos.push({ ano, mes, categoria, descricao, valor });
-                    else transacoes.push({ ano, mes, categoria, descricao, valor });
+                    if (tipoVal === 'orcamento') orcamentos.push({ ano, mes, categoria, valor });
+                    else transacoes.push({ ano, mes, categoria, valor });
                 }
 
                 editIndexInput.value = '-1';
                 tituloFormulario.textContent = 'Novo Lançamento';
-                btnSalvar.textContent = 'Adicionar';
+                btnSalvar.textContent = 'Adicionar Lançamento';
             } else {
-                if (tipo === 'orcamento') {
-                    orcamentos.push({ ano, mes, categoria, descricao, valor });
+                if (tipoVal === 'orcamento') {
+                    orcamentos.push({ ano, mes, categoria, valor });
                 } else {
-                    transacoes.push({ ano, mes, categoria, descricao, valor });
+                    transacoes.push({ ano, mes, categoria, valor });
                 }
             }
 

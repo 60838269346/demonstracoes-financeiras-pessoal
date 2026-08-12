@@ -91,6 +91,11 @@
             background-color: #f8fafc;
             font-weight: bold;
         }
+        .col-vertical {
+            background-color: #fafafa;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
     </style>
 </head>
 <body>
@@ -154,7 +159,7 @@
 
         <!-- Visão Analítica -->
         <div class="card">
-            <h2>Visão Analítica Anual (Orçado x Realizado)</h2>
+            <h2>Visão Analítica Anual (Orçado x Realizado & Análise Vertical)</h2>
             <table>
                 <thead>
                     <tr id="cabecalhoTabela">
@@ -171,8 +176,7 @@
     <script>
         const mesesAno = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
         const contasReceita = ['Salário', 'Outras Receitas'];
-        const contasDespesa = ['Aluguel', 'Contas Básicas', 'Supermercado'];
-        const contasSemanais = ['Lazer / Variados'];
+        const contasDespesa = ['Aluguel', 'Contas Básicas', 'Supermercado', 'Lazer / Variados'];
 
         let orcamentos = [
             { mes: 'Janeiro', categoria: 'Salário', valor: 5000 },
@@ -195,7 +199,7 @@
         function montarCabecalho() {
             let htmlTh = '<th>Categoria / Indicador</th>';
             mesesAno.forEach(mes => {
-                htmlTh += `<th>${mes} (Orç)</th><th>${mes} (Real)</th>`;
+                htmlTh += `<th>${mes} (Orç)</th><th>${mes} (Real)</th><th class="col-vertical">% AV (Real)</th>`;
             });
             cabecalhoTabela.innerHTML = htmlTh;
         }
@@ -211,6 +215,10 @@
                 let valOrc = 0;
                 let valReal = 0;
 
+                // Cálculo das receitas totais do mês para usar na Análise Vertical (% sobre a receita real)
+                let totalReceitaRealMes = 0;
+                transacoes.filter(t => t.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => totalReceitaRealMes += t.valor);
+
                 if (tipoCalculo === 'categoria') {
                     const catLower = categoria.trim().toLowerCase();
                     orcamentos.filter(o => o.mes === mes && o.categoria.trim().toLowerCase() === catLower).forEach(o => valOrc += o.valor);
@@ -224,31 +232,50 @@
                 } else if (tipoCalculo === 'sobra_bruta') {
                     let recOrc = 0, despOrc = 0, recReal = 0, despReal = 0;
                     orcamentos.filter(o => o.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => recOrc += o.valor);
-                    orcamentos.filter(o => o.mes === mes && contasDespesa.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => despOrc += o.valor);
+                    orcamentos.filter(o => o.mes === mes && contasDespesa.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase() && c !== 'Lazer / Variados')).forEach(o => despOrc += o.valor);
                     transacoes.filter(t => t.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => recReal += t.valor);
-                    transacoes.filter(t => t.mes === mes && contasDespesa.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => despReal += t.valor);
+                    transacoes.filter(t => t.mes === mes && contasDespesa.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase() && c !== 'Lazer / Variados')).forEach(t => despReal += t.valor);
                     valOrc = recOrc - despOrc;
                     valReal = recReal - despReal;
                 } else if (tipoCalculo === 'total_semanal') {
-                    orcamentos.filter(o => o.mes === mes && contasSemanais.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => valOrc += o.valor);
-                    transacoes.filter(t => t.mes === mes && contasSemanais.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => valReal += t.valor);
+                    orcamentos.filter(o => o.mes === mes && o.categoria.trim().toLowerCase() === 'lazer / variedos').forEach(o => valOrc += o.valor);
+                    transacoes.filter(t => t.mes === mes && t.categoria.trim().toLowerCase() === 'lazer / variedos').forEach(t => valReal += t.valor);
                 } else if (tipoCalculo === 'sobra_liquida') {
                     let recOrc = 0, despOrc = 0, semOrc = 0, recReal = 0, despReal = 0, semReal = 0;
                     orcamentos.filter(o => o.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => recOrc += o.valor);
-                    orcamentos.filter(o => o.mes === mes && contasDespesa.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => despOrc += o.valor);
-                    orcamentos.filter(o => o.mes === mes && contasSemanais.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => semOrc += o.valor);
+                    orcamentos.filter(o => o.mes === mes && contasDespesa.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase() && c !== 'Lazer / Variados')).forEach(o => despOrc += o.valor);
+                    orcamentos.filter(o => o.mes === mes && o.categoria.trim().toLowerCase() === 'lazer / variedos').forEach(o => semOrc += o.valor);
                     transacoes.filter(t => t.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => recReal += t.valor);
-                    transacoes.filter(t => t.mes === mes && contasDespesa.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => despReal += t.valor);
-                    transacoes.filter(t => t.mes === mes && contasSemanais.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => semReal += t.valor);
+                    transacoes.filter(t => t.mes === mes && contasDespesa.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase() && c !== 'Lazer / Variados')).forEach(t => despReal += t.valor);
+                    transacoes.filter(t => t.mes === mes && t.categoria.trim().toLowerCase() === 'lazer / variedos').forEach(t => semReal += t.valor);
                     valOrc = (recOrc - despOrc) - semOrc;
                     valReal = (recReal - despReal) - semReal;
                 }
 
-                let estiloOrc = `style="${valOrc < 0 ? 'color: #ef4444; font-weight: bold;' : (tipoCalculo.includes('sobra') || tipoCalculo.includes('total') ? 'color: #16a34a; font-weight: bold;' : '')}"`;
-                let estiloReal = `style="${valReal < 0 ? 'color: #ef4444; font-weight: bold;' : (tipoCalculo.includes('sobra') || tipoCalculo.includes('total') ? 'color: #16a34a; font-weight: bold;' : '')}"`;
+                // Identificar se é despesa para colorir de vermelho se for menor que zero (ou se for linha de despesa)
+                let isDespesaCat = contasDespesa.some(c => c.trim().toLowerCase() === categoria.trim().toLowerCase()) || tipoCalculo === 'total_despesas' || tipoCalculo === 'total_semanal';
+                
+                let corOrc = valOrc < 0 || isDespesaCat ? '#ef4444' : '#1e293b';
+                let corReal = valReal < 0 || isDespesaCat ? '#ef4444' : '#1e293b';
+                
+                if (tipoCalculo.includes('sobra') || tipoCalculo === 'total_receitas') {
+                    corOrc = valOrc >= 0 ? '#16a34a' : '#ef4444';
+                    corReal = valReal >= 0 ? '#16a34a' : '#ef4444';
+                }
+
+                let estiloOrc = `style="color: ${corOrc}; font-weight: ${isGrupo ? 'bold' : 'normal'};"`;
+                let estiloReal = `style="color: ${corReal}; font-weight: ${isGrupo ? 'bold' : 'normal'};"`;
+
+                // Cálculo da Análise Vertical (% em relação à receita real total do mês)
+                let percentualAV = 0;
+                if (totalReceitaRealMes !== 0) {
+                    percentualAV = (valReal / totalReceitaRealMes) * 100;
+                }
+                let textoAV = totalReceitaRealMes !== 0 ? percentualAV.toFixed(1) + '%' : '-';
 
                 html += `<td ${estiloOrc}>R$ ${valOrc.toFixed(2)}</td>`;
                 html += `<td ${estiloReal}>R$ ${valReal.toFixed(2)}</td>`;
+                html += `<td class="col-vertical">${textoAV}</td>`;
             });
 
             tr.innerHTML = html;

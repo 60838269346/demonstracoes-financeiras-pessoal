@@ -11,6 +11,8 @@
             --text-main: #1e293b;
             --text-muted: #64748b;
             --primary: #2563eb;
+            --success: #16a34a;
+            --danger: #ef4444;
             --border: #e2e8f0;
         }
         body {
@@ -21,29 +23,31 @@
             padding: 20px;
         }
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
         }
         h1 {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             margin-bottom: 20px;
+            color: var(--text-main);
         }
         .card {
             background: var(--card-bg);
             border: 1px solid var(--border);
             border-radius: 8px;
             padding: 20px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
             overflow-x: auto;
         }
         table {
             width: 100%;
             border-collapse: collapse;
             text-align: left;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
         th, td {
-            padding: 10px 12px;
+            padding: 8px 10px;
             border-bottom: 1px solid var(--border);
             white-space: nowrap;
         }
@@ -55,21 +59,25 @@
             background-color: #f8fafc;
             font-weight: bold;
         }
+        .col-analise {
+            background-color: #fafafa;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Demonstrações Financeiras</h1>
+        <h1>Demonstrações Financeiras Pessoais</h1>
+        
         <div class="card">
+            <h2>Visão Analítica Anual</h2>
             <table>
                 <thead>
-                    <tr>
+                    <tr id="cabecalhoTabela">
                         <th>Categoria / Indicador</th>
-                        <!-- Cabeçalhos gerados dinamicamente ou fixos podem ser inseridos aqui -->
                     </tr>
                 </thead>
                 <tbody id="tabelaAnaliticaAno">
-                    <!-- Linhas injetadas via JavaScript -->
+                    <!-- Preenchido via JavaScript -->
                 </tbody>
             </table>
         </div>
@@ -77,13 +85,35 @@
 
     <script>
         const mesesAno = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
-        const contasReceita = ['Salário', 'Investimentos'];
-        const contasDespesa = ['Aluguel', 'Supermercado'];
-        const contasSemanais = ['Lazer'];
         
-        let orcamentos = [];
-        let transacoes = [];
+        const contasReceita = ['Salário', 'Outras Receitas'];
+        const contasDespesa = ['Aluguel', 'Contas Básicas', 'Supermercado'];
+        const contasSemanais = ['Lazer / Variados'];
+
+        let orcamentos = [
+            { mes: 'Janeiro', categoria: 'Salário', valor: 5000 },
+            { mes: 'Janeiro', categoria: 'Aluguel', valor: 1500 },
+            { mes: 'Janeiro', categoria: 'Supermercado', valor: 800 },
+            { mes: 'Janeiro', categoria: 'Lazer / Variados', valor: 400 }
+        ];
+
+        let transacoes = [
+            { mes: 'Janeiro', categoria: 'Salário', valor: 5000 },
+            { mes: 'Janeiro', categoria: 'Aluguel', valor: 1500 },
+            { mes: 'Janeiro', categoria: 'Supermercado', valor: 850 },
+            { mes: 'Janeiro', categoria: 'Lazer / Variados', valor: 350 }
+        ];
+
         const tabelaAnaliticaAno = document.getElementById('tabelaAnaliticaAno');
+        const cabecalhoTabela = document.getElementById('cabecalhoTabela');
+
+        function montarCabecalho() {
+            let htmlTh = '<th>Categoria / Indicador</th>';
+            mesesAno.forEach(mes => {
+                htmlTh += `<th>${mes} (Orç)</th><th>${mes} (Real)</th><th class="col-analise">Delta</th>`;
+            });
+            cabecalhoTabela.innerHTML = htmlTh;
+        }
 
         function criarLinhaHorizontal(titulo, categoria, tipoCalculo, isGrupo = false, classeExtra = '') {
             const tr = document.createElement('tr');
@@ -157,8 +187,17 @@
             tabelaAnaliticaAno.appendChild(tr);
         }
 
-        // Exemplo de chamada inicial para teste do componente
-        criarLinhaHorizontal('Total de Receitas', '', 'total_receitas', true);
+        function inicializarSistema() {
+            montarCabecalho();
+            tabelaAnaliticaAno.innerHTML = '';
+            criarLinhaHorizontal('Total de Receitas', '', 'total_receitas', true);
+            criarLinhaHorizontal('Salário', 'Salário', 'categoria');
+            criarLinhaHorizontal('Total de Despesas', '', 'total_despesas', true);
+            criarLinhaHorizontal('Aluguel', 'Aluguel', 'categoria');
+            criarLinhaHorizontal('Sobra Bruta', '', 'sobra_bruta', true);
+        }
+
+        inicializarSistema();
     </script>
 </body>
 </html>

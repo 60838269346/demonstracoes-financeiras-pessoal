@@ -268,7 +268,7 @@
                 </div>
                 <div class="form-group">
                     <label for="valorLancamento">Valor (R$)</label>
-                    <input type="number" id="valorLancamento" step="0.01" placeholder="0.00" required>
+                    <input type="text" id="valorLancamento" placeholder="0,00" required>
                 </div>
                 <div class="form-group">
                     <button type="submit" id="btnSalvar">Adicionar Lançamento</button>
@@ -362,13 +362,33 @@
         const filtroAno = document.getElementById('filtroAno');
         const filtroMes = document.getElementById('filtroMes');
         const anoLancamentoInput = document.getElementById('anoLancamentoInput');
+        const inputValor = document.getElementById('valorLancamento');
 
         filtroAno.addEventListener('input', atualizarTabela);
         filtroMes.addEventListener('change', atualizarTabela);
 
+        // Máscara e conversão em tempo real para o campo de valor monetário
+        inputValor.addEventListener('input', function (e) {
+            let valorStr = e.target.value.replace(/\D/g, '');
+            if (valorStr === '') {
+                e.target.value = '';
+                return;
+            }
+            let numero = parseInt(valorStr, 10) / 100;
+            e.target.value = numero.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        });
+
         // Função utilitária para formatar números no padrão brasileiro (1.000,00)
         function formatarMoeda(valor) {
             return valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        // Função para converter string formatada (ex: "1.234,56") de volta para número float
+        function parseMoeda(valorStr) {
+            if (!valorStr) return 0;
+            if (typeof valorStr === 'number') return valorStr;
+            let limpo = valorStr.replace(/\./g, '').replace(',', '.');
+            return parseFloat(limpo) || 0;
         }
 
         function salvarDadosLocal() {
@@ -402,36 +422,36 @@
 
                 if (tipoCalculo === 'categoria') {
                     const catLower = categoria.trim().toLowerCase();
-                    orcamentos.filter(o => o.ano === anoAtualFiltro && o.mes === mes && o.categoria.trim().toLowerCase() === catLower).forEach(o => valOrc += o.valor);
-                    transacoes.filter(t => t.ano === anoAtualFiltro && t.mes === mes && t.categoria.trim().toLowerCase() === catLower).forEach(t => valReal += t.valor);
+                    orcamentos.filter(o => o.ano === anoAtualFiltro && o.mes === mes && o.categoria.trim().toLowerCase() === catLower).forEach(o => valOrc += parseMoeda(o.valor));
+                    transacoes.filter(t => t.ano === anoAtualFiltro && t.mes === mes && t.categoria.trim().toLowerCase() === catLower).forEach(t => valReal += parseMoeda(t.valor));
                 } else if (tipoCalculo === 'total_receitas') {
-                    orcamentos.filter(o => o.ano === anoAtualFiltro && o.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => valOrc += o.valor);
-                    transacoes.filter(t => t.ano === anoAtualFiltro && t.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => valReal += t.valor);
+                    orcamentos.filter(o => o.ano === anoAtualFiltro && o.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => valOrc += parseMoeda(o.valor));
+                    transacoes.filter(t => t.ano === anoAtualFiltro && t.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => valReal += parseMoeda(t.valor));
                 } else if (tipoCalculo === 'total_despesas') {
-                    orcamentos.filter(o => o.ano === anoAtualFiltro && o.mes === mes && despesasFixasBase.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => valOrc += o.valor);
-                    transacoes.filter(t => t.ano === anoAtualFiltro && t.mes === mes && despesasFixasBase.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => valReal += t.valor);
+                    orcamentos.filter(o => o.ano === anoAtualFiltro && o.mes === mes && despesasFixasBase.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => valOrc += parseMoeda(o.valor));
+                    transacoes.filter(t => t.ano === anoAtualFiltro && t.mes === mes && despesasFixasBase.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => valReal += parseMoeda(t.valor));
                 } else if (tipoCalculo === 'sobra_bruta') {
                     let recOrc = 0, despOrc = 0, recReal = 0, despReal = 0;
-                    orcamentos.filter(o => o.ano === anoAtualFiltro && o.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => recOrc += o.valor);
-                    orcamentos.filter(o => o.ano === anoAtualFiltro && o.mes === mes && despesasFixasBase.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => despOrc += o.valor);
-                    transacoes.filter(t => t.ano === anoAtualFiltro && t.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => recReal += t.valor);
-                    transacoes.filter(t => t.ano === anoAtualFiltro && t.mes === mes && despesasFixasBase.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => despReal += t.valor);
+                    orcamentos.filter(o => o.ano === anoAtualFiltro && o.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => recOrc += parseMoeda(o.valor));
+                    orcamentos.filter(o => o.ano === anoAtualFiltro && o.mes === mes && despesasFixasBase.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => despOrc += parseMoeda(o.valor));
+                    transacoes.filter(t => t.ano === anoAtualFiltro && t.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => recReal += parseMoeda(t.valor));
+                    transacoes.filter(t => t.ano === anoAtualFiltro && t.mes === mes && despesasFixasBase.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => despReal += parseMoeda(t.valor));
                     valOrc = recOrc - despOrc;
                     valReal = recReal - despReal;
                 } else if (tipoCalculo === 'total_semanal') {
-                    orcamentos.filter(o => o.ano === anoAtualFiltro && o.mes === mes && despesasSemanaisBase.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => valOrc += o.valor);
-                    transacoes.filter(t => t.ano === anoAtualFiltro && t.mes === mes && despesasSemanaisBase.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => valReal += t.valor);
+                    orcamentos.filter(o => o.ano === anoAtualFiltro && o.mes === mes && despesasSemanaisBase.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => valOrc += parseMoeda(o.valor));
+                    transacoes.filter(t => t.ano === anoAtualFiltro && t.mes === mes && despesasSemanaisBase.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => valReal += parseMoeda(t.valor));
                 } else if (tipoCalculo === 'sobra_liquida') {
                     let recOrc = 0, despOrc = 0, semOrc = 0, guardarOrc = 0, recReal = 0, despReal = 0, semReal = 0, guardarReal = 0;
-                    orcamentos.filter(o => o.ano === anoAtualFiltro && o.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => recOrc += o.valor);
-                    orcamentos.filter(o => o.ano === anoAtualFiltro && o.mes === mes && despesasFixasBase.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => despOrc += o.valor);
-                    orcamentos.filter(o => o.ano === anoAtualFiltro && o.mes === mes && despesasSemanaisBase.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => semOrc += o.valor);
-                    orcamentos.filter(o => o.ano === anoAtualFiltro && o.mes === mes && o.categoria.trim().toLowerCase() === 'guardar').forEach(o => guardarOrc += o.valor);
+                    orcamentos.filter(o => o.ano === anoAtualFiltro && o.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => recOrc += parseMoeda(o.valor));
+                    orcamentos.filter(o => o.ano === anoAtualFiltro && o.mes === mes && despesasFixasBase.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => despOrc += parseMoeda(o.valor));
+                    orcamentos.filter(o => o.ano === anoAtualFiltro && o.mes === mes && despesasSemanaisBase.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => semOrc += parseMoeda(o.valor));
+                    orcamentos.filter(o => o.ano === anoAtualFiltro && o.mes === mes && o.categoria.trim().toLowerCase() === 'guardar').forEach(o => guardarOrc += parseMoeda(o.valor));
 
-                    transacoes.filter(t => t.ano === anoAtualFiltro && t.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => recReal += t.valor);
-                    transacoes.filter(t => t.ano === anoAtualFiltro && t.mes === mes && despesasFixasBase.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => despReal += t.valor);
-                    transacoes.filter(t => t.ano === anoAtualFiltro && t.mes === mes && despesasSemanaisBase.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => semReal += t.valor);
-                    transacoes.filter(t => t.ano === anoAtualFiltro && t.mes === mes && t.categoria.trim().toLowerCase() === 'guardar').forEach(t => guardarReal += t.valor);
+                    transacoes.filter(t => t.ano === anoAtualFiltro && t.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => recReal += parseMoeda(t.valor));
+                    transacoes.filter(t => t.ano === anoAtualFiltro && t.mes === mes && despesasFixasBase.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => despReal += parseMoeda(t.valor));
+                    transacoes.filter(t => t.ano === anoAtualFiltro && t.mes === mes && despesasSemanaisBase.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => semReal += parseMoeda(t.valor));
+                    transacoes.filter(t => t.ano === anoAtualFiltro && t.mes === mes && t.categoria.trim().toLowerCase() === 'guardar').forEach(t => guardarReal += parseMoeda(t.valor));
 
                     valOrc = (recOrc - despOrc) - semOrc - guardarOrc;
                     valReal = (recReal - despReal) - semReal - guardarReal;
@@ -538,7 +558,7 @@
                     <td>${item.mes}</td>
                     <td>${item.categoria}</td>
                     <td>${item.descricao || '-'}</td>
-                    <td>R$ ${formatarMoeda(item.valor)}</td>
+                    <td>R$ ${formatarMoeda(parseMoeda(item.valor))}</td>
                     <td>
                         <button class="btn-edit" onclick="prepararEdicao('orcamento', ${index})">Editar</button>
                         <button class="btn-delete" onclick="excluirLancamento('orcamento', ${index})">Excluir</button>
@@ -558,7 +578,7 @@
                     <td>${item.mes}</td>
                     <td>${item.categoria}</td>
                     <td>${item.descricao || '-'}</td>
-                    <td>R$ ${formatarMoeda(item.valor)}</td>
+                    <td>R$ ${formatarMoeda(parseMoeda(item.valor))}</td>
                     <td>
                         <button class="btn-edit" onclick="prepararEdicao('transacao', ${index})">Editar</button>
                         <button class="btn-delete" onclick="excluirLancamento('transacao', ${index})">Excluir</button>
@@ -581,7 +601,11 @@
             document.getElementById('mesLancamento').value = item.mes;
             document.getElementById('categoriaLancamento').value = item.categoria;
             document.getElementById('descricaoLancamento').value = item.descricao || '';
-            document.getElementById('valorLancamento').value = item.valor;
+            
+            // Formata o valor salvo para o input formatado
+            let valNum = parseMoeda(item.valor);
+            inputValor.value = formatarMoeda(valNum);
+
             editIndexInput.value = `${tipo}_${index}`;
             
             tituloFormulario.textContent = 'Editar Lançamento';
@@ -614,7 +638,7 @@
             const mes = document.getElementById('mesLancamento').value;
             const categoria = document.getElementById('categoriaLancamento').value;
             const descricao = document.getElementById('descricaoLancamento').value.trim();
-            const valor = parseFloat(document.getElementById('valorLancamento').value);
+            const valor = parseMoeda(inputValor.value);
             const editVal = editIndexInput.value;
 
             if (isNaN(valor)) return;

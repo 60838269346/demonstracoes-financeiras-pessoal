@@ -349,7 +349,6 @@
         const despesasFixasBase = ['Aluguel', 'Contas Básicas', 'Supermercado', 'Cartão Itau', 'Cartão Mercado pago', 'Cartão Inter', 'Cartão magalu'];
         const despesasSemanaisBase = ['Lazer / Variados', 'Semana 01', 'Semana 02', 'Semana 03', 'Semana 04'];
 
-        // Carregar dados salvos do navegador (localStorage) se existirem
         let orcamentos = JSON.parse(localStorage.getItem('fin_orcamentos')) || [];
         let transacoes = JSON.parse(localStorage.getItem('fin_transacoes')) || [];
 
@@ -366,6 +365,11 @@
 
         filtroAno.addEventListener('input', atualizarTabela);
         filtroMes.addEventListener('change', atualizarTabela);
+
+        // Função utilitária para formatar números no padrão brasileiro (1.000,00)
+        function formatarMoeda(valor) {
+            return valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
 
         function salvarDadosLocal() {
             localStorage.setItem('fin_orcamentos', JSON.stringify(orcamentos));
@@ -457,8 +461,8 @@
                 }
                 let textoAH = temAH ? percentualAH.toFixed(1) + '%' : '-';
 
-                html += `<td ${estiloOrc}>R$ ${valOrc.toFixed(2)}</td>`;
-                html += `<td ${estiloReal}>R$ ${valReal.toFixed(2)}</td>`;
+                html += `<td ${estiloOrc}>R$ ${formatarMoeda(valOrc)}</td>`;
+                html += `<td ${estiloReal}>R$ ${formatarMoeda(valReal)}</td>`;
                 html += `<td class="col-horizontal">${textoAH}</td>`;
             });
 
@@ -479,8 +483,8 @@
             }
             let textoConsAH = temConsAH ? percentualConsAH.toFixed(1) + '%' : '-';
 
-            html += `<td class="col-consolidado" style="color: ${corConsOrc};">R$ ${totalAnoOrc.toFixed(2)}</td>`;
-            html += `<td class="col-consolidado" style="color: ${corConsReal};">R$ ${totalAnoReal.toFixed(2)}</td>`;
+            html += `<td class="col-consolidado" style="color: ${corConsOrc};">R$ ${formatarMoeda(totalAnoOrc)}</td>`;
+            html += `<td class="col-consolidado" style="color: ${corConsReal};">R$ ${formatarMoeda(totalAnoReal)}</td>`;
             html += `<td class="col-consolidado col-horizontal">${textoConsAH}</td>`;
 
             tr.innerHTML = html;
@@ -534,7 +538,7 @@
                     <td>${item.mes}</td>
                     <td>${item.categoria}</td>
                     <td>${item.descricao || '-'}</td>
-                    <td>R$ ${item.valor.toFixed(2)}</td>
+                    <td>R$ ${formatarMoeda(item.valor)}</td>
                     <td>
                         <button class="btn-edit" onclick="prepararEdicao('orcamento', ${index})">Editar</button>
                         <button class="btn-delete" onclick="excluirLancamento('orcamento', ${index})">Excluir</button>
@@ -554,7 +558,7 @@
                     <td>${item.mes}</td>
                     <td>${item.categoria}</td>
                     <td>${item.descricao || '-'}</td>
-                    <td>R$ ${item.valor.toFixed(2)}</td>
+                    <td>R$ ${formatarMoeda(item.valor)}</td>
                     <td>
                         <button class="btn-edit" onclick="prepararEdicao('transacao', ${index})">Editar</button>
                         <button class="btn-delete" onclick="excluirLancamento('transacao', ${index})">Excluir</button>

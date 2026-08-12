@@ -91,7 +91,7 @@
             background-color: #f8fafc;
             font-weight: bold;
         }
-        .col-vertical {
+        .col-horizontal {
             background-color: #fafafa;
             color: var(--text-muted);
             font-size: 0.8rem;
@@ -159,7 +159,7 @@
 
         <!-- Visão Analítica -->
         <div class="card">
-            <h2>Visão Analítica Anual (Orçado x Realizado & Análise Vertical)</h2>
+            <h2>Visão Analítica Anual (Orçado x Realizado & Análise Horizontal)</h2>
             <table>
                 <thead>
                     <tr id="cabecalhoTabela">
@@ -199,7 +199,7 @@
         function montarCabecalho() {
             let htmlTh = '<th>Categoria / Indicador</th>';
             mesesAno.forEach(mes => {
-                htmlTh += `<th>${mes} (Orç)</th><th>${mes} (Real)</th><th class="col-vertical">% AV (Real)</th>`;
+                htmlTh += `<th>${mes} (Orç)</th><th>${mes} (Real)</th><th class="col-horizontal">% AH (Real/Orç)</th>`;
             });
             cabecalhoTabela.innerHTML = htmlTh;
         }
@@ -215,10 +215,6 @@
                 let valOrc = 0;
                 let valReal = 0;
 
-                // Cálculo das receitas totais do mês para usar na Análise Vertical (% sobre a receita real)
-                let totalReceitaRealMes = 0;
-                transacoes.filter(t => t.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => totalReceitaRealMes += t.valor);
-
                 if (tipoCalculo === 'categoria') {
                     const catLower = categoria.trim().toLowerCase();
                     orcamentos.filter(o => o.mes === mes && o.categoria.trim().toLowerCase() === catLower).forEach(o => valOrc += o.valor);
@@ -227,8 +223,8 @@
                     orcamentos.filter(o => o.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => valOrc += o.valor);
                     transacoes.filter(t => t.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => valReal += t.valor);
                 } else if (tipoCalculo === 'total_despesas') {
-                    orcamentos.filter(o => o.mes === mes && contasDespesa.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => valOrc += o.valor);
-                    transacoes.filter(t => t.mes === mes && contasDespesa.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => valReal += t.valor);
+                    orcamentos.filter(o => o.mes === mes && contasDespesa.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase() && c !== 'Lazer / Variados')).forEach(o => valOrc += o.valor);
+                    transacoes.filter(t => t.mes === mes && contasDespesa.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase() && c !== 'Lazer / Variados')).forEach(t => valReal += t.valor);
                 } else if (tipoCalculo === 'sobra_bruta') {
                     let recOrc = 0, despOrc = 0, recReal = 0, despReal = 0;
                     orcamentos.filter(o => o.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => recOrc += o.valor);
@@ -252,7 +248,6 @@
                     valReal = (recReal - despReal) - semReal;
                 }
 
-                // Identificar se é despesa para colorir de vermelho se for menor que zero (ou se for linha de despesa)
                 let isDespesaCat = contasDespesa.some(c => c.trim().toLowerCase() === categoria.trim().toLowerCase()) || tipoCalculo === 'total_despesas' || tipoCalculo === 'total_semanal';
                 
                 let corOrc = valOrc < 0 || isDespesaCat ? '#ef4444' : '#1e293b';
@@ -266,16 +261,18 @@
                 let estiloOrc = `style="color: ${corOrc}; font-weight: ${isGrupo ? 'bold' : 'normal'};"`;
                 let estiloReal = `style="color: ${corReal}; font-weight: ${isGrupo ? 'bold' : 'normal'};"`;
 
-                // Cálculo da Análise Vertical (% em relação à receita real total do mês)
-                let percentualAV = 0;
-                if (totalReceitaRealMes !== 0) {
-                    percentualAV = (valReal / totalReceitaRealMes) * 100;
+                // Cálculo da Análise Horizontal: Realizado / Orçado (%)
+                let percentualAH = 0;
+                let temAH = false;
+                if (valOrc !== 0) {
+                    percentualAH = (valReal / valOrc) * 100;
+                    temAH = true;
                 }
-                let textoAV = totalReceitaRealMes !== 0 ? percentualAV.toFixed(1) + '%' : '-';
+                let textoAH = temAH ? percentualAH.toFixed(1) + '%' : '-';
 
                 html += `<td ${estiloOrc}>R$ ${valOrc.toFixed(2)}</td>`;
                 html += `<td ${estiloReal}>R$ ${valReal.toFixed(2)}</td>`;
-                html += `<td class="col-vertical">${textoAV}</td>`;
+                html += `<td class="col-horizontal">${textoAH}</td>`;
             });
 
             tr.innerHTML = html;

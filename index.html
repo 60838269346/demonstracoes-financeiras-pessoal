@@ -13,6 +13,7 @@
             --primary: #2563eb;
             --success: #16a34a;
             --danger: #ef4444;
+            --warning: #d97706;
             --border: #e2e8f0;
         }
         body {
@@ -72,6 +73,17 @@
         button:hover {
             opacity: 0.9;
         }
+        .btn-edit {
+            background-color: var(--warning);
+            padding: 5px 10px;
+            font-size: 0.75rem;
+            margin-right: 5px;
+        }
+        .btn-delete {
+            background-color: var(--danger);
+            padding: 5px 10px;
+            font-size: 0.75rem;
+        }
         table {
             width: 100%;
             border-collapse: collapse;
@@ -104,8 +116,9 @@
 
         <!-- Formulário de Lançamentos -->
         <div class="card">
-            <h2>Novo Lançamento</h2>
+            <h2 id="tituloFormulario">Novo Lançamento</h2>
             <form id="formLancamento" class="form-grid">
+                <input type="hidden" id="editIndex" value="-1">
                 <div class="form-group">
                     <label for="tipoLancamento">Tipo</label>
                     <select id="tipoLancamento">
@@ -152,7 +165,7 @@
                     <input type="number" id="valorLancamento" step="0.01" placeholder="0.00" required>
                 </div>
                 <div class="form-group">
-                    <button type="submit">Adicionar Lançamento</button>
+                    <button type="submit" id="btnSalvar">Adicionar Lançamento</button>
                 </div>
             </form>
         </div>
@@ -167,6 +180,25 @@
                     </tr>
                 </thead>
                 <tbody id="tabelaAnaliticaAno">
+                    <!-- Preenchido via JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Histórico de Lançamentos para Gerenciamento -->
+        <div class="card">
+            <h2>Histórico de Lançamentos</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tipo</th>
+                        <th>Mês</th>
+                        <th>Categoria</th>
+                        <th>Valor (R$)</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="tabelaHistorico">
                     <!-- Preenchido via JavaScript -->
                 </tbody>
             </table>
@@ -195,6 +227,10 @@
         const tabelaAnaliticaAno = document.getElementById('tabelaAnaliticaAno');
         const cabecalhoTabela = document.getElementById('cabecalhoTabela');
         const formLancamento = document.getElementById('formLancamento');
+        const tabelaHistorico = document.getElementById('tabelaHistorico');
+        const editIndexInput = document.getElementById('editIndex');
+        const tituloFormulario = document.getElementById('tituloFormulario');
+        const btnSalvar = document.getElementById('btnSalvar');
 
         function montarCabecalho() {
             let htmlTh = '<th>Categoria / Indicador</th>';
@@ -261,7 +297,6 @@
                 let estiloOrc = `style="color: ${corOrc}; font-weight: ${isGrupo ? 'bold' : 'normal'};"`;
                 let estiloReal = `style="color: ${corReal}; font-weight: ${isGrupo ? 'bold' : 'normal'};"`;
 
-                // Cálculo da Análise Horizontal: Realizado / Orçado (%)
                 let percentualAH = 0;
                 let temAH = false;
                 if (valOrc !== 0) {
@@ -292,6 +327,65 @@
             criarLinhaHorizontal('Total Despesas Semanais / Variáveis', '', 'total_semanal', true);
             criarLinhaHorizontal('Lazer / Variados', 'Lazer / Variados', 'categoria');
             criarLinhaHorizontal('Sobra Líquida', '', 'sobra_liquida', true);
+            atualizarTabelaHistorico();
+        }
+
+        function atualizarTabelaHistorico() {
+            tabelaHistorico.innerHTML = '';
+            
+            orcamentos.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>Orçado (Planejado)</td>
+                    <td>${item.mes}</td>
+                    <td>${item.categoria}</td>
+                    <td>R$ ${item.valor.toFixed(2)}</td>
+                    <td>
+                        <button class="btn-edit" onclick="prepararEdicao('orcamento', ${index})">Editar</button>
+                        <button class="btn-delete" onclick="excluirLancamento('orcamento', ${index})">Excluir</button>
+                    </td>
+                `;
+                tabelaHistorico.appendChild(tr);
+            });
+
+            transacoes.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>Realizado (Efetivo)</td>
+                    <td>${item.mes}</td>
+                    <td>${item.categoria}</td>
+                    <td>R$ ${item.valor.toFixed(2)}</td>
+                    <td>
+                        <button class="btn-edit" onclick="prepararEdicao('transacao', ${index})">Editar</button>
+                        <button class="btn-delete" onclick="excluirLancamento('transacao', ${index})">Excluir</button>
+                    </td>
+                `;
+                tabelaHistorico.appendChild(tr);
+            });
+        }
+
+        window.prepararEdicao = function(tipo, index) {
+            const item = tipo === 'orcamento' ? orcamentos[index] : transacoes[index];
+            document.getElementById('tipoLancamento').value = tipo;
+            document.getElementById('mesLancamento').value = item.mes;
+            document.getElementById('categoriaLancamento').value = item.categoria;
+            document.getElementById('valorLancamento').value = item.valor;
+            editIndexInput.value = `${tipo}_${index}`;
+            
+            tituloFormulario.textContent = 'Editar Lançamento';
+            btnSalvar.textContent = 'Salvar Alterações';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        window.excluirLancamento = function(tipo, index) {
+            if (confirm('Tem certeza que deseja excluir este lançamento?')) {
+                if (tipo === 'orcamento') {
+                    orcamentos.splice(index, 1);
+                } else {
+                    transacoes.splice(index, 1);
+                }
+                atualizarTabela();
+            }
         }
 
         formLancamento.addEventListener('submit', function(e) {
@@ -300,13 +394,34 @@
             const mes = document.getElementById('mesLancamento').value;
             const categoria = document.getElementById('categoriaLancamento').value;
             const valor = parseFloat(document.getElementById('valorLancamento').value);
+            const editVal = editIndexInput.value;
 
             if (isNaN(valor)) return;
 
-            if (tipo === 'orcamento') {
-                orcamentos.push({ mes, categoria, valor });
+            if (editVal !== '-1') {
+                const [tipoAntigo, indexAntigo] = editVal.split('_');
+                const idx = parseInt(indexAntigo);
+                
+                if (tipoAntigo === tipo) {
+                    if (tipo === 'orcamento') orcamentos[idx] = { mes, categoria, valor };
+                    else transacoes[idx] = { mes, categoria, valor };
+                } else {
+                    if (tipoAntigo === 'orcamento') orcamentos.splice(idx, 1);
+                    else transacoes.splice(idx, 1);
+
+                    if (tipo === 'orcamento') orcamentos.push({ mes, categoria, valor });
+                    else transacoes.push({ mes, categoria, valor });
+                }
+
+                editIndexInput.value = '-1';
+                tituloFormulario.textContent = 'Novo Lançamento';
+                btnSalvar.textContent = 'Adicionar Lançamento';
             } else {
-                transacoes.push({ mes, categoria, valor });
+                if (tipo === 'orcamento') {
+                    orcamentos.push({ mes, categoria, valor });
+                } else {
+                    transacoes.push({ mes, categoria, valor });
+                }
             }
 
             atualizarTabela();

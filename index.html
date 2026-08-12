@@ -256,8 +256,9 @@
                 }
                 valorMesAnteriorReal = valReal;
 
-                let estiloOrc = tipoCalculo.includes('sobra') || tipoCalculo.includes('total') ? `style="font-weight: bold; color: ${valOrc >= 0 ? '#16a34a' : '#ef4444'};"` : '';
-                let estiloReal = tipoCalculo.includes('sobra') || tipoCalculo.includes('total') ? `style="font-weight: bold; color: ${valReal >= 0 ? '#16a34a' : '#ef4444'};"` : '';
+                // Cores dinâmicas para valores negativos (vermelho) e positivos (verde ou cor padrão)
+                let estiloOrc = `style="${valOrc < 0 ? 'color: #ef4444; font-weight: bold;' : (tipoCalculo.includes('sobra') || tipoCalculo.includes('total') ? 'color: #16a34a; font-weight: bold;' : '')}"`;
+                let estiloReal = `style="${valReal < 0 ? 'color: #ef4444; font-weight: bold;' : (tipoCalculo.includes('sobra') || tipoCalculo.includes('total') ? 'color: #16a34a; font-weight: bold;' : '')}"`;
 
                 let textoDelta = "-";
                 let corDelta = "";

@@ -58,7 +58,7 @@
         }
         .form-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
             gap: 16px;
             align-items: end;
         }
@@ -211,16 +211,32 @@
                         <optgroup label="Receitas">
                             <option value="Salário">Salário</option>
                             <option value="Outras Receitas">Outras Receitas</option>
+                            <option value="clientex externos">clientex externos</option>
                         </optgroup>
                         <optgroup label="Despesas">
                             <option value="Aluguel">Aluguel</option>
                             <option value="Contas Básicas">Contas Básicas</option>
                             <option value="Supermercado">Supermercado</option>
+                            <option value="Cartão Itau">Cartão Itau</option>
+                            <option value="Cartão Mercado pago">Cartão Mercado pago</option>
+                            <option value="Cartão Inter">Cartão Inter</option>
+                            <option value="Cartão magalu">Cartão magalu</option>
                         </optgroup>
                         <optgroup label="Despesas Semanais / Variáveis">
                             <option value="Lazer / Variados">Lazer / Variados</option>
+                            <option value="Semana 01">Semana 01</option>
+                            <option value="Semana 02">Semana 02</option>
+                            <option value="Semana 03">Semana 03</option>
+                            <option value="Semana 04">Semana 04</option>
+                        </optgroup>
+                        <optgroup label="Sobra Líquida / Destino">
+                            <option value="Guardar">Guardar</option>
                         </optgroup>
                     </select>
+                </div>
+                <div class="form-group">
+                    <label for="descricaoLancamento">Descrição</label>
+                    <input type="text" id="descricaoLancamento" placeholder="Ex: Conta de luz, Compra X...">
                 </div>
                 <div class="form-group">
                     <label for="valorLancamento">Valor (R$)</label>
@@ -282,6 +298,7 @@
                             <th>Tipo</th>
                             <th>Mês</th>
                             <th>Categoria</th>
+                            <th>Descrição</th>
                             <th>Valor (R$)</th>
                             <th>Ações</th>
                         </tr>
@@ -296,8 +313,11 @@
 
     <script>
         const mesesAno = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
-        const contasReceita = ['Salário', 'Outras Receitas'];
-        const contasDespesa = ['Aluguel', 'Contas Básicas', 'Supermercado', 'Lazer / Variados'];
+        const contasReceita = ['Salário', 'Outras Receitas', 'clientex externos'];
+        const contasDespesa = ['Aluguel', 'Contas Básicas', 'Supermercado', 'Cartão Itau', 'Cartão Mercado pago', 'Cartão Inter', 'Cartão magalu', 'Lazer / Variados', 'Semana 01', 'Semana 02', 'Semana 03', 'Semana 04', 'Guardar'];
+        
+        const despesasFixasBase = ['Aluguel', 'Contas Básicas', 'Supermercado', 'Cartão Itau', 'Cartão Mercado pago', 'Cartão Inter', 'Cartão magalu'];
+        const despesasSemanaisBase = ['Lazer / Variados', 'Semana 01', 'Semana 02', 'Semana 03', 'Semana 04'];
 
         let orcamentos = [];
         let transacoes = [];
@@ -344,32 +364,36 @@
                     orcamentos.filter(o => o.ano === anoAtualFiltro && o.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => valOrc += o.valor);
                     transacoes.filter(t => t.ano === anoAtualFiltro && t.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => valReal += t.valor);
                 } else if (tipoCalculo === 'total_despesas') {
-                    orcamentos.filter(o => o.ano === anoAtualFiltro && o.mes === mes && contasDespesa.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase() && c !== 'Lazer / Variados')).forEach(o => valOrc += o.valor);
-                    transacoes.filter(t => t.ano === anoAtualFiltro && t.mes === mes && contasDespesa.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase() && c !== 'Lazer / Variados')).forEach(t => valReal += t.valor);
+                    orcamentos.filter(o => o.ano === anoAtualFiltro && o.mes === mes && despesasFixasBase.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => valOrc += o.valor);
+                    transacoes.filter(t => t.ano === anoAtualFiltro && t.mes === mes && despesasFixasBase.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => valReal += t.valor);
                 } else if (tipoCalculo === 'sobra_bruta') {
                     let recOrc = 0, despOrc = 0, recReal = 0, despReal = 0;
                     orcamentos.filter(o => o.ano === anoAtualFiltro && o.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => recOrc += o.valor);
-                    orcamentos.filter(o => o.ano === anoAtualFiltro && o.mes === mes && contasDespesa.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase() && c !== 'Lazer / Variados')).forEach(o => despOrc += o.valor);
+                    orcamentos.filter(o => o.ano === anoAtualFiltro && o.mes === mes && despesasFixasBase.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => despOrc += o.valor);
                     transacoes.filter(t => t.ano === anoAtualFiltro && t.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => recReal += t.valor);
-                    transacoes.filter(t => t.ano === anoAtualFiltro && t.mes === mes && contasDespesa.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase() && c !== 'Lazer / Variados')).forEach(t => despReal += t.valor);
+                    transacoes.filter(t => t.ano === anoAtualFiltro && t.mes === mes && despesasFixasBase.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => despReal += t.valor);
                     valOrc = recOrc - despOrc;
                     valReal = recReal - despReal;
                 } else if (tipoCalculo === 'total_semanal') {
-                    orcamentos.filter(o => o.ano === anoAtualFiltro && o.mes === mes && o.categoria.trim().toLowerCase() === 'lazer / variedos').forEach(o => valOrc += o.valor);
-                    transacoes.filter(t => t.ano === anoAtualFiltro && t.mes === mes && t.categoria.trim().toLowerCase() === 'lazer / variedos').forEach(t => valReal += t.valor);
+                    orcamentos.filter(o => o.ano === anoAtualFiltro && o.mes === mes && despesasSemanaisBase.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => valOrc += o.valor);
+                    transacoes.filter(t => t.ano === anoAtualFiltro && t.mes === mes && despesasSemanaisBase.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => valReal += t.valor);
                 } else if (tipoCalculo === 'sobra_liquida') {
-                    let recOrc = 0, despOrc = 0, semOrc = 0, recReal = 0, despReal = 0, semReal = 0;
+                    let recOrc = 0, despOrc = 0, semOrc = 0, guardarOrc = 0, recReal = 0, despReal = 0, semReal = 0, guardarReal = 0;
                     orcamentos.filter(o => o.ano === anoAtualFiltro && o.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => recOrc += o.valor);
-                    orcamentos.filter(o => o.ano === anoAtualFiltro && o.mes === mes && contasDespesa.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase() && c !== 'Lazer / Variados')).forEach(o => despOrc += o.valor);
-                    orcamentos.filter(o => o.ano === anoAtualFiltro && o.mes === mes && o.categoria.trim().toLowerCase() === 'lazer / variedos').forEach(o => semOrc += o.valor);
+                    orcamentos.filter(o => o.ano === anoAtualFiltro && o.mes === mes && despesasFixasBase.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => despOrc += o.valor);
+                    orcamentos.filter(o => o.ano === anoAtualFiltro && o.mes === mes && despesasSemanaisBase.some(c => c.trim().toLowerCase() === o.categoria.trim().toLowerCase())).forEach(o => semOrc += o.valor);
+                    orcamentos.filter(o => o.ano === anoAtualFiltro && o.mes === mes && o.categoria.trim().toLowerCase() === 'guardar').forEach(o => guardarOrc += o.valor);
+
                     transacoes.filter(t => t.ano === anoAtualFiltro && t.mes === mes && contasReceita.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => recReal += t.valor);
-                    transacoes.filter(t => t.ano === anoAtualFiltro && t.mes === mes && contasDespesa.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase() && c !== 'Lazer / Variados')).forEach(t => despReal += t.valor);
-                    transacoes.filter(t => t.ano === anoAtualFiltro && t.mes === mes && t.categoria.trim().toLowerCase() === 'lazer / variedos').forEach(t => semReal += t.valor);
-                    valOrc = (recOrc - despOrc) - semOrc;
-                    valReal = (recReal - despReal) - semReal;
+                    transacoes.filter(t => t.ano === anoAtualFiltro && t.mes === mes && despesasFixasBase.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => despReal += t.valor);
+                    transacoes.filter(t => t.ano === anoAtualFiltro && t.mes === mes && despesasSemanaisBase.some(c => c.trim().toLowerCase() === t.categoria.trim().toLowerCase())).forEach(t => semReal += t.valor);
+                    transacoes.filter(t => t.ano === anoAtualFiltro && t.mes === mes && t.categoria.trim().toLowerCase() === 'guardar').forEach(t => guardarReal += t.valor);
+
+                    valOrc = (recOrc - despOrc) - semOrc - guardarOrc;
+                    valReal = (recReal - despReal) - semReal - guardarReal;
                 }
 
-                let isDespesaCat = contasDespesa.some(c => c.trim().toLowerCase() === categoria.trim().toLowerCase()) || tipoCalculo === 'total_despesas' || tipoCalculo === 'total_semanal';
+                let isDespesaCat = contasDespesa.some(c => c.trim().toLowerCase() === categoria.trim().toLowerCase());
                 
                 let corOrc = valOrc < 0 || isDespesaCat ? '#ef4444' : '#0f172a';
                 let corReal = valReal < 0 || isDespesaCat ? '#ef4444' : '#0f172a';
@@ -404,14 +428,29 @@
             criarLinhaHorizontal('Total de Receitas', '', 'total_receitas', true);
             criarLinhaHorizontal('Salário', 'Salário', 'categoria');
             criarLinhaHorizontal('Outras Receitas', 'Outras Receitas', 'categoria');
+            criarLinhaHorizontal('clientex externos', 'clientex externos', 'categoria');
+            
             criarLinhaHorizontal('Total de Despesas', '', 'total_despesas', true);
             criarLinhaHorizontal('Aluguel', 'Aluguel', 'categoria');
             criarLinhaHorizontal('Contas Básicas', 'Contas Básicas', 'categoria');
             criarLinhaHorizontal('Supermercado', 'Supermercado', 'categoria');
+            criarLinhaHorizontal('Cartão Itau', 'Cartão Itau', 'categoria');
+            criarLinhaHorizontal('Cartão Mercado pago', 'Cartão Mercado pago', 'categoria');
+            criarLinhaHorizontal('Cartão Inter', 'Cartão Inter', 'categoria');
+            criarLinhaHorizontal('Cartão magalu', 'Cartão magalu', 'categoria');
+            
             criarLinhaHorizontal('Sobra Bruta', '', 'sobra_bruta', true);
+            
             criarLinhaHorizontal('Total Despesas Semanais / Variáveis', '', 'total_semanal', true);
             criarLinhaHorizontal('Lazer / Variados', 'Lazer / Variados', 'categoria');
+            criarLinhaHorizontal('Semana 01', 'Semana 01', 'categoria');
+            criarLinhaHorizontal('Semana 02', 'Semana 02', 'categoria');
+            criarLinhaHorizontal('Semana 03', 'Semana 03', 'categoria');
+            criarLinhaHorizontal('Semana 04', 'Semana 04', 'categoria');
+            
+            criarLinhaHorizontal('Guardar', 'Guardar', 'categoria');
             criarLinhaHorizontal('Sobra Líquida', '', 'sobra_liquida', true);
+            
             atualizarTabelaHistorico();
         }
 
@@ -430,6 +469,7 @@
                     <td>Orçado (Planejado)</td>
                     <td>${item.mes}</td>
                     <td>${item.categoria}</td>
+                    <td>${item.descricao || '-'}</td>
                     <td>R$ ${item.valor.toFixed(2)}</td>
                     <td>
                         <button class="btn-edit" onclick="prepararEdicao('orcamento', ${index})">Editar</button>
@@ -449,6 +489,7 @@
                     <td>Realizado (Efetivo)</td>
                     <td>${item.mes}</td>
                     <td>${item.categoria}</td>
+                    <td>${item.descricao || '-'}</td>
                     <td>R$ ${item.valor.toFixed(2)}</td>
                     <td>
                         <button class="btn-edit" onclick="prepararEdicao('transacao', ${index})">Editar</button>
@@ -471,6 +512,7 @@
             document.getElementById('tipoLancamento').value = tipo;
             document.getElementById('mesLancamento').value = item.mes;
             document.getElementById('categoriaLancamento').value = item.categoria;
+            document.getElementById('descricaoLancamento').value = item.descricao || '';
             document.getElementById('valorLancamento').value = item.valor;
             editIndexInput.value = `${tipo}_${index}`;
             
@@ -502,6 +544,7 @@
             const tipo = document.getElementById('tipoLancamento').value;
             const mes = document.getElementById('mesLancamento').value;
             const categoria = document.getElementById('categoriaLancamento').value;
+            const descricao = document.getElementById('descricaoLancamento').value.trim();
             const valor = parseFloat(document.getElementById('valorLancamento').value);
             const editVal = editIndexInput.value;
 
@@ -512,14 +555,14 @@
                 const idx = parseInt(indexAntigo);
                 
                 if (tipoAntigo === tipo) {
-                    if (tipo === 'orcamento') orcamentos[idx] = { ano, mes, categoria, valor };
-                    else transacoes[idx] = { ano, mes, categoria, valor };
+                    if (tipo === 'orcamento') orcamentos[idx] = { ano, mes, categoria, descricao, valor };
+                    else transacoes[idx] = { ano, mes, categoria, descricao, valor };
                 } else {
                     if (tipoAntigo === 'orcamento') orcamentos.splice(idx, 1);
                     else transacoes.splice(idx, 1);
 
-                    if (tipo === 'orcamento') orcamentos.push({ ano, mes, categoria, valor });
-                    else transacoes.push({ ano, mes, categoria, valor });
+                    if (tipo === 'orcamento') orcamentos.push({ ano, mes, categoria, descricao, valor });
+                    else transacoes.push({ ano, mes, categoria, descricao, valor });
                 }
 
                 editIndexInput.value = '-1';
@@ -527,9 +570,9 @@
                 btnSalvar.textContent = 'Adicionar Lançamento';
             } else {
                 if (tipo === 'orcamento') {
-                    orcamentos.push({ ano, mes, categoria, valor });
+                    orcamentos.push({ ano, mes, categoria, descricao, valor });
                 } else {
-                    transacoes.push({ ano, mes, categoria, valor });
+                    transacoes.push({ ano, mes, categoria, descricao, valor });
                 }
             }
 
